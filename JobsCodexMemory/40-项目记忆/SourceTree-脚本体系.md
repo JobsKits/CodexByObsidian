@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-09-06
+updated: 2026-09-13
 tags:
   - codex-memory
   - project
@@ -33,6 +33,9 @@ tags:
 
 - 两份对应文件必须内容一致。
 - 如果修改 `.command`，必须分别对运行副本与备灾副本执行 `zsh -n`。
+- 新增或修改 Sourcetree 脚本时，必须把动作实际写入当前用户 `actions.plist` 并完成重载验证；只生成脚本或 README 不算完成。
+- 当前用户 `actions.plist`、运行目录和备灾目录内的菜单配置必须同步，覆盖前生成带时间戳的可恢复备份。
+- Codex 负责菜单项除显示标题之外的全部配置。用户可能自行调整显示标题，因此更新已有动作时按目标脚本路径识别并默认保留当前标题，除非用户明确要求改名。
 - 详细决策见 [[30-工作流决策/工作流决策#三、SourceTree 双位置同步|SourceTree 双位置同步]]。
 
 ## 三、Git Fetch 引用冲突修复
@@ -57,5 +60,12 @@ tags:
 - 按官方快速开始执行 `pnpm install` 与 `pnpm dev`，服务就绪后打开 `http://localhost:3000`；不自动执行 `git pull`、依赖升级、构建或部署。
 - 开发服务器必须使用 `nohup`、断开标准输入并脱离 zsh 作业控制在后台运行，保证关闭终端或 Sourcetree 输出窗口后服务继续可用，同时记录服务日志和实际监听 PID。
 - 3000 端口只复用脚本 PID 文件已记录的当前仓库后台 Vite；当前仓库未托管的 Vite dev 只发送普通 `TERM` 后转为后台运行，不强制结束；其它目录或无法确认为 Vite dev 的监听进程一律不处理并报错退出。
+
+## 六、Sourcetree 菜单挂载完成定义
+
+- 来源：用户于 2026-09-13 明确确认；适用于今后所有 Sourcetree 脚本的新建、修改和重命名。
+- 每次交付必须完成运行副本、备灾副本、两边菜单配置和当前用户 Sourcetree 动作配置的同步，并验证菜单动作能够解析到可执行脚本。
+- 用户侧最多只调整 Sourcetree 菜单显示标题；动作路径、`$REPO` 参数、动作类型、输出策略、执行权限、安装与备份由 Codex 完成。
+- 更新已有动作时，默认保留用户在 Sourcetree 中修改过的显示标题。修改 `actions.plist` 前生成可恢复备份，重载后反查动作唯一性与配置字段。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
