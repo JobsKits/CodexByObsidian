@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-09-13
+updated: 2026-09-30
 tags:
   - codex-memory
   - project
@@ -67,5 +67,15 @@ tags:
 - 每次交付必须完成运行副本、备灾副本、两边菜单配置和当前用户 Sourcetree 动作配置的同步，并验证菜单动作能够解析到可执行脚本。
 - 用户侧最多只调整 Sourcetree 菜单显示标题；动作路径、`$REPO` 参数、动作类型、输出策略、执行权限、安装与备份由 Codex 完成。
 - 更新已有动作时，默认保留用户在 Sourcetree 中修改过的显示标题。修改 `actions.plist` 前生成可恢复备份，重载后反查动作唯一性与配置字段。
+
+## 七、逐层空白提交推送的递归范围
+
+- 来源：用户于 2026-09-30 明确确认；适用于 `【MacOS@SourceTree】🚀逐层空白提交并Push.command`。
+- 从 `JobsGenesis` 等大仓运行时，必须先递归处理其管理的子仓，例如 `SourceTree.command`；子仓完成 commit + push 后，父仓再提交并推送更新后的 gitlink。仅向上查找父仓不满足需求。
+- 从小仓运行时，处理该子树后继续向上处理父仓，不扩展上层兄弟仓。无改动不创建空提交，仍可推送已有提交；任一失败停止后续队列。
+- 来源：用户于 2026-09-30 确认落盘游离态自动恢复流程。仅对游离仓舍弃独有提交、未提交改动及非忽略的未跟踪文件；先明确目标分支并成功 fetch，再恢复远端最新版本，正常分支内容保留。忽略文件、未跟踪嵌套 Git 仓库及已有正常分支独有提交不自动删除。终端清理需 YES，Sourcetree 按已声明策略无交互执行。
+- 已替代（`superseded`）：逐层推送脚本遇到任何游离 HEAD 一律停止的旧行为；目标不明确、fetch 失败、冲突或未完成操作仍停止。
+
+- 来源：用户确认远端存在本地没有的提交时必须先拉取，最终同步结果要求本地与远端一致。正常分支采用 fetch、提交本地改动、快进或合并远端、push、远端提交号核验；保留双方历史，不强推，合并冲突停止并保留现场。该规则替代此前正常分支不获取远端、直接 push 的行为。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

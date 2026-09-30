@@ -4,7 +4,7 @@ status: active
 scope: codex-config
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs
 created: 2026-07-15
-updated: 2026-09-13
+updated: 2026-09-30
 tags:
   - codex-memory
   - project
@@ -35,7 +35,9 @@ tags:
 
 - 全局指导修改先写 `JobsCodexConfigs/AGENTS.md`，再单向部署到 `/Users/jobs/.codex/AGENTS.md`，部署后检查内容一致。
 - Skills 修改直接写 `/Users/jobs/.agents/skills` 现行工作树；不得用父仓子模块、历史备份或其它副本反向覆盖它。
-- `JobsCodexConfigs/skills` 只记录 `JobsSkills` 子模块版本。先在现行工作树提交并推送，再更新父仓 gitlink；父仓不直接维护第二份 Skills 内容。
+- `JobsCodexConfigs/skills` 是 `JobsSkills` 的备份子模块，父仓仍只跟踪 gitlink。用户于 2026-09-30 明确要求：以 `/Users/jobs/.agents/skills` 当前运行工作树为准，将其未提交的有效内容一并单向同步到备份子仓；保留各自 `.git`，遵守源目录 `.gitignore`，外援运行态软链接不纳入备份。同步本身不代表授权提交或推送。
+- 已替代（`superseded`，2026-09-30）：只允许现行工作树先提交推送、备份子模块只更新已提交版本的限制。当前同步范围允许本地未提交内容，仍禁止反向覆盖现行工作树。
+- 备份子仓必须处于正常本地分支，不能保留游离 HEAD；本次已在保持提交内容不变的前提下恢复到 `main`。
 - 配置注入脚本只部署 `AGENTS.md` 和扫描现行 Skills 生成注册项，不复制、删除或覆盖 `/Users/jobs/.agents/skills`。
 - 已替代（`superseded`，2026-09-13）：`JobsCodexConfigs/skills` 作为 Skills 标准源并部署到运行态的旧方向不再使用。
 

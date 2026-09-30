@@ -4,10 +4,11 @@ status: active
 scope: jobs-ios-repos
 repositories:
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo
+  - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo
   - /Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
 created: 2026-07-15
-updated: 2026-09-13
+updated: 2026-09-26
 tags:
   - codex-memory
   - project
@@ -340,5 +341,28 @@ tags:
 - `JobsSwiftMarkdown` 与 `JobsOCMarkdown` 的 `JobsMarkdownPackager.rb` 不能依赖终端 `LANG` / `LC_ALL`。Xcode Build Phase 可能以 `US-ASCII` / `ASCII-8BIT` 标记中文文件系统路径，最终在清单 JSON 生成时触发 `incompatible character encodings: ASCII-8BIT and UTF-8`，外层仅表现为 `Command PhaseScriptExecution failed with a nonzero exit code`。
 - 打包器必须在项目根路径、构建输出路径、扫描结果、相对路径和项目名进入业务逻辑前主动规范为有效 UTF-8，并用 UTF-8 模式写入 `manifest.json`；无效字节要明确报错，不能静默吞掉。
 - 回归至少包含 `env -i PATH='/usr/bin:/bin:/usr/sbin:/sbin'` 下的打包器测试，以及对应 workspace 的模拟器构建；涉及真机失败时继续执行真实设备构建，不能只在带 UTF-8 locale 的终端环境验证。
+
+## 四十九、四端真机 IPA 留存
+
+- 来源：用户于 2026-09-25 明确确认；状态：confirmed。Swift 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、SwiftUI 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`、OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 与 OC 老工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 的主 App target 都在 Xcode 构建完成后自动筛选 `iphoneos` 产物。
+- 四侧统一由各自 `ScriptsByDevTools/save_device_ipa_after_build.sh` 生成标准 `Payload/<App>.app` 结构的 `.ipa`，输出到各自工程根目录的 Git 忽略 `build/`，同名文件每次覆盖；模拟器 `iphonesimulator` 构建、Widget、Tests 不进入留存流程。
+- 留存脚本必须校验 Xcode 提供的签名身份，并对临时 IPA 快照执行签名和 `codesign --verify --deep --strict` 校验；不能只把未经签名校验的 `.app` 复制到 `build/`。
+- 如果 Xcode 产出的 `.app` 已通过完整签名校验，脚本必须原样保留其 `application-identifier`、Team ID、`get-task-allow` 等签名元数据，禁止无条件使用 `codesign --deep --entitlements` 重签导致安装校验失败；只有未签名快照才允许走保留元数据的补签分支。
+
+- Swift 主 App 的 `Save Device IPA` 阶段不得将整个 `$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)` 声明为输入，否则可能与 App 签名、扩展或嵌入测试包形成依赖循环；输入保留脚本文件，末尾执行与 IPA 留存逻辑不变。来源：2026-09-26 用户构建报错及本地构建图排查，修复后 `build-for-testing` 通过；真机签名打包未执行。
+
+## 五十、语言学习 Demo 分类与迁移顺序
+
+- 来源：用户于 2026-09-25 明确确认；状态：已确认；适用范围：Swift Demo 及后续 OC 新旧工程迁移；创建 / 更新时间：2026-09-25。
+- Swift Demo 根页面新增通用“语言学习”Section，首项为“俄语点读”，后续朝鲜语、日语等独立 Demo 归入同一分类。
+- 先在 Swift 侧做出效果供用户查看，后续再移植到 OC 新、老工程；本阶段不提前修改 OC。
+- 俄语的单独元音、单独辅音与辅音元音组合均须支持点读；手机默认分组点读，并可切换完整矩阵。
+
+## 五十一、安装与构建挂载脚本的 README 归属
+
+- 来源：用户于 2026-09-26 明确要求；状态：confirmed；适用范围：本笔记仓库映射中的 OC 新工程、OC 老工程和 Swift 工程；创建 / 更新时间：2026-09-26。
+- 各项目根 README 记录实际挂载的安装与构建脚本：Swift 放在“项目配置支持”，OC 新旧工程放在“特色一览”。用户进一步明确：以后凡新增或修改 `pod install` 外援脚本、Xcode 编译后挂载脚本及其调用配置，都必须在同一任务更新对应 README；移除挂载时同步修正说明，不能只更新脚本目录 README。
+- 规则主归属为现行 JobsSkills 的 `jobs-podspec/SKILL.md` 1.6.2 节，`jobs-swift` 和 `jobs-objective-c-pods` 保留强制同步入口；交付前对账脚本行为、挂载配置、文档与相对链接。
+- 按真实入口区分安装前置任务、安装完成后的钩子、Build Phases 与 Scheme 构建后动作，并记录行为、产物、日志和失败边界；各仓挂载差异据实说明，不把目录内未挂载的脚本写成自动执行能力。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
