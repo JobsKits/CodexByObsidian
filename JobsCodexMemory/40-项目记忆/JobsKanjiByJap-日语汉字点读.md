@@ -1,13 +1,15 @@
 ---
 type: project-memory
 status: active
-scope: JobsKanji
+scope: JobsKanjiByJap
 source: 用户于 2026-09-30 提出日语汉字学习软件需求；工程事实经本机验证
 created: 2026-09-30
 updated: 2026-10-01
 ---
 
-# JobsKanji 日语汉字点读
+# JobsKanjiByJap 日语汉字点读
+
+- 用户于 2026-10-01 明确将工程统一更名为 `JobsKanjiByJap`，目录、源码包 `jobs_kanji_by_jap`、界面、配置和双平台产物同步；远端不改。
 
 ## 一、已确认需求
 
@@ -15,11 +17,11 @@ updated: 2026-10-01
 - 展示日语汉字的多读音、释义与例句，例句汉字上方红字振假名，点击读音可播放。
 - 用户希望全部覆盖；这仍是目标，不等于当前数据已全部满足。
 - 用户在本会话明确要求只有中日互译，不需要英文解释；学习页面的字义、词义、词性及例句译文不得用英文兜底。
-- 用户明确指出黑色阅读背景难看且影响辨读；本项目采用暖白背景、白色卡片和深色正文，系统深色模式下也必须覆盖滚动视口、弹窗、下拉菜单的背景与文字配色。
+- superseded：此前固定暖白方案被用户进一步要求的三态主题替代。现行要求为日间 / 夜间 / 跟随系统开关，保存选择并即时更新；日间暖白深色文字，夜间深灰浅色文字，红色振假名、滚动区、弹窗与下拉菜单均需清晰可读。首次默认日间。
 
 ## 二、工程事实与边界
 
-- 工程路径：`/Users/jobs/Desktop/JobsKanji.py`，内层 `JobsKanji`。
+- 工程现路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/语言学习.py/JobsKanjiByJap.py`，内层 `JobsKanjiByJap`；用户于 2026-10-01 从桌面迁移，远端为 `git@github.com:JobsKits/JpKanji.git`。旧桌面路径已失效。
 - PySide6 原生 UI、SQLite 离线词库、QTextToSpeech 系统日语语音、PyInstaller 本机分平台打包。
 - 当前 KANJIDIC2 13,108 字、JMdict 218,844 词条、26,269 条不同 Tatoeba 例句；来源校验见 assets/coverage.json。
 - 原库有 751 字没有读音，2,724 字没有英文释义，7,092 字没有匹配 JMdict 词条；不能宣称完整覆盖所有日语汉字及读法。
@@ -28,7 +30,7 @@ updated: 2026-10-01
 - 预制汉字中文显示记录 13,108 条：9,271 条可显示中文辅助译文，1,113 条显示中文待校对，2,724 条原库无释义。机器译文尚未全量人工审校，不得描述为权威日汉词典全覆盖。
 - 例句属于词义，不保证覆盖词语全部读法；自动振假名由 Sudachi 生成，可能有歧义。保留词条写法 / 读法 / 义项限制，不把熟字训强拆为单字读音。
 - 词典派生数据遵守 EDRDG CC BY-SA 4.0；Tatoeba 保留来源链接；许可证与归属在 assets/NOTICE.txt。
-- 已通过 10 项单测、中文界面扫描、后台翻译控件销毁验证；macOS arm64 APP 内置模型已验证独立推理。保留既有日语语音与红字振假名能力。最新产物由桌面外层 JobsKanji.app 链接指向对应 dist 时间戳目录。
+- 已通过 10 项单测、中文界面扫描、后台翻译控件销毁验证；macOS arm64 APP 内置模型已验证独立推理。保留既有日语语音与红字振假名能力。最新产物由桌面外层 JobsKanjiByJap.app 链接指向对应 dist 时间戳目录。
 - Windows 只有构建入口和静态检查，未真机打包或运行；未做 Intel 构建、Apple 公证或发行签名。
 
 ## 三、维护入口
@@ -36,3 +38,7 @@ updated: 2026-10-01
 - 外层 README.md、验证结果.txt；内层 scripts/build_catalog.py 更新数据，scripts/build.py 打包。
 - forms(word_id) 索引必须保留，否则关联词语筛选会卡住 UI。
 - 后续重点是中文机器译文人工校对、补齐缺失读音及逐音例句；不得恢复英文学习界面，也不得用自动编造数据冒充词典事实。
+
+- Git 管理边界：catalog.sqlite 与 model.bin 保留本地并忽略，不进入源码提交；JobsKanjiByJap.app 链接、dist、work 亦忽略。README 记录克隆后下载校验模型、重建词库的流程。
+
+- 用户于 2026-10-01 确认：语言学习各独立子仓统一保留根目录 `showMeNow.mp4`，README 提供本地视频链接；GitHub 内嵌播放器使用上传后生成的独立附件 URL，不使用相对路径 `<video>`。上传附件不等于提交或推送 README。

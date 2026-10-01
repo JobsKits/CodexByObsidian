@@ -7,8 +7,9 @@ repositories:
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo
   - /Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
+  - /Users/jobs/Desktop/JobsLanguageLearning
 created: 2026-07-15
-updated: 2026-09-26
+updated: 2026-10-01
 tags:
   - codex-memory
   - project
@@ -342,14 +343,18 @@ tags:
 - 打包器必须在项目根路径、构建输出路径、扫描结果、相对路径和项目名进入业务逻辑前主动规范为有效 UTF-8，并用 UTF-8 模式写入 `manifest.json`；无效字节要明确报错，不能静默吞掉。
 - 回归至少包含 `env -i PATH='/usr/bin:/bin:/usr/sbin:/sbin'` 下的打包器测试，以及对应 workspace 的模拟器构建；涉及真机失败时继续执行真实设备构建，不能只在带 UTF-8 locale 的终端环境验证。
 
-## 四十九、四端真机 IPA 留存
+## 四十九、五端 iOS 一次性构建产物
 
-- 来源：用户于 2026-09-25 明确确认；状态：confirmed。Swift 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、SwiftUI 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`、OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 与 OC 老工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 的主 App target 都在 Xcode 构建完成后自动筛选 `iphoneos` 产物。
-- 四侧统一由各自 `ScriptsByDevTools/save_device_ipa_after_build.sh` 生成标准 `Payload/<App>.app` 结构的 `.ipa`，输出到各自工程根目录的 Git 忽略 `build/`，同名文件每次覆盖；模拟器 `iphonesimulator` 构建、Widget、Tests 不进入留存流程。
+- 已替代（`superseded`，2026-10-01）：2026-09-25 的“四端仅筛选真机、以 App 产品名命名并同名覆盖、跳过模拟器”策略，由下述五端工作流替代。
+- 当前决策：来源为用户于 2026-10-01 明确要求及同轮命名修正；状态：confirmed；适用范围为 Swift 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、SwiftUI 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`、OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`、OC 老工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 和 `/Users/jobs/Desktop/JobsLanguageLearning`；创建：2026-09-25，更新：2026-10-01。
+- 各自主 App 最后一个 `Save Build IPA` 阶段调用 `ScriptsByDevTools/save_device_ipa_after_build.sh`，保留标准 `Payload/<App>.app` 结构；真机固定输出 `build/真机.ipa`，模拟器固定输出 `build/模拟器.ipa`。不带项目名、`@` 或历史时间戳。
+- 在 build 外的临时目录完成快照与压缩，成功后清空 build 全部内容（含隐藏文件、子目录和另一平台的包），再写入本次唯一产物；签名或压缩失败不提前清理旧产物。模拟器允许 `CODE_SIGNING_ALLOWED=NO`，其 IPA 仅是模拟器 App 快照，不能安装到真机或用于正式分发。
+- build 仅保存一次性产物；DerivedData、源 App 和构建中间目录必须在 build 外。脚本拒绝清理软链接 build 或含当前构建工作路径的 build。主 App 阶段输入只声明脚本，输出声明 build 目录，避免整个 App 输入造成签名 / 扩展 / 测试依赖循环；clean、Tests 和 Widget 不独立输出，测试重建主 App 时仍更新主 App 产物。
+- 五个工程根 README 必须同步完整工作流、命名、清理范围、签名、模拟器使用边界及日志；没有说明的工程补齐。语言学习工程的初始工程生成器也保留该 Build Phase，README 的 DerivedData 示例放到根 `DerivedData/`，并由 `.gitignore` 排除。
 - 留存脚本必须校验 Xcode 提供的签名身份，并对临时 IPA 快照执行签名和 `codesign --verify --deep --strict` 校验；不能只把未经签名校验的 `.app` 复制到 `build/`。
 - 如果 Xcode 产出的 `.app` 已通过完整签名校验，脚本必须原样保留其 `application-identifier`、Team ID、`get-task-allow` 等签名元数据，禁止无条件使用 `codesign --deep --entitlements` 重签导致安装校验失败；只有未签名快照才允许走保留元数据的补签分支。
 
-- Swift 主 App 的 `Save Device IPA` 阶段不得将整个 `$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)` 声明为输入，否则可能与 App 签名、扩展或嵌入测试包形成依赖循环；输入保留脚本文件，末尾执行与 IPA 留存逻辑不变。来源：2026-09-26 用户构建报错及本地构建图排查，修复后 `build-for-testing` 通过；真机签名打包未执行。
+- `Save Build IPA` 的整个 App 输入禁令沿用 2026-09-26 Swift 构建图排查结论，并于 2026-10-01 同步五端。验证：五份脚本一致、Shell / 工程语法通过，隔离夹具完成双平台切换、实际 Payload 压缩解包、隐藏项与子目录清理、失败保留及临时快照清理；真机分支使用 ad-hoc 夹具核验原签名保留，不代表开发者证书 / 真机安装验收；未执行五工程全量构建。
 
 ## 五十、语言学习 Demo 分类与迁移顺序
 
