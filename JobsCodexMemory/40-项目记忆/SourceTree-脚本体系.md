@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-09-30
+updated: 2026-10-02
 tags:
   - codex-memory
   - project
@@ -77,5 +77,7 @@ tags:
 - 已替代（`superseded`）：逐层推送脚本遇到任何游离 HEAD 一律停止的旧行为；目标不明确、fetch 失败、冲突或未完成操作仍停止。
 
 - 来源：用户确认远端存在本地没有的提交时必须先拉取，最终同步结果要求本地与远端一致。正常分支采用 fetch、提交本地改动、快进或合并远端、push、远端提交号核验；保留双方历史，不强推，合并冲突停止并保留现场。该规则替代此前正常分支不获取远端、直接 push 的行为。
+
+- 来源：用户于 2026-10-02 明确确认新增码云线路；逐层推送需同时覆盖已配置的 GitHub 与码云。每仓先获取并整合全部目标线路，再推送同一最终提交并逐条核验；全部成功才处理父仓，单线子仓保留兼容，不自动创建远端仓库。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
