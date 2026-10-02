@@ -9,7 +9,7 @@ repositories:
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
   - /Users/jobs/Desktop/JobsLanguageLearning
 created: 2026-07-15
-updated: 2026-10-01
+updated: 2026-10-02
 tags:
   - codex-memory
   - project
@@ -369,5 +369,11 @@ tags:
 - 各项目根 README 记录实际挂载的安装与构建脚本：Swift 放在“项目配置支持”，OC 新旧工程放在“特色一览”。用户进一步明确：以后凡新增或修改 `pod install` 外援脚本、Xcode 编译后挂载脚本及其调用配置，都必须在同一任务更新对应 README；移除挂载时同步修正说明，不能只更新脚本目录 README。
 - 规则主归属为现行 JobsSkills 的 `jobs-podspec/SKILL.md` 1.6.2 节，`jobs-swift` 和 `jobs-objective-c-pods` 保留强制同步入口；交付前对账脚本行为、挂载配置、文档与相对链接。
 - 按真实入口区分安装前置任务、安装完成后的钩子、Build Phases 与 Scheme 构建后动作，并记录行为、产物、日志和失败边界；各仓挂载差异据实说明，不把目录内未挂载的脚本写成自动执行能力。
+
+## 五十二、OC 新旧工程的 Git 仓库关系
+
+- 来源：用户于 2026-10-02 明确确认，并经本地 Git 核验；状态：已确认。
+- `/Users/jobs/Documents/Github/1/JobsOCBaseConfigDemo@ByPods` 与 `/Users/jobs/Documents/Github/1/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 属于同一 `JobsOCBaseConfigDemo` 仓库，分别使用 `byPods` 与 `main` 分支；建立新的托管副本时共用一个远程仓库，不拆成两个仓库。
+- Xcode 运行态 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets` 也在码云同步范围内；与配置子仓 `JobsCodeSnippets` 按仓库身份去重，保持两处本地副本可同步同一远程。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
