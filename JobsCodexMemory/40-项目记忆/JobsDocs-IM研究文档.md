@@ -23,14 +23,14 @@ tags:
 
 > 仅记录用户已确认的研究范围，避免后续继续维护时退回单道面试题。
 
-## 一、项目与入口
+## 一、项目与入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 仓库：`/Users/jobs/Documents/Github/JobsDocs`。
 - 工作目录：`/Users/jobs/Documents/Github/JobsDocs/iOS相关的文档和资料.md`。
 - 总册：`iOS IM开发研究手册.md/iOS IM开发研究手册.md`。
 - 消息入库与 SQL 原文：`iOS IM消息入库架构与SQL面试手册.md/iOS IM消息入库架构与SQL面试手册.md`。
 
-## 二、已确认的范围
+## 二、已确认的范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 用户明确要求面向完整的 iOS IM 开发开展研究，文档尽可能完备；此前“大量消息如何插入数据库”的面试问题只是其中一个方面。
 - 后续维护应以完整研发体系组织内容，不把数据库入库或面试答题作为整套文档的唯一主线；保留原问题作为数据库专题案例。

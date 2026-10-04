@@ -7,11 +7,11 @@ created: 2026-09-30
 updated: 2026-10-01
 ---
 
-# JobsKanjiByJap 日语汉字点读
+# <span id="前言">JobsKanjiByJap 日语汉字点读</span>
 
 - 用户于 2026-10-01 明确将工程统一更名为 `JobsKanjiByJap`，目录、源码包 `jobs_kanji_by_jap`、界面、配置和双平台产物同步；远端不改。
 
-## 一、已确认需求
+## 一、已确认需求 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - Python 工程放在系统桌面，分别支持 macOS / Windows 打包。
 - 展示日语汉字的多读音、释义与例句，例句汉字上方红字振假名，点击读音可播放。
@@ -19,7 +19,7 @@ updated: 2026-10-01
 - 用户在本会话明确要求只有中日互译，不需要英文解释；学习页面的字义、词义、词性及例句译文不得用英文兜底。
 - superseded：此前固定暖白方案被用户进一步要求的三态主题替代。现行要求为日间 / 夜间 / 跟随系统开关，保存选择并即时更新；日间暖白深色文字，夜间深灰浅色文字，红色振假名、滚动区、弹窗与下拉菜单均需清晰可读。首次默认日间。
 
-## 二、工程事实与边界
+## 二、工程事实与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 工程现路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/语言学习.py/JobsKanjiByJap.py`，内层 `JobsKanjiByJap`；用户于 2026-10-01 从桌面迁移，远端为 `git@github.com:JobsKits/JpKanji.git`。旧桌面路径已失效。
 - PySide6 原生 UI、SQLite 离线词库、QTextToSpeech 系统日语语音、PyInstaller 本机分平台打包。
@@ -33,7 +33,7 @@ updated: 2026-10-01
 - 已通过 10 项单测、中文界面扫描、后台翻译控件销毁验证；macOS arm64 APP 内置模型已验证独立推理。保留既有日语语音与红字振假名能力。最新产物由桌面外层 JobsKanjiByJap.app 链接指向对应 dist 时间戳目录。
 - Windows 只有构建入口和静态检查，未真机打包或运行；未做 Intel 构建、Apple 公证或发行签名。
 
-## 三、维护入口
+## 三、维护入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 外层 README.md、验证结果.txt；内层 scripts/build_catalog.py 更新数据，scripts/build.py 打包。
 - forms(word_id) 索引必须保留，否则关联词语筛选会卡住 UI。
@@ -42,3 +42,5 @@ updated: 2026-10-01
 - Git 管理边界：catalog.sqlite 与 model.bin 保留本地并忽略，不进入源码提交；JobsKanjiByJap.app 链接、dist、work 亦忽略。README 记录克隆后下载校验模型、重建词库的流程。
 
 - 用户于 2026-10-01 确认：语言学习各独立子仓统一保留根目录 `showMeNow.mp4`，README 提供本地视频链接；GitHub 内嵌播放器使用上传后生成的独立附件 URL，不使用相对路径 `<video>`。上传附件不等于提交或推送 README。
+
+<a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
