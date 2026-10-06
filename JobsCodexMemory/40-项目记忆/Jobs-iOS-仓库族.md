@@ -9,7 +9,7 @@ repositories:
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
   - /Users/jobs/Desktop/JobsLanguageLearning
 created: 2026-07-15
-updated: 2026-10-03
+updated: 2026-10-06
 tags:
   - codex-memory
   - project
@@ -342,12 +342,16 @@ tags:
 - `JobsSwiftMarkdown` 与 `JobsOCMarkdown` 的 `JobsMarkdownPackager.rb` 不能依赖终端 `LANG` / `LC_ALL`。Xcode Build Phase 可能以 `US-ASCII` / `ASCII-8BIT` 标记中文文件系统路径，最终在清单 JSON 生成时触发 `incompatible character encodings: ASCII-8BIT and UTF-8`，外层仅表现为 `Command PhaseScriptExecution failed with a nonzero exit code`。
 - 打包器必须在项目根路径、构建输出路径、扫描结果、相对路径和项目名进入业务逻辑前主动规范为有效 UTF-8，并用 UTF-8 模式写入 `manifest.json`；无效字节要明确报错，不能静默吞掉。
 - 回归至少包含 `env -i PATH='/usr/bin:/bin:/usr/sbin:/sbin'` 下的打包器测试，以及对应 workspace 的模拟器构建；涉及真机失败时继续执行真实设备构建，不能只在带 UTF-8 locale 的终端环境验证。
+- 补充来源：2026-10-06 OC 自建 Pod 升级的生产实现与实测；状态：verified；补充创建 / 更新：2026-10-06。适用工程：OC 新项目 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 与 OC 老项目 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo`；本次生成树隔离补充只覆盖这两侧。
+- 两侧 `JobsMarkdownPackager.rb` 永久排除路径组件 `Products`、`Intermediates`、固定输出 `JobsMarkdownDocuments.bundle`，以及项目根相对生成前缀 `work/JobsPodsStability/full`，防止重新扫描既有构建产物或文档 bundle 而递归打包。文档扫描与引用资源拷贝共用同一 canonical 过滤规则；不能用一次性环境变量代替生产过滤。
+- 仅排除上述明确生成树，不按 `work/` 名称泛排整个目录；其它位置的真实文档、JSON 证明资源、中文路径与本地图片继续保留。回归同时验证生成目录拒入与真实源留存、连续两次打包清单及资源字节稳定。
+- 验证基线：44 项实际 Ruby 断言全部通过，OC 新旧主工程 Debug / Release 构建实际成功；新工程 D0 两配置文档重建均通过源文档字节一致性检查。
 
 ## 四十九、五端 iOS 一次性构建产物 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 已替代（`superseded`，2026-10-01）：2026-09-25 的“四端仅筛选真机、以 App 产品名命名并同名覆盖、跳过模拟器”策略，由下述五端工作流替代。
 - 当前决策：来源为用户于 2026-10-01 明确要求及同轮命名修正；状态：confirmed；适用范围为 Swift 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、SwiftUI 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`、OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`、OC 老工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 和 `/Users/jobs/Desktop/JobsLanguageLearning`；创建：2026-09-25，更新：2026-10-01。
-- 各自主 App 最后一个 `Save Build IPA` 阶段调用 `ScriptsByDevTools/save_device_ipa_after_build.sh`，保留标准 `Payload/<App>.app` 结构；真机固定输出 `build/真机.ipa`，模拟器固定输出 `build/模拟器.ipa`。不带项目名、`@` 或历史时间戳。
+- 各自主 App 最后一个 `Save Build IPA` 阶段调用 IPA 留存脚本（2026-10-05 迁移范围与现行路径见 [[#五十五、ScriptsByDevTools 的 command 包结构|ScriptsByDevTools 包结构]]），保留标准 `Payload/<App>.app` 结构；真机固定输出 `build/真机.ipa`，模拟器固定输出 `build/模拟器.ipa`。不带项目名、`@` 或历史时间戳。
 - 在 build 外的临时目录完成快照与压缩，成功后清空 build 全部内容（含隐藏文件、子目录和另一平台的包），再写入本次唯一产物；签名或压缩失败不提前清理旧产物。模拟器允许 `CODE_SIGNING_ALLOWED=NO`，其 IPA 仅是模拟器 App 快照，不能安装到真机或用于正式分发。
 - build 仅保存一次性产物；DerivedData、源 App 和构建中间目录必须在 build 外。脚本拒绝清理软链接 build 或含当前构建工作路径的 build。主 App 阶段输入只声明脚本，输出声明 build 目录，避免整个 App 输入造成签名 / 扩展 / 测试依赖循环；clean、Tests 和 Widget 不独立输出，测试重建主 App 时仍更新主 App 产物。
 - 五个工程根 README 必须同步完整工作流、命名、清理范围、签名、模拟器使用边界及日志；没有说明的工程补齐。语言学习工程的初始工程生成器也保留该 Build Phase，README 的 DerivedData 示例放到根 `DerivedData/`，并由 `.gitignore` 排除。
@@ -368,11 +372,40 @@ tags:
 - 各项目根 README 记录实际挂载的安装与构建脚本：Swift 放在“项目配置支持”，OC 新旧工程放在“特色一览”。用户进一步明确：以后凡新增或修改 `pod install` 外援脚本、Xcode 编译后挂载脚本及其调用配置，都必须在同一任务更新对应 README；移除挂载时同步修正说明，不能只更新脚本目录 README。
 - 规则主归属为现行 JobsSkills 的 `jobs-podspec/SKILL.md` 1.6.2 节，`jobs-swift` 和 `jobs-objective-c-pods` 保留强制同步入口；交付前对账脚本行为、挂载配置、文档与相对链接。
 - 按真实入口区分安装前置任务、安装完成后的钩子、Build Phases 与 Scheme 构建后动作，并记录行为、产物、日志和失败边界；各仓挂载差异据实说明，不把目录内未挂载的脚本写成自动执行能力。
+- 2026-10-05 用户明确将 [[啄木鸟维修平台#六、Xcode 手动依赖安装入口|啄木鸟手动安装入口]] 扩展到本笔记映射中的 OC 新旧工程、Swift 工程和 `/Users/jobs/Documents/Github/语言学习/原生iOS版本`，并要求相应根 README 写入合适章节；状态：confirmed。每个工程使用独立 `ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/` 包和工程文件引用，保留系统打开终端、回车确认、相对项目定位、现有 `pod` 检查、完整日志及真实退出码，不增加自动构建动作。
+- 当前用户 Xcode Behaviors 分别为 `🫘OC 新工程 · Pod Install`、`🫘OC 老工程 · Pod Install`、`🫘Swift 基础工程 · Pod Install`、`🫘语言学习 iOS · Pod Install`；每项固定绑定对应工程脚本，与当前窗口无关。用户设置不随工程迁移，换电脑或移动路径后须重新选择脚本；四个入口日志名分别为 `jobs-oc-new-pod-install.log`、`jobs-oc-old-pod-install.log`、`jobs-swift-base-config-pod-install.log`、`language-learning-pod-install.log`，均在系统临时目录。
+- 本轮验证：现有工程对象和构建阶段保留、语法与相对链接有效、四工程隔离假 `pod` 接入验证通过，四个 Behaviors 已在实际 Xcode 菜单核验；未执行真实 `pod install` 或构建。OC 根 README 位于“特色一览”2.7，Swift 位于“项目配置支持”第 10 节，原生语言学习位于“运行方式”2.1；语言学习初始工程生成器同时保留这些展示引用。
 
 ## 五十二、OC 新旧工程的 Git 仓库关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-02 明确确认，并经本地 Git 核验；状态：已确认。
 - `/Users/jobs/Documents/Github/1/JobsOCBaseConfigDemo@ByPods` 与 `/Users/jobs/Documents/Github/1/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 属于同一 `JobsOCBaseConfigDemo` 仓库，分别使用 `byPods` 与 `main` 分支；建立新的托管副本时共用一个远程仓库，不拆成两个仓库。
 - Xcode 运行态 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets` 也在码云同步范围内；与配置子仓 `JobsCodeSnippets` 按仓库身份去重，保持两处本地副本可同步同一远程。
+
+## 五十三、四端 Debug 调试面板 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-05 明确要求并追加 SwiftUI 工程；状态：confirmed；创建 / 更新时间：2026-10-05；适用范围：本笔记仓库映射中的 OC 新工程、OC 老工程、Swift 工程和 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`。
+- `JobsDebugPanel` 在 OC 新工程与 Swift 工程下沉为本地 Pod；OC 老工程将同一源码、资源和 Demo 直接集成于主工程，保持同一功能标准。
+- 面板仅在 Debug 出现。最前方入口为圆形 UIButton，只用背景图；点击进入表格工具页，长按仅关闭本次运行的入口，重启 App 自动恢复。
+- AppDelegate 配置默认环境功能，环境模型承载 URL 和备注，一级工具页进入二级环境选择页；切换必须连接到实际网络请求配置。
+- 自定义功能用专用模型封装 Cell 标题、可选图片和点击行为，通过点语法链式 DSL 注册，按配置先后展示；四个 Demo 都要实现并完成编译验证。
+- SwiftUI 工程使用独立的 SwiftUI 本地 Pod，界面和导航用 SwiftUI 实现，不能直接复用 UIKit 面板替代。
+- 用户于 2026-10-05 追加确认：调试面板的主题与入口拖动问题必须同步修复 OC 新旧、Swift UIKit、SwiftUI 及啄木鸟 iOS 的五处副本。菜单、环境页和已打开页面都跟随宿主的有效主题；UIKit 宿主的 App 外观与系统外观可能不同，必须覆盖两者错配。入口可拖动且保持点击打开、长按仅本次隐藏和重启恢复，拖动不能误触这两种动作；不能为框架另造与宿主脱节的主题状态。
+- 用户于 2026-10-05 再次确认：圆形 bug 入口点击打开调试面板，再次点击应退出本次调试导航并返回打开前的宿主页面；菜单、环境二级页及自定义工具详情统一遵循此行为。独立 Demo 也纳入宿主主题适配，检查原生 Cell 背景、文字、选中态和附件，不能仅适配框架菜单。发现一处同类缺陷时统一核查上述五处集成，并先从保留对话和本节核对范围；不把尚未集成框架的工程列为已修复。
+- 2026-10-05 验证基线：四端 Debug / 原生 Release 模拟器编译成功，环境选择、冷启动持久化、真实 GET、功能顺序和长按恢复实测通过。Swift UIKit 既有 Flutter 模块在模拟器 Release 验证中使用 `FLUTTER_BUILD_MODE=debug`，不等同于完整 Flutter Release 或签名真机包；本轮未验证真机 Release。成品 Swift Pod 已另用于 [[啄木鸟维修平台#四、前端环境切换|啄木鸟 iOS 调试入口替换]]。
+
+## 五十四、OC / Swift 自建 Pods 所有权与演进目标 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-05 分别在 OC、Swift 自建 Pods 审阅任务中明确确认；状态：confirmed；创建 / 更新时间：2026-10-05。
+- 适用工程：OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 的 `JobsByPods/` 下除 `ManualByOCPods@Pods/` 外，以及 Swift 工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo` 的 `JobsByPods/` 下除 `ManualBySwiftPods@Pods/` 外的一级 Pod，均为 Jobs 自建维护；目录中的第三方依赖本体、供应商和生成代码仍按全局边界排除。
+- 长期演进目标：程序向更强健、更稳定的方向发展；评估升级空间时以当前自维护实现与可验证行为为依据，区分必要修复、值得安排的加固和按需扩展，不因既往 AI 打磨记录推断实现已无缺陷。
+- 初始两次任务均授权为审阅，并在各工程根目录与 README.md 平行交付报告。用户于 2026-10-05 随后分别在 OC、Swift 两轮任务中明确授权全部自建 Pod 升级，要求同步每个 Pod README，按每个 Pod 小工程先编译，再编译完整大工程；只有大工程编译成功才算成功。该授权适用于这两轮已明确要求的升级，不外推为任意未来审阅均获批量修改授权；审阅推断、一次性问题清单和未完成验证不写成永久通过结论。
+
+## 五十五、ScriptsByDevTools 的 command 包结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-05 明确要求将 OC 新旧、Swift 基础工程、啄木鸟原生 iOS 与语言学习原生 iOS 的 `ScriptsByDevTools` 下 `.sh` 整理为 `.command + README.md`，并放入与完整 `.command` 文件名一致的目录；状态：confirmed；创建 / 更新：2026-10-05。
+- 适用工程：`/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`、`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo`、`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、`/Users/jobs/Documents/Github/啄木鸟维修平台/iOS`、`/Users/jobs/Documents/Github/语言学习/原生iOS版本`。
+- 五工程现行 IPA 入口均为 `ScriptsByDevTools/save_device_ipa_after_build.command/save_device_ipa_after_build.command`，同目录配套 `README.md`；主工程输入 / 调用、各根 README 和语言学习初始工程生成器同步此路径。该规则限定用户点名的 `ScriptsByDevTools`，不扩张迁移 `ScriptsByPods`、供应商或生成脚本。
+- 保留主 App 最后构建阶段和原 IPA 留存业务：明确识别 `XCODE_VERSION_ACTUAL` 与 `TARGET_BUILD_DIR` 后自动执行；终端入口先展示自述，回车后输入 `YES` 授权清理，取消或无法读取确认时直接退出，确认前不初始化日志。脚本共享同一内容，语法、引用、结构与临时夹具验证通过；未为目录迁移执行真实工程构建、安装或真机签名验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

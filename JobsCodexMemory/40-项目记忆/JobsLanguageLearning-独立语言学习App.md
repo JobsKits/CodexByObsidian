@@ -6,7 +6,7 @@ repository: /Users/jobs/Documents/Github/语言学习
 source: 2026-10-03 用户明确要求三端新增法语、西班牙语、朝鲜语拼读；架构与实现由当前工程核验
 confirmation: 用户确认新增语言范围；架构事实由工程核验
 created: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-05
 tags:
   - codex-memory
   - project
@@ -29,6 +29,7 @@ tags:
 ## 一、项目与来源边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 2026-10-04 用户明确移动端双向同步约束：iOS 出现的问题要在 Flutter 对应调整，Flutter 出现的问题也要在 iOS 对应调整；适用于搜索框位置、字号主次、列表布局等共同能力。
+- 来源：用户于 2026-10-04 在任务 `01a0ff33-3ef8-7300-a8e0-8b8c3c617620` 明确要求；状态：已确认；适用范围：iOS / Flutter 首页；创建 / 更新：2026-10-05。首页旗帜资源随应用本地打包：对应语言入口展示国旗，阿拉伯语展示用户指定的阿拉伯联盟旗帜，不使用运行时外链。会话完成记录报告两端已使用本地图片、iOS 模拟器构建与 Flutter 静态分析通过；页面视觉验收尚未完成。
 - 2026-10-04 用户要求德语提供与俄语同类的元音、辅音、组合拼读，覆盖原生 / Flutter / Python；原生使用 JobsGermanLearning 数据 Pod。首页现为八个入口，分级英语置顶；字母主字形应显著大于拉丁注音和 IPA。原生完整模拟器构建通过，Flutter analyzer / Python compileall 通过；页面和设备语音尚待验收。
 
 
@@ -50,12 +51,15 @@ tags:
 - 用户于 2026-10-01 明确主业务控制器不属于 Pod：语言学习页、详情页、Cell / View 及日语翻译桥接归 App 的 `Business`；俄法西朝课程 Pods 只保留课程模型，英语 / 日语 Pods 保存模型、Repository 与资源，公开数据接口与资源 bundle 所有者同步。2026-10-03 在 JobsLanguageCore 新增通用 `JobsLanguageSyllableCourse`，拉丁字母拼写组合、Unicode 韩文音节块及阿拉伯语字母与短元音符号共用课程模型；阿拉伯语课程由 App 配置，不增加专属课程 Pod。新语种复用 App 的拼读页面与选项页。UI 使用真实 JobsByUIKit 工厂、JobsSwiftDSL 链式配置、JobsCor / JobsFont 和 [**SnapKit**](https://github.com/SnapKit/SnapKit)。
 - 词库由 Repository actor 读取只读 SQLite；查询绑定参数、分页并过滤旧请求。播放队列按页面独占，离开页面 / 失去活跃状态停止，并丢弃取消后的旧回调。
 - 三态主题与按语种的语速、声音、重复次数、音量保存到沙盒。俄语页面快捷设置和通用设置使用同一存储。
+- 来源：2026-10-05 用户明确要求并纠正交互；状态：已确认；适用范围：原生 iOS / Flutter；创建 / 更新：2026-10-05。移动端首页右上角设置改为主题入口，点击后展开下拉列表，再选择白天 / 黑夜 / 跟随系统，当前项勾选；参照 Swift 基座主题下拉菜单的定位与样式，选择后保存并收起，点外部收起。此前“点击直接循环切换”的实现已被用户否定（superseded，以本条下拉列表要求为准）。学习说明功能移除；内页语音设置与页面发音提示保留。
 - 2026-10-01 用户要求一处主题异常按全局问题修复。当前公共按钮配置背景通过 `byLearningBackgroundColor` 绑定 JobsThemeCenter，禁用文字使用次级语义色；日语富文本同时监听 UIKit 与主题中心，在颜色更新后重建。6 项单元测试、iPhone / iPad 各 4 项页面流程及手机例句 / 弹窗补充通过，覆盖三态主题、俄语矩阵与辅音选择、英日详情、红色振假名、系统深色与横屏；截图和日志见工程验证记录。19 个来源 Jobs Pod 快照保持一致，未回写原 Swift / Python 工程。
 - 独立 App 的公共 `JobsLanguageBaseVC` 在 `viewDidAppear` 清除系统返回手势的默认代理限制，按导航栈深度启用屏幕边缘侧滑；根页面禁用。沿用原 Swift BaseVC 的处理，不修改来源快照或第三方导航框架。
 - 代码按 [[10-用户画像/长期偏好#十三、OC / Swift 代码可读性|OC / Swift 代码可读性偏好]] 提行缩进；执行范围仅新 App 自有代码，不批量改写来源工程。
 - 本次业务迁移和返回手势由 6 项单元测试、iPhone / iPad 各 5 项完整 UI 流程验证，新增用例实际从屏幕边缘拖动。58 份自有 Swift 正常提行缩进并通过语法检查；Skills 与 CodeSnippets 同步，第三方和 19 个来源快照保持原样。迁移目录时首轮 iPad 结果包保存中断，新位置复测成功，记录见工程验证记录。
 - 快照范围、语料来源和校验分别记录在 `dependency-snapshot.json` 与 `resource-provenance.json`，验证结果见根 `验证记录.md`。不得以语言迁移为由改第三方源码。
 - 用户于 2026-10-01 确认加入五端一次性构建产物工作流：主 App 末尾 `Save Build IPA` 输出 `build/真机.ipa` 或 `build/模拟器.ipa`，打包成功后先清空 build 全部内容再写入唯一新包；源 App / DerivedData 必须在 build 外。脚本、初始工程生成器和 README 同步，具体边界见 [[Jobs-iOS-仓库族#四十九、五端 iOS 一次性构建产物]]。
+
+- 来源：用户于 2026-10-05 明确要求；状态：confirmed；适用范围：`/Users/jobs/Documents/Github/语言学习/原生iOS版本`；创建 / 更新：2026-10-05。新增 `ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/` 手动安装包，工程与 `ScriptsByDevTools/generate_project.rb` 初始生成器保留展示引用；当前用户 Xcode 行为为 `🫘语言学习 iOS · Pod Install`，终端回车确认后安装，独立日志 `language-learning-pod-install.log`，不增加自动构建动作。根 README 在“运行方式”2.1 说明运行、日志和迁移；语法、工程完整性、隔离用例及菜单检查通过，未执行真实安装或构建。共用工作流与其它工程说明见 [[Jobs-iOS-仓库族#五十一、安装与构建挂载脚本的 README 归属|手动安装与 README 归属]]。
 
 ## 三、数据与设备边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

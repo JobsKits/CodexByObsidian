@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-03
+updated: 2026-10-06
 tags:
   - codex-memory
   - project
@@ -80,7 +80,10 @@ tags:
 - 来源：用户确认远端存在本地没有的提交时必须先拉取，最终同步结果要求本地与远端一致。正常分支采用 fetch、提交本地改动、快进或合并远端、push、远端提交号核验；保留双方历史，不强推，合并冲突停止并保留现场。该规则替代此前正常分支不获取远端、直接 push 的行为。
 
 - 来源：用户于 2026-10-02 明确确认新增码云线路；逐层推送需同时覆盖已配置的 GitHub 与码云。每仓先获取并整合全部目标线路，再推送同一最终提交并逐条核验；全部成功才处理父仓，单线子仓保留兼容，不自动创建远端仓库。
+- 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名统一为 `gitee`，对应本地跟踪分支和码云远程分支统一命名为 `gitee`；已有同名分支先核验，不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。
 
 - 来源：用户于 2026-10-02 明确要求逐层推送动作从 Sourcetree 打开独立 Terminal.app，以实时查看日志。Sourcetree 仅负责启动；终端回车确认后执行，游离态清理保留 YES 门禁，结束后保留结果与退出码。
+
+- 来源：用户于 2026-10-06 明确要求；状态：已确认；适用范围：逐层空白提交并推送脚本；创建 / 更新：2026-10-06。游离态舍弃的 `YES` 提示前必须逐项显示待处理子仓完整路径，不能仅报仓库数量；恢复分支和本次 fetch 固定的目标提交号一并展示并写入日志。应用与备灾两处脚本及 README 同步，继续按两份 `zsh -n` 和 `cmp` 验证。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

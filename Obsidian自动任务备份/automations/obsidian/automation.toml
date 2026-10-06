@@ -1,0 +1,15 @@
+version = 1
+id = "obsidian"
+kind = "cron"
+name = "Obsidian 每日记忆复盘"
+prompt = "每天凌晨 1 点（Asia/Shanghai）执行 Obsidian 永久记忆复盘。先读取并遵循 `/Users/jobs/.agents/skills/jobs-obsidian-memory/SKILL.md`、Vault 的 `00-记忆入口.md`、`90-系统/记忆协议.md`、`90-系统/同步状态.md`、长期偏好和工作流决策。以 `last_successful_review_at` 为起点，检查此后完成的 Codex 任务及 `~/.codex/memories` 中的新增线索；只提取用户明确确认、可复用的长期规划、稳定偏好、工作流决策或项目约束。先去重，再写入最具体的记忆文件并更新入口索引；追加当天 `50-每日复盘/YYYY/YYYY-MM-DD.md`，即使无新增也写明无新增和检查范围。只在全部完成并验证 Markdown 属性、Wiki 链接、内容去重后更新 `last_successful_review_at`、状态、增更数量和日期；任何步骤失败时保留原成功游标并记录阻断原因。仅修改 Obsidian Vault 内必要的记忆文件，不提交或推送 Git。"
+status = "ACTIVE"
+rrule = "FREQ=DAILY;BYHOUR=1;BYMINUTE=0;BYSECOND=0"
+model = "gpt-6.1-sol"
+reasoning_effort = "medium"
+notification_policy = "failed_runs_only"
+execution_environment = "local"
+target = { type = "project", project_id = "b73d4055-baf0-488c-81c0-a3e880751d4d" }
+cwds = ["/Users/jobs/Documents/Github/JobsGenesis"]
+created_at = 1791108261444
+updated_at = 1791108261444
