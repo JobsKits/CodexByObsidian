@@ -10,7 +10,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-15
+updated: 2026-10-16
 tags:
   - codex-memory
   - project
@@ -382,8 +382,8 @@ tags:
 
 ## 五十二、OC 新旧工程的 Git 仓库关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 来源：用户于 2026-10-02 明确确认，并经本地 Git 核验；状态：已确认。
-- `/Users/jobs/Documents/Github/1/JobsOCBaseConfigDemo@ByPods` 与 `/Users/jobs/Documents/Github/1/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 属于同一 `JobsOCBaseConfigDemo` 仓库，分别使用 `byPods` 与 `main` 分支；建立新的托管副本时共用一个远程仓库，不拆成两个仓库。
+- 来源：用户于 2026-10-02 明确确认，2026-10-16 再次确认现行路径与分支职责，并经只读 Git 核验；状态：已确认；更新：2026-10-16。
+- `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 使用 `main`，功能集成主工程；`/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 使用 `byPods`，功能下沉本地 Pod。两处是独立 Git 元数据的本地仓库，在 GitHub / Gitee 各平台内共用同一远端仓库地址，以 `main` / `byPods` 区分形态，不拆成两个远端仓库；旧 `/Github/1/` 路径已替代（`superseded`）。职责映射不表示两平台当前提交已一致，不能据此自动推送或重建远端分支。
 - Xcode 运行态 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets` 也在码云同步范围内；与配置子仓 `JobsCodeSnippets` 按仓库身份去重，保持两处本地副本可同步同一远程。
 
 ## 五十三、四端 Debug 调试面板 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -415,6 +415,7 @@ tags:
 ## 五十六、OC 新工程的 GitHub 完整历史与 Gitee 零点快照 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-07 明确要求同一工程文件夹中 GitHub 全跟踪，Gitee 以当前状态为零点；远端旧记录清理由用户处理，真实提交与推送由用户执行。状态：confirmed；创建 / 更新：2026-10-07；适用范围仅为 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`。
+- 2026-10-16 用户要求只读提炼原因并写入 Git Skill，不改当前代码；状态：confirmed。现有快照 README 记载旧历史与容量问题、Gitee 服务端 `Repo size ... exceeds quota` 拒绝，因此保留 GitHub 完整历史、Gitee 使用独立零点。未确认旧对象精确体积或当前平台配额，不作量化归因。
 - GitHub `origin` 继续使用 `byPods` 并保留全部原历史；Gitee `gitee` 使用本地 `Gitee@snapshot` 推到远端 `byPods`。首次快照无父提交，后续只延续快照父链，不合并 GitHub 与 Gitee 的提交历史；保留现有跟踪文件和忽略范围，包括当前依赖报告与 PNG。
 - 同日分支显示与命名调整（2026-10-07，confirmed）：用户要求去掉 Sourcetree 中的 `codex` 文件夹层，随后自行改名为 `Gitee@snapshot` 并明确要求维持该名，大小写和 `@` 必须保留，与 `byPods` 同级显示。旧名称 `codex/gitee-snapshot`、`gitee-snapshot` 均已取代（`superseded`）；改名保留已有快照提交，安装配置、推送映射与文档同步使用用户当前名称，远端目标仍为 `gitee/byPods`。
 - 快照分支名称属于可调整配置：通过随 `git branch -m` 移动的本地分支标记识别现有名称，旧版本用唯一快照根标记识别；自动同步不得因旧配置而重建已改名分支。改名后重新安装会沿用用户当前名、保留快照链并更新默认推送映射。Sourcetree 显式推送须选择 `Gitee@snapshot → byPods` 并关闭标签推送，不能用窗口自动填入的同名远端目标。
@@ -422,6 +423,7 @@ tags:
 - 同日使用流程补充（2026-10-07，confirmed）：开发、提交与拉取 GitHub 都保持检出 `byPods`；Sourcetree 推 Gitee 只在窗口选择快照源分支，无须检出快照。仅删除本地 remote-tracking 记录不等于服务器删除成功。
 - 同日删除权限纠正（2026-10-07，confirmed）：用户明确要求“只要是远端，我都要允许删除”。本工程本地 hook 放行所有远端引用的原生删除，包含分支、标签与多引用删除；纯删除不依赖工作区快照脚本，切换旧分支后也可执行。普通推送继续检查快照与目标。先前只允许删除 `byPods` 的本地限制已取代（`superseded`），不再按远端名、分支名或快照启用状态限制用户删除。远端实际操作仍由用户执行，Codex 不自动清理 `main` 或其它远端记录。
 - 本工程不使用“逐层空白提交并Push”通用动作去整合全部远端；使用 Sourcetree 原生推送窗口或明确 ref 映射。双远端推同一最终提交的旧要求在本工程内已被取代（`superseded`），其它仓库继续遵循 [[SourceTree-脚本体系#七、逐层空白提交推送的递归范围|SourceTree 通用双线路策略]]。
+- 2026-10-16 严格分支管理确认：旧工程工作分支 `main`，新工程工作分支 `byPods`；仅新工程允许现有发布分支 `Gitee@snapshot` 例外，不是额外开发分支。它复用已提交文件树、保留独立快照父链，远端目标仍是 `byPods`；不得套用通用 Gitee 目标 `gitee` 命名，也不新建同名远端分支或其它辅助本地分支。既有其它分支只读核验并报告，不擅自删除、改名或重写。规则归 `/Users/jobs/.agents/skills/jobs-git-repository/SKILL.md` 第 1.5 节。
 - 清空前同一 Gitee 远端还承载 OC 老工程的 `main`，不得由 Codex 默认列入清理范围。同日用户明确选择网页清空整个 Gitee 代码库并自行执行（2026-10-07，confirmed），该范围包含旧 `main`；重建时只推独立快照到 `byPods`，不自动把 GitHub 的 `main` 回推 Gitee。只读核对已确认 GitHub 的 `main` 与清空前 Gitee 的 `main` 提交相同，GitHub 原历史继续保留。操作已执行不等于服务端已成功恢复为空库，仍须核验实际结果。零点只切断以前历史，后续图像版本仍会累积容量。
 
 ## 五十七、马赛克实验室 App 与后续双语言 Pod 规划 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
