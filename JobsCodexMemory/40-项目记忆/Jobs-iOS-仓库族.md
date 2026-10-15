@@ -8,8 +8,9 @@ repositories:
   - /Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
   - /Users/jobs/Desktop/JobsLanguageLearning
+  - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-06
+updated: 2026-10-15
 tags:
   - codex-memory
   - project
@@ -203,7 +204,7 @@ tags:
 
 - 来源：用户于 2026-07-24 明确要求。OC 新、老工程是同一组能力的两种管理形态：新工程将相关功能拆为本地 Pod 管理，老工程将相关功能直接集成于主工程管理。
 - 每次调整任一 OC 工程中的 Jobs 自维护能力，都必须同步检查并更新两份根 `README.md` 与 `/Users/jobs/Library/Developer/Xcode/UserData/CodeSnippets` 中的相关代码块；覆盖新增、删除、重命名、公开 API、固定写法、Demo、资源、依赖和行为变化。
-- 两份根 README 的特色说明、能力矩阵、Demo 代码和使用边界保持一致，唯一固定差异是各自的工程形态说明。每份 README 只描述当前工程自身，不提及或比较另一份工程。
+- 2026-10-08 新确认：OC 新旧工程根 `README.md` 直接共用一份逐字相同的文档，数据库选型与高频 I/O 对比单元必须同步；README 不再保留“仅工程形态说明不同”的双版本差异。新工程使用本地 Pods、旧工程直接集成主工程的形态差异，统一写在同一份兼容双形态说明中。
 - 同步验收时，以源码、公开头和可运行 Demo 为 API 权威源；工程形态说明归一化后，两份 README 的对应章节必须一致，相关 `.codesnippet` 必须通过 `plutil -lint`。
 
 ## 二十八、三端录音与录像快门视觉 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -266,6 +267,8 @@ tags:
 - 三端 `Info.plist` 必须声明 `UIApplicationSupportsMultipleScenes = YES`，运行时仍以 `UIApplication.supportsMultipleScenes` 判断环境能力；完整多窗口交互优先在 iPad 环境验证。
 - Demo 中暂不支持、当前环境不可用或没有目标 Scene 的动作仍保持可点击，并通过 Toast 解释原因；真正调用系统能力后执行失败才使用 Alert。Swift 反馈必须绑定当前页面的 `view.window`，避免多 Scene 下把提示投递到错误窗口。
 - OC 新工程保留主工程 Demo + 现有本地 Pods 基座；OC 老工程继续直接集成主工程，不新增 Pod，并把新增 `.m` 纳入文件同步组的 target 编译清单。
+- 2026-10-15 用户明确要求：OC 新旧工程与 Swift UIKit 工程统一适配 Xcode 27 / iOS 27 SDK 的 Scene 生命周期要求，持续保留已有多窗口能力；`AppDelegate` 只做进程初始化，业务窗口、独立根控制器及开屏由所属 Scene 连接流程创建，不能仅保留 SceneDelegate 文件却继续复用全局窗口或根控制器。状态：confirmed；适用范围为本笔记三仓映射；创建 / 更新：2026-10-15。
+- 同日确认文档交付：在 `JobsDocs/iOS相关的文档和资料.md/` 下维护 `UIScene生命周期迁移与Xcode27启动适配.md/UIScene生命周期迁移与Xcode27启动适配.md`，用可编辑 Mermaid 时序图详细对照旧 AppDelegate 启动、新 Scene 冷启动，以及进程存活时的新建 / 重连 / 激活窗口；区分进程启动一次与每次窗口连接的执行边界。验证记录只写实际执行结果，不把配置或语法检查当运行验收。
 
 ## 三十八、三端 Demo 架构智慧可发现性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -325,6 +328,7 @@ tags:
 - 来源：用户于 2026-08-12 明确确认。OC 新工程与 OC 老工程的唯一架构差异是能力承载形态：新工程把 Jobs 自维护功能下沉到本地 Pod 集中管理，老工程把同一功能直接集成在主工程；两边不是不同产品，也不允许形成不同功能标准。
 - 用户只点名任一 OC 工程时，同一任务默认必须定位并同步另一工程的对应实现，即使用户忘记补充另一工程。同步范围包括 Jobs 自维护源码、公开 API、Demo、资源、行为、入口、README、工程文档和必要的工程引用。
 - 允许差异仅限集成形态：新工程使用 `JobsByPods/Pod名@Pods`、podspec、Podfile 和 Development Pods 装配；老工程使用主工程源码 / 资源目录、Xcode 文件引用、Build Phases 与 target membership。没有形态差异的对应文件应逐字一致；有形态差异的内容在归一化路径、模块化 import、聚合入口和工程引用后必须语义一致。
+- 2026-10-08 规则覆盖本节旧的 README 差异表述：两份 OC 根 README 必须字节级一致；同步验收使用 `cmp` 或 SHA-256 校验，任何仅出现在一侧的 README 改动都视为未完成。
 - 不把新工程 Pod 目录或 podspec 原样复制进老工程。一侧确实不适用时，只有第三方所有权、生成代码或语言边界等明确理由可以判定“无需修改”，并必须在交付中说明，不能静默漏掉另一侧。
 
 ## 四十七、自建 Pod 的中文架构说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -407,5 +411,30 @@ tags:
 - 适用工程：`/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`、`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo`、`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`、`/Users/jobs/Documents/Github/啄木鸟维修平台/iOS`、`/Users/jobs/Documents/Github/语言学习/原生iOS版本`。
 - 五工程现行 IPA 入口均为 `ScriptsByDevTools/save_device_ipa_after_build.command/save_device_ipa_after_build.command`，同目录配套 `README.md`；主工程输入 / 调用、各根 README 和语言学习初始工程生成器同步此路径。该规则限定用户点名的 `ScriptsByDevTools`，不扩张迁移 `ScriptsByPods`、供应商或生成脚本。
 - 保留主 App 最后构建阶段和原 IPA 留存业务：明确识别 `XCODE_VERSION_ACTUAL` 与 `TARGET_BUILD_DIR` 后自动执行；终端入口先展示自述，回车后输入 `YES` 授权清理，取消或无法读取确认时直接退出，确认前不初始化日志。脚本共享同一内容，语法、引用、结构与临时夹具验证通过；未为目录迁移执行真实工程构建、安装或真机签名验收。
+
+## 五十六、OC 新工程的 GitHub 完整历史与 Gitee 零点快照 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-07 明确要求同一工程文件夹中 GitHub 全跟踪，Gitee 以当前状态为零点；远端旧记录清理由用户处理，真实提交与推送由用户执行。状态：confirmed；创建 / 更新：2026-10-07；适用范围仅为 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`。
+- GitHub `origin` 继续使用 `byPods` 并保留全部原历史；Gitee `gitee` 使用本地 `Gitee@snapshot` 推到远端 `byPods`。首次快照无父提交，后续只延续快照父链，不合并 GitHub 与 Gitee 的提交历史；保留现有跟踪文件和忽略范围，包括当前依赖报告与 PNG。
+- 同日分支显示与命名调整（2026-10-07，confirmed）：用户要求去掉 Sourcetree 中的 `codex` 文件夹层，随后自行改名为 `Gitee@snapshot` 并明确要求维持该名，大小写和 `@` 必须保留，与 `byPods` 同级显示。旧名称 `codex/gitee-snapshot`、`gitee-snapshot` 均已取代（`superseded`）；改名保留已有快照提交，安装配置、推送映射与文档同步使用用户当前名称，远端目标仍为 `gitee/byPods`。
+- 快照分支名称属于可调整配置：通过随 `git branch -m` 移动的本地分支标记识别现有名称，旧版本用唯一快照根标记识别；自动同步不得因旧配置而重建已改名分支。改名后重新安装会沿用用户当前名、保留快照链并更新默认推送映射。Sourcetree 显式推送须选择 `Gitee@snapshot → byPods` 并关闭标签推送，不能用窗口自动填入的同名远端目标。
+- 工程入口为 `ScriptsByDevTools/gitee_snapshot.command/`，tracked hook 源位于 `.githooks/`；安装将入口复制到 Git 元数据目录并备份本地配置。源分支提交、合并、改写后自动同步已提交文件树，推送前拦截原历史、标签和过期快照；不切换工作区、不改暂存区、不自动推送。新克隆或迁移电脑须重新安装本地配置。
+- 同日使用流程补充（2026-10-07，confirmed）：开发、提交与拉取 GitHub 都保持检出 `byPods`；Sourcetree 推 Gitee 只在窗口选择快照源分支，无须检出快照。仅删除本地 remote-tracking 记录不等于服务器删除成功。
+- 同日删除权限纠正（2026-10-07，confirmed）：用户明确要求“只要是远端，我都要允许删除”。本工程本地 hook 放行所有远端引用的原生删除，包含分支、标签与多引用删除；纯删除不依赖工作区快照脚本，切换旧分支后也可执行。普通推送继续检查快照与目标。先前只允许删除 `byPods` 的本地限制已取代（`superseded`），不再按远端名、分支名或快照启用状态限制用户删除。远端实际操作仍由用户执行，Codex 不自动清理 `main` 或其它远端记录。
+- 本工程不使用“逐层空白提交并Push”通用动作去整合全部远端；使用 Sourcetree 原生推送窗口或明确 ref 映射。双远端推同一最终提交的旧要求在本工程内已被取代（`superseded`），其它仓库继续遵循 [[SourceTree-脚本体系#七、逐层空白提交推送的递归范围|SourceTree 通用双线路策略]]。
+- 清空前同一 Gitee 远端还承载 OC 老工程的 `main`，不得由 Codex 默认列入清理范围。同日用户明确选择网页清空整个 Gitee 代码库并自行执行（2026-10-07，confirmed），该范围包含旧 `main`；重建时只推独立快照到 `byPods`，不自动把 GitHub 的 `main` 回推 Gitee。只读核对已确认 GitHub 的 `main` 与清空前 Gitee 的 `main` 提交相同，GitHub 原历史继续保留。操作已执行不等于服务端已成功恢复为空库，仍须核验实际结果。零点只切断以前历史，后续图像版本仍会累积容量。
+
+## 五十七、马赛克实验室 App 与后续双语言 Pod 规划 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-12 技术讨论、问答与实现请求明确确认；状态：confirmed（需求与范围）；创建 / 更新时间：2026-10-12。当前工程路径：`/Users/jobs/Desktop/JobsMosaicLab`，入口 `JobsMosaicLab.xcworkspace`。
+- 早先“必须恢复真实原始内容”的保证口径已被同日甲方新需求更新（superseded）：只有单张已打码静态图，尽力重建、质量不保证、免费且不调用云端 AI 接口；用户明确允许本地开源模型，并确认不要求推理引擎开源，允许本地 Core ML。“无限逼近完美”保留为优化愿望，不写成已验收恢复率。
+- 早先“当前只讨论、立即双语言 Pod”的阶段口径已更新（superseded）：先实现桌面独立 Swift App，OC 以后再做；图像能力暂留 App 内、不下沉业务 Pod。未来要求 OC 与 Swift 各自语言实现，不以桥接包装冒充双版本。
+- App 第一组只有一个手动打码入口：相册选任意可解码静态图、画笔或矩形选区、生成打码图并新增保存相册；第二组演示多条传统 / AI 重建路线。用户看过蓝色选区后明确要求参考原 Swift 打码交互，功能一改为手势中显示真实像素化预览、块强度可调，不能让透明蒙层冒充打码结果。
+- UI 复用指定 Swift 基础工程 JobsByPods 的最小原样源码闭包，使用真实工厂与链式 DSL、SnapKit；Podfile 与 Podfile.deps 解耦，Xcode 左侧 Ruby 红钻展示已实检。原基础工程只读。
+- 已实现结构事实：两条传统方法（网格插值、保边平滑），一个真实 Real-ESRGAN compact 模型的完整 / 55%保守合成两策略；模型离线随包，不保留原图给重建入口回贴。输入长边最多2048 px，PNG新增保存不沿用源EXIF；这些是实验实现边界。
+- 实现基线由本地构建与测试确认：Debug模拟器、Release模拟器、Release iPhoneOS无签名编译及模拟器相册往返 / 四方法流程通过。真机签名运行、机型功耗 / 峰值内存与实际业务图片效果仍待验收，不能把模拟器和数值验证写成真实原图恢复保证。
+- 技术讨论文档继续保留三条条件不同的路线：原始资料精确恢复、单张 AI 重建、参考图或视频多帧辅助恢复；当前 App 只用单图，另两条仍是条件性方案。
+- 2026-10-13 根据用户主题与字号截图修正桌面 App：先配置 `MosaicTheme.json`，以窗口有效外观同步已有 JobsThemeCenter；导航用原生 BarButtonItem，列表高亮背景与前景成对更新。UIButton 颜色 transformer 必须保留 Jobs 字体 transformer，不能覆盖后退回系统大字号；操作标题13 pt、单行、紧凑内边距及等宽主按钮。分段禁用标题使用同层文字避开系统淡化；小屏画布按可用视口预留工具空间，底部取消完整可见的坐标断言通过。原始基础工程与73份复用源码均未修改。
+- 该整改已通过明暗 / 跟随系统真实入口切换、既有页面反复切换、iPhone 13 mini 最大系统字体下六个操作标题单行断言，以及完整相册往返 / 四方法回归。实际截图对比证据在桌面工程 `Tests/Validation/ThemeRuntimeContrast.json`；修复后的实体设备需重新Run验收，不将模拟器结果表述成真机验证。来源：同一用户任务，状态：verified（本地构建与模拟器验证）。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

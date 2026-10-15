@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-06
+updated: 2026-10-16
 tags:
   - codex-memory
   - project
@@ -28,10 +28,15 @@ tags:
 
 - 运行目录：`/Users/jobs/SourceTree.command`。
 - 备灾目录：`/Users/jobs/Documents/Github/JobsGenesis/SourceTree.command`。
+- 来源：用户于 2026-10-09 再次明确确认并要求记住；状态：已确认；适用范围：整个 `SourceTree.command` 运行目录。每次修改运行态，必须在同一任务中按相同相对路径同步到备份态，覆盖改动的脚本、`README.md` 和脚本行为文档；方向为运行态 → 备份态。
+- 来源：用户于 2026-10-16 明确要求保留唯一仓库副本并淘汰旧库，要求记住；状态：已确认；适用范围：`JobsGenesis` 内的 SourceTree 仓库位置与父子仓关系；创建 / 更新：2026-10-16。
+- `JobsGenesis` 内唯一保留的仓库副本为 `/Users/jobs/Documents/Github/JobsGenesis/SourceTree.command`；淘汰 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌲SourceTree.sh`，今后不得从备份或安装清单重新建立旧库。运行目录 `/Users/jobs/SourceTree.command` 继续保留，运行态 → 备灾态双位置同步规则继续有效。
+- 删除旧库必须同时移除直属父 [**Git**](https://git-scm.com/) 仓库的 `.gitmodules` 条目、索引中的 gitlink、本地 submodule 注册及旧 Git 元数据关联；不能只删除工作目录。
+- 两个本地仓库副本共用 `SourceTree.sh` 远端；保留 [**GitHub**](https://github.com/) / [**Gitee**](https://gitee.com/) 远端仓库及现有 URL。淘汰旧本地副本不代表授权删除远端仓库。
 
 ## 二、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 两份对应文件必须内容一致。
+- 用 `cmp` 或内容哈希核验两份对应文件完全一致。
 - 如果修改 `.command`，必须分别对运行副本与备灾副本执行 `zsh -n`。
 - 新增或修改 Sourcetree 脚本时，必须把动作实际写入当前用户 `actions.plist` 并完成重载验证；只生成脚本或 README 不算完成。
 - 当前用户 `actions.plist`、运行目录和备灾目录内的菜单配置必须同步，覆盖前生成带时间戳的可恢复备份。
@@ -80,6 +85,7 @@ tags:
 - 来源：用户确认远端存在本地没有的提交时必须先拉取，最终同步结果要求本地与远端一致。正常分支采用 fetch、提交本地改动、快进或合并远端、push、远端提交号核验；保留双方历史，不强推，合并冲突停止并保留现场。该规则替代此前正常分支不获取远端、直接 push 的行为。
 
 - 来源：用户于 2026-10-02 明确确认新增码云线路；逐层推送需同时覆盖已配置的 GitHub 与码云。每仓先获取并整合全部目标线路，再推送同一最终提交并逐条核验；全部成功才处理父仓，单线子仓保留兼容，不自动创建远端仓库。
+- 项目例外（2026-10-07，confirmed）：上述双线路同一提交要求仅在 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 内已被取代（`superseded`）。该工程 GitHub 保留 `byPods` 完整历史，Gitee 使用独立零点快照；不运行通用动作合并两条历史，改用原生推送窗口或明确映射。其它仓库的通用要求保留；详见 [[Jobs-iOS-仓库族#五十六、OC 新工程的 GitHub 完整历史与 Gitee 零点快照|OC 新工程双远端例外]]。
 - 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名统一为 `gitee`，对应本地跟踪分支和码云远程分支统一命名为 `gitee`；已有同名分支先核验，不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。
 
 - 来源：用户于 2026-10-02 明确要求逐层推送动作从 Sourcetree 打开独立 Terminal.app，以实时查看日志。Sourcetree 仅负责启动；终端回车确认后执行，游离态清理保留 YES 门禁，结束后保留结果与退出码。
