@@ -86,10 +86,18 @@ tags:
 
 - 来源：用户于 2026-10-02 明确确认新增码云线路；逐层推送需同时覆盖已配置的 GitHub 与码云。每仓先获取并整合全部目标线路，再推送同一最终提交并逐条核验；全部成功才处理父仓，单线子仓保留兼容，不自动创建远端仓库。
 - 项目例外（2026-10-07，confirmed）：上述双线路同一提交要求仅在 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 内已被取代（`superseded`）。该工程 GitHub 保留 `byPods` 完整历史，Gitee 使用独立零点快照；不运行通用动作合并两条历史，改用原生推送窗口或明确映射。其它仓库的通用要求保留；详见 [[Jobs-iOS-仓库族#五十六、OC 新工程的 GitHub 完整历史与 Gitee 零点快照|OC 新工程双远端例外]]。
-- 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名统一为 `gitee`，对应本地跟踪分支和码云远程分支统一命名为 `gitee`；已有同名分支先核验，不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。
+- 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名和码云远程目标分支统一为 `gitee`；不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。旧条目中“对应本地跟踪分支也统一为 `gitee`”已替代（`superseded`，2026-10-16），现按[单本地分支同步双平台](#single-local-branch)，不再创建或维护额外本地 `gitee` 分支。
 
 - 来源：用户于 2026-10-02 明确要求逐层推送动作从 Sourcetree 打开独立 Terminal.app，以实时查看日志。Sourcetree 仅负责启动；终端回车确认后执行，游离态清理保留 YES 门禁，结束后保留结果与退出码。
 
 - 来源：用户于 2026-10-06 明确要求；状态：已确认；适用范围：逐层空白提交并推送脚本；创建 / 更新：2026-10-06。游离态舍弃的 `YES` 提示前必须逐项显示待处理子仓完整路径，不能仅报仓库数量；恢复分支和本次 fetch 固定的目标提交号一并展示并写入日志。应用与备灾两处脚本及 README 同步，继续按两份 `zsh -n` 和 `cmp` 验证。
+
+## 八、<span id="single-local-branch">单本地分支同步双平台</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-16 在逐层空白提交推送脚本任务中明确要求写入 Git 相关 Skills；状态：已确认；创建 / 更新：2026-10-16。
+- 适用范围：`SourceTree.command` 运行态和备灾态中的 `【MacOS@SourceTree】🚀逐层空白提交并Push.command`，以及它递归处理的父仓、子仓。用户常用“大 Git 套小 Git”管理；每仓一份代码、一个本地工作分支，同步 GitHub / Gitee 各自的主分支。
+- 维护和运行该脚本均不得额外建立本地分支，也不得把辅助分支推到远端；两端主分支名称可以不同，复用已有本地工作分支并显式映射同一最终 HEAD。游离态只恢复明确的已有本地分支，缺失或目标不明确时先停止。已有额外分支不自动删除。
+- 此决策替代第七节旧的本地 `gitee` 跟踪分支要求；远端 `gitee` 别名和目标分支命名约定保留。OC 新工程的独立快照例外继续走专用流程，不扩展到通用脚本。
+- 专项规则归 `/Users/jobs/.agents/skills/jobs-git-repository/SKILL.md`，包含触发描述、分支禁止边界、远端显式映射和隔离验证要求。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
