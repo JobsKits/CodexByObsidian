@@ -2,9 +2,9 @@
 type: project-memory
 status: active
 scope: JobsCodexAccountSwitcher
-source: 用户于 2026-10-02 至 2026-10-10 明确要求
+source: 用户于 2026-10-02 至 2026-10-16 明确要求
 created: 2026-10-02
-updated: 2026-10-10
+updated: 2026-10-16
 tags:
   - python
   - codex-account-switcher
@@ -42,5 +42,11 @@ tags:
 - 新增或变更钩子需要 Codex 官方 `/hooks` 审阅信任；程序只合并并备份 `hooks.json`，不自动写入信任哈希。当前 `SessionStart` 在新建 / 恢复后首轮执行时消费待处理事件，不能宣称只打开空窗口必定触发。2026-10-10 本机两条动作已通过官方 CLI 审阅启用。
 - 标题与提问摘要只用于本机内存显示，不保存聊天副本、不上传。Mac / Windows 仍分别本机打包和验收，不把 Mac 实测当作 Windows 已通过。
 - 2026-10-10 已实现并通过 161 项回归、Mac 成品与真实日志统计验证；Windows 原生运行及客户端同轮提示的实际显示位置仍需后续对应环境验收。
+
+## 三、<span id="repository-branches">双平台主分支映射</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-16 要求修正本仓远端分支；状态：已确认并实际核验；创建 / 更新：2026-10-16；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexAccountSwitcher.py`。
+- 复用已有本地 `main`，对应 [**GitHub**](https://github.com) 的 `origin/main` 与 [**Gitee**](https://gitee.com) 的 `gitee/main`；Gitee 默认分支为 `main`。本仓原先的远端目标 `gitee` 已替代（`superseded`），逐层推送不得按通用默认映射重建它。
+- 本仓已设置仓库本地 `remote.gitee.jobsPushBranch=main`，由[[SourceTree-脚本体系#single-local-branch|逐层推送的局部覆盖能力]]读取；该例外不传给父仓、子仓或其它项目，不改变其它仓库默认的码云 `gitee` 目标与 OC 独立快照边界。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

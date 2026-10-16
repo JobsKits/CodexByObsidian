@@ -439,4 +439,24 @@ tags:
 - 2026-10-13 根据用户主题与字号截图修正桌面 App：先配置 `MosaicTheme.json`，以窗口有效外观同步已有 JobsThemeCenter；导航用原生 BarButtonItem，列表高亮背景与前景成对更新。UIButton 颜色 transformer 必须保留 Jobs 字体 transformer，不能覆盖后退回系统大字号；操作标题13 pt、单行、紧凑内边距及等宽主按钮。分段禁用标题使用同层文字避开系统淡化；小屏画布按可用视口预留工具空间，底部取消完整可见的坐标断言通过。原始基础工程与73份复用源码均未修改。
 - 该整改已通过明暗 / 跟随系统真实入口切换、既有页面反复切换、iPhone 13 mini 最大系统字体下六个操作标题单行断言，以及完整相册往返 / 四方法回归。实际截图对比证据在桌面工程 `Tests/Validation/ThemeRuntimeContrast.json`；修复后的实体设备需重新Run验收，不将模拟器结果表述成真机验证。来源：同一用户任务，状态：verified（本地构建与模拟器验证）。
 
+## 五十八、Pod Install 的 FVM 安装来源回退 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：本笔记映射中的 OC 新旧、Swift 基础工程；创建 / 更新时间：2026-10-16。挂载到 `pod install` 的 [**fvm**](https://fvm.app) 安装逻辑须在 Homebrew 不可用或安装失败时自动回退官方安装方式，不能因 Homebrew 单一来源失败而放弃配置。
+- 当前挂载事实：Swift 基础工程的 `ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh` 负责安装，`拉取Flutter侧三方资源.sh` 负责后续工具发现；OC 新旧工程的 Podfile、ScriptsByPods、构建阶段与共享 Scheme 均无 Flutter/FVM 安装调用，不为统一文案额外添加挂载。
+- Swift 实现复用健康 FVM；需要安装时尝试已有健康 Homebrew 的 `brew install fvm`，退出失败或 FVM 健康复检失败后运行官方 `https://fvm.app/install.sh`。不再拉取旧 `leoafarias/fvm` tap，也不为此强制安装 Homebrew。官方安装后精确验证安装目录的二进制，并让当前进程与后续独立脚本均能发现；`FVM_INSTALL_DIR` 与 Flutter SDK 缓存目录独立，保留 Podfile 辅助任务失败仅告警的边界。根 README 和两份脚本 README 同步维护。
+
+## 五十九、Swift 与 OC 空壳清理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-16 确认清理 Swift 工程中未使用的 JobsOCDSL，并要求排查 OC 新工程与 Swift 的其它空壳；状态：confirmed（清理范围）、verified（源码与集成检查）；创建 / 更新时间：2026-10-16。
+- Swift 基础工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo` 的 `JobsByPods/JobsOCDSL@Pods` 是没有分类实现且未接入宿主的兼容入口，已删除；独立消费者验证特判、当前 README / SwiftDoc 和依赖报告同步清理。Swift 链式能力继续来自 JobsSwiftDSL，不能因 OC 同名模块存在而把空兼容层重新当作已交付能力。
+- OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 的 JobsOCDSL 有完整真实实现，保持不变；同名不代表相同交付形态。初轮“其它候选只报告”的执行边界已被同日用户后续明确要求“删除你查找/整理出来的空壳”取代（superseded）。
+- 后续清理撤销 Swift 伪 setter、未实现至今选项、倒计时 Date no-op、旧 Timer 子规格及空文件/目录；OC 新工程撤销未完成 VPN，OC 新旧自维护侧同步撤销空动画附件与虚假发布链路。JobsPostVC 保留为图文草稿编辑，不把发布按钮无反应当成已交付网络能力。旧工程手工第三方 VPN 源码仍按维护边界保留，自维护公开头不再导出。
+- 当前清理清单与验证边界记录在 Swift 工程根 `OC新工程与Swift空壳排查报告.md`；历史验收 JSON 保留，不替代本轮验证。该删除确认只针对已排查清单，不扩张为任意模块或手工第三方源码的删除授权。
+
+## 六十、CocoaPods 公共源网络测试模块 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：本笔记第一节的 OC 新旧工程与 Swift 基础工程；创建 / 更新时间：2026-10-16。公共 Specs 源必须根据当前网络测试结果选择，不能只固定优先级或仅测试无关网站。该能力独立封装，和其它安装脚本统一放在各工程 `ScriptsByPods/`，不散落至业务目录；三处实现与说明同步维护。
+- 独立包为 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/`，同包保存 zsh 主脚本、Ruby 适配器、README 与隔离验证。Podfile 在声明 `source` 前同步调用；不是 `pre_install` / `post_install`，也不混入异步强制离线的报告与索引任务。每次真实 `pod install` / `pod update` 测试两源的同一锁定 podspec，Git 额外测试仓库协议，再根据有效响应与耗时选择；查询命令不联网。
+- 公共源关联只在当前 CocoaPods 锁对象中适配，保留版本、校验与私源；磁盘锁文件由正常安装成功后写出，严格部署校验不绕过。网络探测不代表完整克隆或依赖下载已经成功；双源失败明确回用可用缓存源或 CDN 默认值，不自动删锁、删 Pods、升级依赖或递归重试安装。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

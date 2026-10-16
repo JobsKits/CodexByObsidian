@@ -86,7 +86,7 @@ tags:
 
 - 来源：用户于 2026-10-02 明确确认新增码云线路；逐层推送需同时覆盖已配置的 GitHub 与码云。每仓先获取并整合全部目标线路，再推送同一最终提交并逐条核验；全部成功才处理父仓，单线子仓保留兼容，不自动创建远端仓库。
 - 项目例外（2026-10-07，confirmed）：上述双线路同一提交要求仅在 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods` 内已被取代（`superseded`）。该工程 GitHub 保留 `byPods` 完整历史，Gitee 使用独立零点快照；不运行通用动作合并两条历史，改用原生推送窗口或明确映射。其它仓库的通用要求保留；详见 [[Jobs-iOS-仓库族#五十六、OC 新工程的 GitHub 完整历史与 Gitee 零点快照|OC 新工程双远端例外]]。
-- 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名和码云远程目标分支统一为 `gitee`；不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。旧条目中“对应本地跟踪分支也统一为 `gitee`”已替代（`superseded`，2026-10-16），现按[单本地分支同步双平台](#single-local-branch)，不再创建或维护额外本地 `gitee` 分支。
+- 来源：用户于 2026-10-04 明确确认；适用范围：`/Users/jobs/Documents/Github/JobsBaseConfig`、`/Users/jobs/Documents/Github/JobsGenesis` 及其下属仓库。码云远端别名和默认远程目标分支为 `gitee`，显式仓库例外按[局部覆盖约定](#single-local-branch)执行；不强推、不覆盖，未配置码云仓库时不擅自创建远程仓库。旧条目中“对应本地跟踪分支也统一为 `gitee`”已替代（`superseded`，2026-10-16），不再创建或维护额外本地 `gitee` 分支。
 
 - 来源：用户于 2026-10-02 明确要求逐层推送动作从 Sourcetree 打开独立 Terminal.app，以实时查看日志。Sourcetree 仅负责启动；终端回车确认后执行，游离态清理保留 YES 门禁，结束后保留结果与退出码。
 
@@ -97,7 +97,9 @@ tags:
 - 来源：用户于 2026-10-16 在逐层空白提交推送脚本任务中明确要求写入 Git 相关 Skills；状态：已确认；创建 / 更新：2026-10-16。
 - 适用范围：`SourceTree.command` 运行态和备灾态中的 `【MacOS@SourceTree】🚀逐层空白提交并Push.command`，以及它递归处理的父仓、子仓。用户常用“大 Git 套小 Git”管理；每仓一份代码、一个本地工作分支，同步 GitHub / Gitee 各自的主分支。
 - 维护和运行该脚本均不得额外建立本地分支，也不得把辅助分支推到远端；两端主分支名称可以不同，复用已有本地工作分支并显式映射同一最终 HEAD。游离态只恢复明确的已有本地分支，缺失或目标不明确时先停止。已有额外分支不自动删除。
-- 此决策替代第七节旧的本地 `gitee` 跟踪分支要求；远端 `gitee` 别名和目标分支命名约定保留。OC 新工程的独立快照例外继续走专用流程，不扩展到通用脚本。
+- 此决策替代第七节旧的本地 `gitee` 跟踪分支要求；远端 `gitee` 别名和默认目标分支约定保留。OC 新工程的独立快照例外继续走专用流程，不扩展到通用脚本。
+- 来源：用户于 2026-10-16 要求修正账户工具仓库远端分支并防止逐层动作重建旧分支；状态：已确认；创建 / 更新：2026-10-16。固定码云策略支持从各仓本地配置读取非空 `remote.gitee.jobsPushBranch` 覆盖目标分支；全局同名配置不生效，不继承到父仓或子仓。未配置或空值继续用原默认映射，非法分支名或读取异常明确报错并停止，OC 独立快照门禁保持有效。
+- 项目例外：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexAccountSwitcher.py` 本地配置为 `remote.gitee.jobsPushBranch=main`，同一已有本地 `main` 同步到 GitHub / Gitee 的 `main`，Gitee 默认分支也为 `main`；原本适用该仓的远端 `gitee` 目标约定已替代（`superseded`）。其它仓库仍沿用原默认 `gitee` 映射，详见[[JobsCodexAccountSwitcher-双端账户工具#repository-branches|账户工具分支约束]]。
 - 专项规则归 `/Users/jobs/.agents/skills/jobs-git-repository/SKILL.md`，包含触发描述、分支禁止边界、远端显式映射和隔离验证要求。
 
 ## 九、<span id="resume-push">批量推送中断后的用户选择</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
