@@ -10,7 +10,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-16
+updated: 2026-10-17
 tags:
   - codex-memory
   - project
@@ -423,7 +423,7 @@ tags:
 - 同日使用流程补充（2026-10-07，confirmed）：开发、提交与拉取 GitHub 都保持检出 `byPods`；Sourcetree 推 Gitee 只在窗口选择快照源分支，无须检出快照。仅删除本地 remote-tracking 记录不等于服务器删除成功。
 - 同日删除权限纠正（2026-10-07，confirmed）：用户明确要求“只要是远端，我都要允许删除”。本工程本地 hook 放行所有远端引用的原生删除，包含分支、标签与多引用删除；纯删除不依赖工作区快照脚本，切换旧分支后也可执行。普通推送继续检查快照与目标。先前只允许删除 `byPods` 的本地限制已取代（`superseded`），不再按远端名、分支名或快照启用状态限制用户删除。远端实际操作仍由用户执行，Codex 不自动清理 `main` 或其它远端记录。
 - 本工程不使用“逐层空白提交并Push”通用动作去整合全部远端；使用 Sourcetree 原生推送窗口或明确 ref 映射。双远端推同一最终提交的旧要求在本工程内已被取代（`superseded`），其它仓库继续遵循 [[SourceTree-脚本体系#七、逐层空白提交推送的递归范围|SourceTree 通用双线路策略]]。
-- 2026-10-16 严格分支管理确认：旧工程工作分支 `main`，新工程工作分支 `byPods`；仅新工程允许现有发布分支 `Gitee@snapshot` 例外，不是额外开发分支。它复用已提交文件树、保留独立快照父链，远端目标仍是 `byPods`；不得套用通用 Gitee 目标 `gitee` 命名，也不新建同名远端分支或其它辅助本地分支。既有其它分支只读核验并报告，不擅自删除、改名或重写。规则归 `/Users/jobs/.agents/skills/jobs-git-repository/SKILL.md` 第 1.5 节。
+- 2026-10-16 严格分支管理确认：旧工程工作分支 `main`，新工程工作分支 `byPods`；仅新工程允许现有发布分支 `Gitee@snapshot` 例外，不是额外开发分支。它复用已提交文件树、保留独立快照父链，远端目标仍是 `byPods`；不得套用通用 Gitee 目标 `gitee` 命名，也不新建同名远端分支或其它辅助本地分支。既有其它分支只读核验并报告，不擅自删除、改名或重写。规则归 `/Users/jobs/.agents/skills/jobs-git-repository/SKILL.md` 的“OC 双工作目录与 Gitee 独立快照例外”专节。
 - 清空前同一 Gitee 远端还承载 OC 老工程的 `main`，不得由 Codex 默认列入清理范围。同日用户明确选择网页清空整个 Gitee 代码库并自行执行（2026-10-07，confirmed），该范围包含旧 `main`；重建时只推独立快照到 `byPods`，不自动把 GitHub 的 `main` 回推 Gitee。只读核对已确认 GitHub 的 `main` 与清空前 Gitee 的 `main` 提交相同，GitHub 原历史继续保留。操作已执行不等于服务端已成功恢复为空库，仍须核验实际结果。零点只切断以前历史，后续图像版本仍会累积容量。
 
 ## 五十七、马赛克实验室 App 与后续双语言 Pod 规划 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -444,6 +444,7 @@ tags:
 - 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：本笔记映射中的 OC 新旧、Swift 基础工程；创建 / 更新时间：2026-10-16。挂载到 `pod install` 的 [**fvm**](https://fvm.app) 安装逻辑须在 Homebrew 不可用或安装失败时自动回退官方安装方式，不能因 Homebrew 单一来源失败而放弃配置。
 - 当前挂载事实：Swift 基础工程的 `ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh` 负责安装，`拉取Flutter侧三方资源.sh` 负责后续工具发现；OC 新旧工程的 Podfile、ScriptsByPods、构建阶段与共享 Scheme 均无 Flutter/FVM 安装调用，不为统一文案额外添加挂载。
 - Swift 实现复用健康 FVM；需要安装时尝试已有健康 Homebrew 的 `brew install fvm`，退出失败或 FVM 健康复检失败后运行官方 `https://fvm.app/install.sh`。不再拉取旧 `leoafarias/fvm` tap，也不为此强制安装 Homebrew。官方安装后精确验证安装目录的二进制，并让当前进程与后续独立脚本均能发现；`FVM_INSTALL_DIR` 与 Flutter SDK 缓存目录独立，保留 Podfile 辅助任务失败仅告警的边界。根 README 和两份脚本 README 同步维护。
+- 2026-10-17 已修 Swift 换电脑生成配置检查：`Podfile` 与 `拉取Flutter侧三方资源.sh` 同时核验 module / SDK helper、Generated 与 export 的 SDK / module 真实路径，不能仅凭 `podhelper.rb` 存在而跳过。首次 `pub get` 成功仍不健康时，备份移出两份过期配置后再交给 Flutter 官方 `pub get` 生成；失败或中断恢复原配置并保留备份。不手改生成源码、不手动删除 `.ios` / Pods / 锁文件、不通过可能嵌套 Pods 安装的 `build ios --config-only` 修路径。脚本 34 项与 Podfile 检查 10 项隔离回归通过；本机健康入口实跑跳过，未执行真实依赖安装。换机排查先核对实际运行的 Podfile 是否包含 `JobsCocoaPodsSource.apply!`，迁移时同步 Podfile 与完整相关脚本包。
 
 ## 五十九、Swift 与 OC 空壳清理 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -455,8 +456,23 @@ tags:
 
 ## 六十、CocoaPods 公共源网络测试模块 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：本笔记第一节的 OC 新旧工程与 Swift 基础工程；创建 / 更新时间：2026-10-16。公共 Specs 源必须根据当前网络测试结果选择，不能只固定优先级或仅测试无关网站。该能力独立封装，和其它安装脚本统一放在各工程 `ScriptsByPods/`，不散落至业务目录；三处实现与说明同步维护。
+- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：所有 Jobs 自维护、使用 CocoaPods 的工程与安装 / 更新入口（2026-10-17 扩大范围）；创建：2026-10-16，更新：2026-10-17。公共 Specs 源必须根据当前网络测试结果选择，不能只固定优先级或仅测试无关网站。该能力独立封装，和其它安装脚本统一放在各工程 `ScriptsByPods/`，不散落至业务目录；三处实现与说明同步维护。
 - 独立包为 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/`，同包保存 zsh 主脚本、Ruby 适配器、README 与隔离验证。Podfile 在声明 `source` 前同步调用；不是 `pre_install` / `post_install`，也不混入异步强制离线的报告与索引任务。每次真实 `pod install` / `pod update` 测试两源的同一锁定 podspec，Git 额外测试仓库协议，再根据有效响应与耗时选择；查询命令不联网。
 - 公共源关联只在当前 CocoaPods 锁对象中适配，保留版本、校验与私源；磁盘锁文件由正常安装成功后写出，严格部署校验不绕过。网络探测不代表完整克隆或依赖下载已经成功；双源失败明确回用可用缓存源或 CDN 默认值，不自动删锁、删 Pods、升级依赖或递归重试安装。
+- 2026-10-17 用户明确要求将 Swift 的真实网络选源能力移植到 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs/scripts/update.command/update.command`；状态：confirmed（迁移范围）、verified（实现与隔离验证）。工具本体按活跃 `pod` 归属选择 Homebrew / 当前 Gem，公共 Specs 另行实测选源并只刷新选中的官方本地别名；双源失败保留缓存并报告未刷新，自动模式无 Git 缓存且 CDN 可用时选 CDN，不冷克隆巨大 Specs。46 项隔离回归通过，本机命令副本已备份同步，未真实升级。换机日志中的 AMPopTip GitHub 源码连接失败与 Specs 选源属于不同下载层，不能通过换索引、删锁或升级 CocoaPods 声称已修复源码链路；远端受限网络实际安装仍待验。
+- 同日用户明确第二项还须升级 Swift 安装实现，不能只停留在网络诊断；状态：confirmed（Swift 修复范围）、verified（本地实现与隔离验证）。Swift 独立新增 `ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/`，Podfile 在 Specs 选择前实测当前链路与已启用系统代理，代理只作用于本次进程并退出恢复；源码层只对白名单 AMPopTip 4.12.0 已审发布请求在 Git 网络失败后回退官方 codeload 精确 commit，保留原 spec/source/锁参数，不泛化到未知仓库或版本。CocoaPods 1.17.0 / downloader 2.1 实际 API 挂载、72 项隔离验证及本机只读 Git 链路通过；新电脑代理配置尚待用户回传只读诊断，未在该设备完成真实安装。初轮仅 Swift 挂载的范围已被同日后续“凡使用 CocoaPods 均具备网络选择”的明确要求取代（superseded）；当前范围与验证见下述全工程条目。
+
+- 2026-10-17 用户授权先在本机修复再写入日常 `update -t`，并明确原生扩展问题本机验证通过即可，不扩展其它电脑测试；状态：confirmed（范围与维护方式）、verified（本机实际重建）。本机 CocoaPods 绑定 Homebrew Ruby 4.0.7，当前平台为 arm64-darwin-27；25 个已安装 Gem 版本只有旧 darwin-25 扩展。已用当前 Ruby 逐版重编译并在新进程精确激活、实际加载，`pod --version` 的 Ignoring 从 75 条降到 0 条，Ruby 与 Gem 版本不变，144 个旧平台文件和 gemspec 指纹未变，第二次缺失为 0。该告警发生在 Podfile 加载前，不能归因于网络适配脚本，也不能以改名平台目录或复制完成标记修复。独立入口为环境仓库 `scripts/repair_gem_extensions.command/`；同一实现原样内嵌 update，Ruby / RubyGems 更新前后与 CocoaPods 本体升级后按当前运行时检测，仅对缺失项完整备份后重建，构建或加载失败恢复本目标，健康项跳过；失败必须报告，不能隐藏告警冒充修复。
+
+- 2026-10-17 用户再次明确“但凡用到了 CocoaPods 的地方都要有网络选择”，并点名 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`；状态：confirmed（当前及后续自维护工程约束）、verified（实现与隔离验证）。新建、迁移或维护任何 Jobs CocoaPods 工程 / 模板时，必须同时携带网络适配与公共源选择两包，在 Podfile 依赖解析前按“网络 / 已有代理实测 → 已审归档适配注册 → 公共 Specs 选源”顺序执行，使后续 HTTP / Git 下载继承同次进程环境；不能只做 Specs 选源、只复制模块而漏挂 Podfile，或让生成器恢复旧模板。第三方、手工供应商、Pods、Flutter .ios 等生成物及所有权未确认工程继续排除。已覆盖 13 处主工程 Podfile：Swift UIKit / SwiftUI、OC 新旧，Flutter 主仓与 JobsFlutterBaseConfigDemo 的 iOS / macOS，语言学习原生 iOS 与 Flutter iOS / macOS，啄木鸟新旧 iOS。各项目自包含、按相对路径加载，不依赖另一仓的绝对路径；纯本地 Pod 工程也保留入口，不因此新增 AMPopTip 等依赖。
+- 同轮闭环：JobsPodBinaryBuilder 为 PackagingHost / ConsumerDemo 两类临时工程复制运行包并生成同一前置顺序，App 资源随 `.command` 生成器打包；既有 Build App 未重建，下次运行生成器后生效。JobsCommand@iOS / @Flutter 的六个安装、更新、仓库刷新包装器取消缓存镜像对全局 trunk 的自动重建，仓库刷新为同一次 `pod install --repo-update`，保留 workspace / Pods / Podfile.lock；未接入目标只提示边界，不接管其源码。SourceTree 两类安装入口直接进入目标 Podfile，无需额外加载。环境仓 update 的独立 repo 命令不读取工程 Podfile，因此完整内嵌网络模块，通过 0600 NUL 受控键值载荷把验证后的配置交给同一 Specs / repo 子 Shell，父环境与 NO_PROXY / 原 Git 配置保留；禁止 eval 或将代理凭据写日志。更新副本已备份同步本机命令。
+- 验证边界：新增九处 Podfile 的 27 组隔离回归、核心实现副本对账、锁文件与原依赖 / hook 保留检查通过；SwiftUI 完整 Podfile 只读解析、OC 两侧、二进制生成器、六个通用包装器与 update 代理继承 / 原选源 / 原生扩展集成回归通过，未执行真实安装、构建或全量 update。已有代理 / 探测成功不等于完整安装成功；官方归档回退继续只覆盖已核验 AMPopTip 4.12.0 请求，不泛化到任意仓库或版本。
+
+## 六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败；状态：confirmed（覆盖范围）、verified（下述实现与局部验证）；创建 / 更新时间：2026-10-17。工程绝对路径沿用本笔记第一节，不由历史通过记录推断最新提交整条 CI 已通过。
+- Swift 与 OC 新工程的测试设备按当前 Xcode Simulator SDK 主版本选择可用 arm64 iPhone，再按数字 runtime 版本排序；不让已启动的旧系统抢占。Swift 在依赖安装前，以最低 iOS 15.6 编译并实际运行 WebKit overlay 加载探针，不通过提高部署版本或弱化链接绕过问题。首次启动准备预算为 10 分钟。
+- OC 新工程 CI 全 job 使用 `JOBS_SIMULATOR_ONLY=1`，两个 Jobs 自有 podspec 在该模式排除真机专用 IJK，保留 AVPlayer / ControlView；默认本地安装不设此变量，切换模式须重新 `pod install`。安装模式连同架构写入源码指纹和结果身份；此模式的通过结果不能作为真机 IJK 验收。旧工程依赖原本未启用 IJK，不照搬新工程的 Pod 装配方式。
+- OC 旧工程主 target 的 Debug / Release 启用 `GCC_PRECOMPILE_PREFIX_HEADER=YES`，复用现有大型前缀头；两配置 Objective-C / C 的实际 PCH 与代表源码编译已验证。OC 新工程隔离模拟器图的文件工具、Keychain 宿主真实 XCTest 及宿主权限审计已验证；这些局部结果不等同于完整链接、打包或全量组件矩阵已完成。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
