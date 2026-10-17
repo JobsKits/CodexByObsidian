@@ -10,7 +10,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-17
+updated: 2026-10-18
 tags:
   - codex-memory
   - project
@@ -456,17 +456,18 @@ tags:
 
 ## 六十、CocoaPods 公共源网络测试模块 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：所有 Jobs 自维护、使用 CocoaPods 的工程与安装 / 更新入口（2026-10-17 扩大范围）；创建：2026-10-16，更新：2026-10-17。公共 Specs 源必须根据当前网络测试结果选择，不能只固定优先级或仅测试无关网站。该能力独立封装，和其它安装脚本统一放在各工程 `ScriptsByPods/`，不散落至业务目录；三处实现与说明同步维护。
+- 来源：用户于 2026-10-16 明确要求；状态：confirmed；适用范围：所有 Jobs 自维护、使用 CocoaPods 的工程与安装 / 更新入口（2026-10-17 扩大范围）；创建：2026-10-16，更新：2026-10-18。公共 Specs 源必须根据当前网络测试结果选择，不能只固定优先级或仅测试无关网站。该能力独立封装，和其它安装脚本统一放在各工程 `ScriptsByPods/`，不散落至业务目录；三处实现与说明同步维护。
 - 独立包为 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/`，同包保存 zsh 主脚本、Ruby 适配器、README 与隔离验证。Podfile 在声明 `source` 前同步调用；不是 `pre_install` / `post_install`，也不混入异步强制离线的报告与索引任务。每次真实 `pod install` / `pod update` 测试两源的同一锁定 podspec，Git 额外测试仓库协议，再根据有效响应与耗时选择；查询命令不联网。
 - 公共源关联只在当前 CocoaPods 锁对象中适配，保留版本、校验与私源；磁盘锁文件由正常安装成功后写出，严格部署校验不绕过。网络探测不代表完整克隆或依赖下载已经成功；双源失败明确回用可用缓存源或 CDN 默认值，不自动删锁、删 Pods、升级依赖或递归重试安装。
-- 2026-10-17 用户明确要求将 Swift 的真实网络选源能力移植到 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs/scripts/update.command/update.command`；状态：confirmed（迁移范围）、verified（实现与隔离验证）。工具本体按活跃 `pod` 归属选择 Homebrew / 当前 Gem，公共 Specs 另行实测选源并只刷新选中的官方本地别名；双源失败保留缓存并报告未刷新，自动模式无 Git 缓存且 CDN 可用时选 CDN，不冷克隆巨大 Specs。46 项隔离回归通过，本机命令副本已备份同步，未真实升级。换机日志中的 AMPopTip GitHub 源码连接失败与 Specs 选源属于不同下载层，不能通过换索引、删锁或升级 CocoaPods 声称已修复源码链路；远端受限网络实际安装仍待验。
-- 同日用户明确第二项还须升级 Swift 安装实现，不能只停留在网络诊断；状态：confirmed（Swift 修复范围）、verified（本地实现与隔离验证）。Swift 独立新增 `ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/`，Podfile 在 Specs 选择前实测当前链路与已启用系统代理，代理只作用于本次进程并退出恢复；源码层只对白名单 AMPopTip 4.12.0 已审发布请求在 Git 网络失败后回退官方 codeload 精确 commit，保留原 spec/source/锁参数，不泛化到未知仓库或版本。CocoaPods 1.17.0 / downloader 2.1 实际 API 挂载、72 项隔离验证及本机只读 Git 链路通过；新电脑代理配置尚待用户回传只读诊断，未在该设备完成真实安装。初轮仅 Swift 挂载的范围已被同日后续“凡使用 CocoaPods 均具备网络选择”的明确要求取代（superseded）；当前范围与验证见下述全工程条目。
+- 2026-10-17 用户明确要求将 Swift 的真实网络选源能力移植到 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs/scripts/update.command/update.command`；状态：confirmed（迁移范围）、verified（实现与隔离验证）。工具本体按活跃 `pod` 归属选择 Homebrew / 当前 Gem，公共 Specs 另行实测选源并只刷新选中的官方本地别名；双源失败保留缓存并报告未刷新，自动模式无 Git 缓存且 CDN 可用时选 CDN，不冷克隆巨大 Specs。46 项隔离回归通过，本机命令副本已备份同步，未真实升级。换机日志中的 AMPopTip GitHub 源码连接失败与 Specs 选源属于不同下载层，不能通过换索引、删锁或升级 CocoaPods 声称已修复源码链路；当时远端受限网络实际安装尚待验，2026-10-18 的单次换机验收见本节末条。
+- 同日用户明确第二项还须升级 Swift 安装实现，不能只停留在网络诊断；状态：confirmed（Swift 修复范围）、verified（本地实现与隔离验证）。Swift 独立新增 `ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/`，Podfile 在 Specs 选择前实测当前链路与已启用系统代理，代理只作用于本次进程并退出恢复；源码层只对白名单 AMPopTip 4.12.0 已审发布请求在 Git 网络失败后回退官方 codeload 精确 commit，保留原 spec/source/锁参数，不泛化到未知仓库或版本。CocoaPods 1.17.0 / downloader 2.1 实际 API 挂载、72 项隔离验证及本机只读 Git 链路通过；当时新电脑代理配置尚待用户回传只读诊断，未在该设备完成真实安装；该待验状态已由本节 2026-10-18 的用户确认更新。初轮仅 Swift 挂载的范围已被同日后续“凡使用 CocoaPods 均具备网络选择”的明确要求取代（superseded）；当前范围与验证见下述全工程条目。
 
 - 2026-10-17 用户授权先在本机修复再写入日常 `update -t`，并明确原生扩展问题本机验证通过即可，不扩展其它电脑测试；状态：confirmed（范围与维护方式）、verified（本机实际重建）。本机 CocoaPods 绑定 Homebrew Ruby 4.0.7，当前平台为 arm64-darwin-27；25 个已安装 Gem 版本只有旧 darwin-25 扩展。已用当前 Ruby 逐版重编译并在新进程精确激活、实际加载，`pod --version` 的 Ignoring 从 75 条降到 0 条，Ruby 与 Gem 版本不变，144 个旧平台文件和 gemspec 指纹未变，第二次缺失为 0。该告警发生在 Podfile 加载前，不能归因于网络适配脚本，也不能以改名平台目录或复制完成标记修复。独立入口为环境仓库 `scripts/repair_gem_extensions.command/`；同一实现原样内嵌 update，Ruby / RubyGems 更新前后与 CocoaPods 本体升级后按当前运行时检测，仅对缺失项完整备份后重建，构建或加载失败恢复本目标，健康项跳过；失败必须报告，不能隐藏告警冒充修复。
 
 - 2026-10-17 用户再次明确“但凡用到了 CocoaPods 的地方都要有网络选择”，并点名 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`；状态：confirmed（当前及后续自维护工程约束）、verified（实现与隔离验证）。新建、迁移或维护任何 Jobs CocoaPods 工程 / 模板时，必须同时携带网络适配与公共源选择两包，在 Podfile 依赖解析前按“网络 / 已有代理实测 → 已审归档适配注册 → 公共 Specs 选源”顺序执行，使后续 HTTP / Git 下载继承同次进程环境；不能只做 Specs 选源、只复制模块而漏挂 Podfile，或让生成器恢复旧模板。第三方、手工供应商、Pods、Flutter .ios 等生成物及所有权未确认工程继续排除。已覆盖 13 处主工程 Podfile：Swift UIKit / SwiftUI、OC 新旧，Flutter 主仓与 JobsFlutterBaseConfigDemo 的 iOS / macOS，语言学习原生 iOS 与 Flutter iOS / macOS，啄木鸟新旧 iOS。各项目自包含、按相对路径加载，不依赖另一仓的绝对路径；纯本地 Pod 工程也保留入口，不因此新增 AMPopTip 等依赖。
 - 同轮闭环：JobsPodBinaryBuilder 为 PackagingHost / ConsumerDemo 两类临时工程复制运行包并生成同一前置顺序，App 资源随 `.command` 生成器打包；既有 Build App 未重建，下次运行生成器后生效。JobsCommand@iOS / @Flutter 的六个安装、更新、仓库刷新包装器取消缓存镜像对全局 trunk 的自动重建，仓库刷新为同一次 `pod install --repo-update`，保留 workspace / Pods / Podfile.lock；未接入目标只提示边界，不接管其源码。SourceTree 两类安装入口直接进入目标 Podfile，无需额外加载。环境仓 update 的独立 repo 命令不读取工程 Podfile，因此完整内嵌网络模块，通过 0600 NUL 受控键值载荷把验证后的配置交给同一 Specs / repo 子 Shell，父环境与 NO_PROXY / 原 Git 配置保留；禁止 eval 或将代理凭据写日志。更新副本已备份同步本机命令。
-- 验证边界：新增九处 Podfile 的 27 组隔离回归、核心实现副本对账、锁文件与原依赖 / hook 保留检查通过；SwiftUI 完整 Podfile 只读解析、OC 两侧、二进制生成器、六个通用包装器与 update 代理继承 / 原选源 / 原生扩展集成回归通过，未执行真实安装、构建或全量 update。已有代理 / 探测成功不等于完整安装成功；官方归档回退继续只覆盖已核验 AMPopTip 4.12.0 请求，不泛化到任意仓库或版本。
+- 2026-10-17 验证边界：新增九处 Podfile 的 27 组隔离回归、核心实现副本对账、锁文件与原依赖 / hook 保留检查通过；SwiftUI 完整 Podfile 只读解析、OC 两侧、二进制生成器、六个通用包装器与 update 代理继承 / 原选源 / 原生扩展集成回归通过，该轮未执行真实安装、构建或全量 update。已有代理 / 探测成功不等于完整安装成功；官方归档回退继续只覆盖已核验 AMPopTip 4.12.0 请求，不泛化到任意仓库或版本。
+- 2026-10-18 Swift 换机验收：来源为用户回传的 `report.txt`、`report 2.txt` 及随后明确确认；状态：verified（报告中的完整下载）、confirmed（用户确认完整安装）；适用目录：另一台 Mac 的 `/Users/wx996768/Documents/Gitee/JobsSwiftBaseConfigDemo`；创建 / 更新时间：2026-10-18。原终端没有代理环境变量，Git 未连接系统已启用的 `127.0.0.1:7990` 显式代理；原链路 Raw 握手被重置，两种 HTTP 协议的 Git 克隆均触及脚本 60 秒限时，其后的断包错误不能当作远端重置证据。显式使用 `http://127.0.0.1:7990` 后，Raw podspec 的 JSON / 身份校验通过，官方 codeload 归档 `8,701,761` 字节在约 `2.72` 秒完成且 tar 校验通过，同一 [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) `2.9.3` 浅克隆完整接收 `8.28 MiB` 并成功。用户随后确认，以一次性 `env` 代理环境执行完整 `pod install` 成功；该次原终端链路未使用 7990 显式代理的问题已验收。结论仅适用于这台电脑此次环境，不代表所有下载失败同因，也不代表全工程、全环境或后续构建均已验收；未变更全局 Git、未删除 Pods / 锁文件。
 
 ## 六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
