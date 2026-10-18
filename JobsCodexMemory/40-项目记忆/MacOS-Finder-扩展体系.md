@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-18
+updated: 2026-10-19
 tags:
   - codex-memory
   - project
@@ -28,6 +28,7 @@ tags:
 - [四、IDE 打开入口与 Pod 合并](#jobs-toc-heading-5)
 - [五、更新目标文件夹代码地图](#jobs-toc-heading-6)
 - [六、Windows 平行工程](#jobs-toc-heading-7)
+- [七、双端 Flutter SDK 版本管理](#flutter-version-manager)
 
 </details>
 <!-- jobs-toc:end -->
@@ -87,5 +88,18 @@ tags:
 - 来源：用户于 2026-10-18 明确要求新增 Gitee `main`、保留 GitHub `origin` 并关联父仓；状态：已确认，远端推送及本地关联已验证；适用目录：`/Users/jobs/Documents/Github/JobsGenesis/Windows@Extension`；创建 / 更新：2026-10-18。本仓保留 `origin = https://github.com/JobsKits/WindowsOS_Extension.git`，新增 `gitee = https://gitee.com/JobsGo/WindowsOS_Extension.git`，本地 `main` 继续跟踪 `origin/main`，Gitee 目标为 `main`，不另建本地分支。父仓 `JobsGenesis` 以 `path = Windows@Extension`、`url = ../WindowsOS_Extension.git`、`branch = main` 登记子模块，使用官方 `absorbgitdirs` 将元数据归集到父仓 `.git/modules/Windows@Extension`。原先整个 Windows 目录未登记的状态已被本条替代（superseded）；父仓关联及配套说明当前仅在本地，尚未提交或推送。
 - 已替代（superseded，2026-10-18）：原“仅处理根 README、19 项回归、不推广其它仓库”的实验范围，在用户实测确认后被授权推广方案替代；现行跨仓工作流见 [[30-工作流决策/工作流决策#十五、Markdown 动态目录过滤器|Markdown 动态目录过滤器]]。
 - 当前状态：`/Users/jobs/Documents/Github/JobsGenesis/Windows@Extension` 使用 `.jobs-markdown-toc/` 的自包含工具和精确清单，共管理 13 份含标签说明；`Scripts/MarkdownToc.mjs` 保留同源码兼容入口，CI 继续用此入口核对清单全部原始索引内容。根 README 和 `Scripts/README.md` 说明动态目录、首次接入、日常暂存和安装 / 卸载边界；用户要求的 `Scripts` 目录用途说明已补齐。转换器 38 项、部署器 8 项隔离回归通过，真实索引未改、未创建提交或推送；远端折叠与 Windows 真实桌面按各自环境单独验收。
+
+## 七、<span id="flutter-version-manager">双端 Flutter SDK 版本管理</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-19 先要求 macOS 右键功能，随后明确要求同步实现 Windows 并放入平行仓库；状态：需求已确认，实现已落盘；适用范围：本仓与 `/Users/jobs/Documents/Github/JobsGenesis/Windows@Extension`；创建 / 更新：2026-10-19。两端功能目录均为 `JobsFlutterVersionMgr`，入口“安装/切换 Flutter SDK（FVM）”；保持一项功能一个独立安装单元，包含独立安装 / 卸载并接入总选择器。macOS 当前八工程十二项功能，八个工程均为独立子模块；Windows 当前十一包，新包尚未建立独立远端或子模块。
+- 命名决策：用户于 2026-10-19 明确要求更名为 `JobsFlutterVersionMgr`；原名 `JobsFlutterVersionManager` 标为 `superseded`，以本节现行目录为准。两端目录、macOS 工程 / Scheme / 产品 / Bundle ID / URL scheme、安装映射、测试和文档同步更名；稳定业务标识保留。未安装的运行态与远端不作迁移。
+- 用户确认的功能：先验证精确所选文件夹自身是 [**Flutter**](https://flutter.dev/) 项目，在终端体检实际工具链，查询官方历史及最新 SDK，通过 [**fzf**](https://formulae.brew.sh/formula/fzf) 单选，由 [**FVM**](https://fvm.app/) 安装或切换项目精确版本。macOS 通过 Homebrew 准备所需工具；Windows 复用健康工具，缺失 Git / fzf 经 WinGet，FVM 使用官方架构 ZIP 并校验 SHA-256。Windows 注册表菜单可见性不能据清单解析动态隐藏，运行第一步严格拒绝无效项目；保留当前用户注册及 Windows 11“显示更多选项”边界。
+- 实现约束：只认根 `pubspec.yaml` 的 `dependencies.flutter.sdk: flutter`，排除注释、description、flutter_test-only、链接与非普通目录。官方清单失效时明确最新未知，仅提供已初始化缓存。健康工具复用，缺失 / 损坏层确认后只修一次并复检；fzf 按 Esc 取消，不设置全局 Flutter、不改变代理。版本操作跳过 pub get，成功需核对项目配置、SDK 链接和实际 Flutter / Dart。
+- 交互决策：用户于 2026-10-19 在 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsFlutterBaseConfigDemo` 实测后，明确要求去掉 macOS 独立管理 GUI，所有 SDK 操作在 Terminal 内进行。宿主仅作为 `LSUIElement` 后台 URL 转发与扩展初始化进程，不创建窗口、项目选择器或 Dock 图标；等待初始化与所有终端派发返回后自动退出。用户同时明确最终确认对调为直接回车执行安装 / 切换、任意非空输入（含空格）取消，EOF 停止；旧“最终回车跳过”已替代（superseded）。两端仅本功能同步此默认值，不改变依赖安装、fzf 取消和其它脚本的确认习惯。已打开的终端使用启动时的脚本副本，须重新右键启动才采用新交互。
+- 点击链路：纯代码宿主没有 nib，入口 `main.swift` 显式强持有并挂接 AppDelegate；在 `willFinishLaunching` 注册 URL AppleEvent，再共用严格请求解码。Finder 动作在点击时重新查询所选项目或当前目录，不依赖菜单 `representedObject`。宿主启动、项目接收、Terminal 派发及退出状态追加到 `/tmp/JobsFlutterVersionMgr.log`；业务日志仍由终端脚本在首屏确认后建立。
+- 配置保护：在私有 inspection 影子配置目录查询目标自身的 FVM context / cache，防止继承父项目缓存；精确根 `.fvmrc` 合并保留字段，迁移时去除旧 `flutterSdkVersion` 别名并关闭 `updateMelosSettings`。写前快照和并发校验，拒绝 FVM 已知写入位置的外部链接；FVM 成功后先核验真实版本，再补回其序列化剥离的原字段。失败保留现场和快照，不伪称事务回滚。
+- 仓库关系：用户随后明确要求新增 Gitee、推送并关联父仓。macOS 新工程原先由父仓作为普通目录维护的状态已被替代（superseded）；现子仓位于 `/Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension/JobsFlutterVersionMgr`，保留 HTTPS `origin = https://github.com/JobsKits/JobsFlutterVersionMgr.git`，新增 `gitee = https://gitee.com/JobsGo/JobsFlutterVersionMgr.git`，本地及两端均用 `main`。父仓登记 `path = JobsFlutterVersionMgr`、`url = ../JobsFlutterVersionMgr.git`、`branch = main`，已用官方 `absorbgitdirs` 归集元数据。子仓 `e0b4b5c`、父仓 `a259b48` 已按子先父后推送两平台；未发布 Windows 此次改动或提交更上层 JobsGenesis。
+- 目录边界：本地 `[toc]` 是正常编辑形态。原普通目录曾由父过滤器接入；交付后初始化独立 Git，不会继承父仓的 local 配置，须按新 Git 根独立接入。现子仓自带 `.jobs-markdown-toc/`、精确属性与五份清单，父仓只管理自身四份文档，真实原始暂存 `check` 与工作区字节往返 `verify` 均通过。父安装器测试移至父仓 `Tests/FlutterInstallerIntegrationTests.rb`，保证子仓测试可独立运行；目录渲染的平台实测不由这些检查替代。
+- 验证基线：初始 macOS Debug / Release、签名深验、资源字节一致、原生路径 / 载体权限 / 退出清理及五项父安装映射回归（27 断言）通过。2026-10-19 点击修复与后台化后重新构建 Debug、深验签名和资源一致；在用户指定项目通过真实 Finder 右键确认请求送达 Terminal，后台宿主派发后正常退出，原生隔离测试和二十二项业务（169 断言）通过。用户已自行安装并进入终端操作，原“未安装扩展”的初始状态已过时；本轮更新已有 App，本轮修复未提交推送。Windows 最终确认对应 69 条夹具断言、修改文件 Parser / BOM / CRLF 与目录往返通过，真实 Windows 桌面仍待实机验收；SDK 下载、选版与项目兼容性不由这些检查替代。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
