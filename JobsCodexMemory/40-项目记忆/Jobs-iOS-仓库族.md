@@ -472,6 +472,7 @@ tags:
 ## 六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败；状态：confirmed（覆盖范围）、verified（下述实现与局部验证）；创建 / 更新时间：2026-10-17。工程绝对路径沿用本笔记第一节，不由历史通过记录推断最新提交整条 CI 已通过。
+- 2026-10-18 用户明确验收标准：Swift 及 OC 新旧工程的 workflow 修复，必须以对应修复提交的完整 GitHub workflow 正常成功结束为任务完成标志；本地编译、局部回归或仅推送修复均属于中间验证，不能提前报完成。状态：confirmed；适用范围：本节的三处 iOS 工程。
 - Swift 与 OC 新工程的测试设备按当前 Xcode Simulator SDK 主版本选择可用 arm64 iPhone，再按数字 runtime 版本排序；不让已启动的旧系统抢占。Swift 在依赖安装前，以最低 iOS 15.6 编译并实际运行 WebKit overlay 加载探针，不通过提高部署版本或弱化链接绕过问题。首次启动准备预算为 10 分钟。
 - OC 新工程 CI 全 job 使用 `JOBS_SIMULATOR_ONLY=1`，两个 Jobs 自有 podspec 在该模式排除真机专用 IJK，保留 AVPlayer / ControlView；默认本地安装不设此变量，切换模式须重新 `pod install`。安装模式连同架构写入源码指纹和结果身份；此模式的通过结果不能作为真机 IJK 验收。旧工程依赖原本未启用 IJK，不照搬新工程的 Pod 装配方式。
 - OC 旧工程主 target 的 Debug / Release 启用 `GCC_PRECOMPILE_PREFIX_HEADER=YES`，复用现有大型前缀头；两配置 Objective-C / C 的实际 PCH 与代表源码编译已验证。OC 新工程隔离模拟器图的文件工具、Keychain 宿主真实 XCTest 及宿主权限审计已验证；这些局部结果不等同于完整链接、打包或全量组件矩阵已完成。

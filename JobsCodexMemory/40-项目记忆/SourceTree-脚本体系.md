@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-16
+updated: 2026-10-18
 tags:
   - codex-memory
   - project
@@ -109,5 +109,12 @@ tags:
 - 已完整推送并核验的仓库逐仓保存检查点；续跑前复查本地分支、HEAD、有效 Git 配置和工作区，变化时从最早变化仓重做。失败仓即使已推完部分线路，也按完整仓库流程重试；保留已完成子仓信息以供父仓 gitlink 收口。
 - 检查点放在起始仓库实际 Git 管理目录内，按完整队列及连续已完成前缀记录，原子替换，不把状态文件作为 Shell 代码执行；队列变化或状态损坏时不能猜测跳过。成功结束清除检查点和旧日志迁移候选。
 - 旧版失败日志只作为候选进度：起始仓库及队列必须一致，选择续跑后先核验本地状态和当前各目标远端提交，再跳过历史成功前缀；取消选择保留候选。运行态与备灾态脚本、README 同步维护。
+
+## 十、<span id="installer-git-copy">非管理员新电脑与安装器 Git 副本</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-18 报告新电脑运行安装器失败，并说明使用非管理员访客账户、目前访问权限开放；状态：账户背景为用户确认，复制错误为本地隔离复现；适用范围：`【MacOS】安装SourceTree自定义菜单.command`；创建 / 更新：2026-10-18。
+- 安装器使用当前用户可写目录与用户级菜单配置，不依赖管理员身份，不使用 `sudo`。远端新电脑的实际权限错误仍按原始诊断区分，不能只凭通用校验失败消息判断账户权限。
+- 备灾库是父仓子模块，真实 Git 目录位于 `JobsGenesis/.git/modules/SourceTree.command`；其 `core.worktree=../../../SourceTree.command` 复制到独立 `.git` 后可能失效。旧版 `git -C 暂存目录 config --local --unset` 会先进入失效路径并失败，原脚本还会忽略这次失败；使用 `git config --file` 直接清除暂存 `config` 与已有 `config.worktree` 的全部 `core.worktree`，仅允许无键退出码 5，随后核对实际工作树根目录、HEAD 和只读状态。
+- 安装器属于终端交互入口，不作为 Sourcetree 自定义动作挂载；维护它不新增菜单项。本地运行态与备灾态的脚本 / README 同步，隔离验证覆盖发送、最终目录改名、替换备份及失败保留目标和清理暂存；未操作真实菜单、提交或推送。新电脑须取得更新后的同名脚本才生效。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
