@@ -2,9 +2,9 @@
 type: project-memory
 status: active
 scope: JobsCodexAccountSwitcher
-source: 用户于 2026-10-02 至 2026-10-16 明确要求
+source: 用户于 2026-10-02 至 2026-10-18 明确要求
 created: 2026-10-02
-updated: 2026-10-16
+updated: 2026-10-18
 tags:
   - python
   - codex-account-switcher
@@ -34,6 +34,8 @@ tags:
 - 用户于 2026-10-03 确认：双击账户应自动关闭所选 ChatGPT / Codex 桌面应用、切换账户并重启；账户列表右键支持更改备注和刷新缓存，空白处右键刷新，列表可滚动；不保留人工核验完成或回滚按钮。
 
 ## 二、Token 用量与对话归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- **工程归属已替代（superseded，2026-10-18）：** 用户明确要求账户切换与 Token 上下行监控拆成两个同级 Python 工具，不能仅用同一主程序的不同参数或轻量启动器区分。账户工程仅管理账户；独立监控工程及置顶设置约束见 [[JobsCodexTokenMonitor-独立用量监控]]。下列统计与隐私口径继续适用于独立监控工具，2026-10-10 的合包验收仅为历史基线。
 
 - 用户于 2026-10-10 要求保留账户切换，新增只负责每轮上行 / 下行 Token 的独立桌面浮窗；账户窗口与浮窗各自运行，浮窗不加载账户库，不读取或切换登录凭据。
 - 用户要求随 Codex 钩子启动，并能对已运行的 Codex 热接入。实现方向为只读本地会话日志、用户级 `SessionStart` 后台启动和单实例唤起，不注入或修改 Codex 本体。

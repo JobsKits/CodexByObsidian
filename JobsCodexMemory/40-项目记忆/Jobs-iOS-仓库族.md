@@ -471,10 +471,13 @@ tags:
 
 ## 六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败；状态：confirmed（覆盖范围）、verified（下述实现与局部验证）；创建 / 更新时间：2026-10-17。工程绝对路径沿用本笔记第一节，不由历史通过记录推断最新提交整条 CI 已通过。
+- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-18。工程绝对路径沿用本笔记第一节，不由历史通过记录推断最新提交整条 CI 已通过。
 - 2026-10-18 用户明确验收标准：Swift 及 OC 新旧工程的 workflow 修复，必须以对应修复提交的完整 GitHub workflow 正常成功结束为任务完成标志；本地编译、局部回归或仅推送修复均属于中间验证，不能提前报完成。状态：confirmed；适用范围：本节的三处 iOS 工程。
 - Swift 与 OC 新工程的测试设备按当前 Xcode Simulator SDK 主版本选择可用 arm64 iPhone，再按数字 runtime 版本排序；不让已启动的旧系统抢占。Swift 在依赖安装前，以最低 iOS 15.6 编译并实际运行 WebKit overlay 加载探针，不通过提高部署版本或弱化链接绕过问题。首次启动准备预算为 10 分钟。
 - OC 新工程 CI 全 job 使用 `JOBS_SIMULATOR_ONLY=1`，两个 Jobs 自有 podspec 在该模式排除真机专用 IJK，保留 AVPlayer / ControlView；默认本地安装不设此变量，切换模式须重新 `pod install`。安装模式连同架构写入源码指纹和结果身份；此模式的通过结果不能作为真机 IJK 验收。旧工程依赖原本未启用 IJK，不照搬新工程的 Pod 装配方式。
 - OC 旧工程主 target 的 Debug / Release 启用 `GCC_PRECOMPILE_PREFIX_HEADER=YES`，复用现有大型前缀头；两配置 Objective-C / C 的实际 PCH 与代表源码编译已验证。OC 新工程隔离模拟器图的文件工具、Keychain 宿主真实 XCTest 及宿主权限审计已验证；这些局部结果不等同于完整链接、打包或全量组件矩阵已完成。
+- Swift hosted 测试须避开首次通知授权弹窗：仅共享 Scheme 的 TestAction 配置 `JOBS_HOSTED_TESTS=1`，AppDelegate 在该环境跳过授权请求，正常启动沿用原流程；测试准备阶段等待真实 `UIApplication.applicationState == .active`，不以发送前台通知冒充实际前台状态，不削弱 Timer 的后台暂停行为或原有断言。来源：2026-10-18 同一任务的冷启动复现及完整 CI；状态：verified。
+- Swift 与 OC 旧工程打包按 `${products_dir}/${SCHEME}.app` 精确取主 App，并核对 plist、非 `.xctrunner` Bundle ID、可执行名及文件存在；不能使用目录枚举到的第一个 `.app`。Swift 的 build-for-testing 会同时产生 UI 测试 Runner，workflow 绿灯仍须核对实际下载产物身份。来源：2026-10-18 错包实证及修复后的 ZIP 核验；状态：verified。
+- 2026-10-18 分工程验收基线：Swift `6606ecb3` 的 [run 39087121259](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/39087121259) 完整成功，27 项 hosted UIKit / Timer 测试零失败；OC 旧工程 `main` 的 `cbec8426d` [run 39088328889](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39088328889) 完整成功。两者最终 ZIP 均核实为对应主 App、预期 Bundle ID、真实可执行文件及 arm64 架构；这两份结论不替代 OC 新工程的独立全流程验收。状态：verified；范围仅为上述提交和运行。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
