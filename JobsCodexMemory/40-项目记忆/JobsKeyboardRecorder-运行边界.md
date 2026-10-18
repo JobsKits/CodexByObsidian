@@ -15,7 +15,17 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#%E5%89%8D%E8%A8%80)
+- [一、项目范围](#jobs-toc-heading-2)
+- [二、已确认约束](#jobs-toc-heading-3)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
@@ -23,12 +33,12 @@ tags:
 
 > 记录键盘记录脚本的用户确认边界，避免后续恢复为关闭入口后继续驻留的行为。
 
-## 一、项目范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 仓库路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others`。
 - 脚本包路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others/【MacOS】JobsKeyboardRecorder.command`，主脚本与 `README.md` 同级维护。
 
-## 二、已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源：用户于 2026-10-17 反馈脚本未运行时，键盘输入仍会创建下载目录中的 `JobsKeyboardRecorder`；状态：confirmed；适用范围：本脚本及其缓存原生记录器。
 - 只有主动运行程序的有效会话期间才允许创建或重建记录路径。启动脚本退出、启动终端关闭或记录停止后，不能由残留后台记录器继续监听、写入或重建路径。

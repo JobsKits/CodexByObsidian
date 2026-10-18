@@ -17,26 +17,37 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、项目边界](#jobs-toc-heading-2)
+- [二、已确认约束](#jobs-toc-heading-3)
+- [三、同步与核验](#jobs-toc-heading-4)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > 记录 JobsDocs 博客必须持续自动构建的项目约束，以及构建产物回写主分支后的同步要求。
 
-## 一、项目边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 仓库路径：`/Users/jobs/Documents/Github/JobsDocs`；远端为 [**GitHub**](https://github.com) 的 `JobsKits/JobsDocs`。
 - 适用范围：`.github/workflows/deploy-blog.yml` 与 `blog/` 的自动生成和产物回写；不外推到 iOS、IM 或其它项目的构建策略。
 
-## 二、已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 用户原话：“始终要自动构建”；确认状态：`confirmed`；确认日期：2026-10-08。
 - 始终保留 `push main` 自动触发博客生成及构建产物回写 `main` 的能力；不能通过关闭工作流、取消回写或跳过构建来解决 `non-fast-forward` 推送拒绝。
 - 2026-10-08 核验现有工作流：推送 `main` 后运行 `blog/install.command --ci`，`blog/` 产物有变化时由机器人提交，并执行 `git push origin HEAD:main`。远端因此可能先于本地出现新的产物提交。
 
-## 三、同步与核验 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、同步与核验 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 后续授权推送前先 `fetch` 并检查工作区和双方历史；分叉时整合本地业务提交与远端构建提交，保留双方历史，再正常推送，不用强推覆盖构建提交。
 - 推送后等待对应自动构建完成，核验构建结果，再获取并整合产物回写，确认本地 `main` 与 `origin/main` 同步。构建或回写失败时继续排查实际失败原因，不能用跳过构建作为成功判据。

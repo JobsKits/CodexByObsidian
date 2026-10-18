@@ -18,15 +18,28 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、项目与来源边界](#jobs-toc-heading-2)
+- [二、架构与持续维护](#jobs-toc-heading-3)
+- [三、数据与设备边界](#jobs-toc-heading-4)
+- [四、Flutter 独立版本](#jobs-toc-heading-5)
+- [五、跨端新增拼读课程](#jobs-toc-heading-6)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > 用户要求在系统桌面新建独立 [**Swift**](https://www.swift.org/) App，沿用 Jobs Swift 项目的架构与链式 UI，整合俄语、英语、日语三个成熟学习功能；2026-10-03 明确将法语、西班牙语、朝鲜语拼读扩展到原生、Flutter 和 Python 三端。
 
-## 一、项目与来源边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目与来源边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 2026-10-04 用户明确移动端双向同步约束：iOS 出现的问题要在 Flutter 对应调整，Flutter 出现的问题也要在 iOS 对应调整；适用于搜索框位置、字号主次、列表布局等共同能力。
 - 来源：用户于 2026-10-04 在任务 `01a0ff33-3ef8-7300-a8e0-8b8c3c617620` 明确要求；状态：已确认；适用范围：iOS / Flutter 首页；创建 / 更新：2026-10-05。首页旗帜资源随应用本地打包：对应语言入口展示国旗，阿拉伯语展示用户指定的阿拉伯联盟旗帜，不使用运行时外链。会话完成记录报告两端已使用本地图片、iOS 模拟器构建与 Flutter 静态分析通过；页面视觉验收尚未完成。
@@ -43,7 +56,7 @@ tags:
 - 原生首页原有三个 Cell；2026-10-03 增至七个入口，加入法语、西班牙语、朝鲜语和阿拉伯语拼读页。新 App 使用 Swift 原生实现，复用英语、日语离线语料，不携带 Python / Qt / Argos 运行时。
 - 原 Swift Demo 不随本次修改；Python 的 `JobsRussianTrainer.py` 按用户本次要求加入三种语言，英语与日语 Python 子仓保持不变。新 App 的 Jobs 公共库仍为独立快照，后续修改不默认回写原 Swift Demo。尚未创建 Git 提交或远端。
 
-## 二、架构与持续维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、架构与持续维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `Podfile` 管平台与安装策略，`Podfile.deps` 管 `swiftAppCommon`、`byJobs`、target；使用 [**CocoaPods**](https://cocoapods.org/) 本地 Pods 和静态 frameworks。
 - 用户于 2026-10-01 确认 `Podfile.deps` 的展示与安全挂载属于同一要求：依赖清单在 Xcode 呈现红色 Ruby 钻石图标的文件引用态，同时保持 Pods 工程完整。当前由 `Podfile` 的 `post_integrate` 自动维护 Pods 根组中与 `Podfile` 相邻的唯一引用，显式类型 `text.script.ruby`，不进入 Build Phase；保存后重开校验，失败恢复原工程并告警。Xcode 当前窗口已核验红钻、引用箭头与 Ruby 高亮，依赖清单已展开为逐条 `pod`；持续规则归属 `jobs-podspec` 1.6.1。
@@ -61,7 +74,7 @@ tags:
 
 - 来源：用户于 2026-10-05 明确要求；状态：confirmed；适用范围：`/Users/jobs/Documents/Github/语言学习/原生iOS版本`；创建 / 更新：2026-10-05。新增 `ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/` 手动安装包，工程与 `ScriptsByDevTools/generate_project.rb` 初始生成器保留展示引用；当前用户 Xcode 行为为 `🫘语言学习 iOS · Pod Install`，终端回车确认后安装，独立日志 `language-learning-pod-install.log`，不增加自动构建动作。根 README 在“运行方式”2.1 说明运行、日志和迁移；语法、工程完整性、隔离用例及菜单检查通过，未执行真实安装或构建。共用工作流与其它工程说明见 [[Jobs-iOS-仓库族#五十一、安装与构建挂载脚本的 README 归属|手动安装与 README 归属]]。
 
-## 三、数据与设备边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、数据与设备边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 最低 iOS / iPadOS 18；支持 iPhone 与 iPad。真机签名需使用用户自己的开发 Team。
 - 俄语课程保留 10 元音、21 辅音、210 组合，系统 TTS 不等于专业音素录音。
@@ -72,14 +85,14 @@ tags:
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
 
 
-## 四、Flutter 独立版本 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、Flutter 独立版本 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 用户于 2026-10-02 明确要求制作 JobsLanguageLearning 的 Flutter 版本；当前工程随总仓位于 `/Users/jobs/Documents/Github/语言学习/Flutter版本`。旧桌面工程路径为历史位置。
 - Flutter 工程独立复制 Swift 工程的完整英日词库、中文种子、学习指南与版权文件，不依赖来源目录运行；来源校验在工程 `resource-provenance.json`。俄语、英语、日语分别有独立页面，日语基础发音包含五元音、14 辅音行、65 有效组合与鼻音。
 - 生成 Android / iOS / macOS / Windows 宿主；按语种持久化语音设置、三态主题和页面 / 后台停止播放。macOS 按需中文接入 Apple Translation；移动端接入 ML Kit；Windows 保留内置中文与缺译提示。平台实际验证以工程 `验证记录.md` 为准，不把生成宿主当作已构建或真机验收。
 - 2026-10-03 按用户要求增加法语、西班牙语、朝鲜语拼读入口与独立 `fr-FR` / `es-ES` / `ko-KR` 系统语音设置；韩文按 Unicode 规则由 19 个声母、21 个元音及可选收音构成音节块。
 
-## 五、跨端新增拼读课程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、跨端新增拼读课程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 法语课程使用 6 个基础元音字母、20 个辅音字母及 `ch / gn / ph` 拼写行，`q` 只提供 `que / qui`；西班牙语使用 5 个元音、22 个辅音字母及 `ch / ll` 行，提示 `c / g / h / q` 和地区读音规则。两者是基础拼写组合试听，不是完整 IPA 或人工录音。
 - 朝鲜语课程包括 19 个声母、21 个元音、27 种收音与无收音。三端共用音节块学习方式，实际词中收音仍受连音、音变影响。

@@ -15,28 +15,52 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、项目与入口](#jobs-toc-heading-2)
+- [二、已确认的范围](#jobs-toc-heading-3)
+- [三、自建 IM 产品的已确认约束](#jobs-toc-heading-4)
+- [四、三阶段工程与开放集成补充](#jobs-toc-heading-5)
+- [五、主营消息内核与删除扩展](#jobs-toc-heading-6)
+- [六、工程交付与选型原则](#jobs-toc-heading-7)
+- [七、独立新工程与本人 Swift 模板](#jobs-toc-heading-8)
+- [八、工程决策与验收责任委托](#jobs-toc-heading-9)
+- [九、聊天数据备灾约束](#jobs-toc-heading-10)
+- [十、多端同步对标与架构图交付](#jobs-toc-heading-11)
+- [十一、通信方式图文与高级入口组](#jobs-toc-heading-12)
+- [十二、面向非技术新人的产品首屏导航](#jobs-toc-heading-13)
+- [十三、高级转账与配套账单](#jobs-toc-heading-14)
+- [十四、JobsIM迁移与每份文档的同名目录](#jobs-toc-heading-15)
+- [十五、README入口与独立文档审计](#jobs-toc-heading-16)
+- [十六、数据库设计独立维护](#jobs-toc-heading-17)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > 分别记录已确认的技术研究范围与自建产品约束；不把选型候选或尚未实施的能力写成已完成事实。
 
-## 一、项目与入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目与入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 仓库：`/Users/jobs/Documents/Github/JobsDocs`。
 - 工作目录：`/Users/jobs/Documents/Github/JobsDocs/iOS相关的文档和资料.md`。
 - 总册：`iOS IM开发研究手册.md/iOS IM开发研究手册.md`。
 - 消息入库与 SQL 原文：`iOS IM消息入库架构与SQL面试手册.md/iOS IM消息入库架构与SQL面试手册.md`。
 
-## 二、已确认的范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、已确认的范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 用户明确要求面向完整的 iOS IM 开发开展研究，文档尽可能完备；此前“大量消息如何插入数据库”的面试问题只是其中一个方面。
 - 后续维护应以完整研发体系组织内容，不把数据库入库或面试答题作为整套文档的唯一主线；保留原问题作为数据库专题案例。
 - 这项约束仅适用于本套 IM 研究文档，不据此推断所有技术文档都必须扩写成百科。
 
-## 三、自建 IM 产品的已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、自建 IM 产品的已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：2026-10-07 用户十二条明确说明，`confirmed`；只适用于自建 IM 产品，不替代第二章的既有技术研究范围。
 - 当前文档仓库：`/Users/jobs/Documents/Github/JobsIM`（2026-10-08由用户从JobsDocs迁移，专题包装目录已直接位于仓库根，见第十四章）；产品总纲为 `IM需求明细表.md`，服务/硬件/后端依赖放在 `IM后端架构表.md`；原由后端承载表字段的分工已由第十六章的独立数据库文档取代，平台/工程/端侧数据与构建放在 `IM前端架构表.md`，逐项交付台账为 `IM功能验收表.md`，输入原表为 `IM需求明细表.xlsx`。当前先理需求与架构，未来再下沉代码，尚未创建新 IM 业务工程。
@@ -47,7 +71,7 @@ tags:
 - 前端提供小/标准/大三档受控字体，兼顾老年人与视力不佳人群；功能多，必须逐项记录通过、存疑、不通过等验收状态与证据，不能把 AI 生成代码视为已经通过验收。
 - 只借鉴公开需求与产品优势，形成自己的设计和实现，不抄袭或盲目临摹。现阶段的模块能力与性能目标是需求约束，不是已完成代码或实测收益。
 
-## 四、三阶段工程与开放集成补充 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、三阶段工程与开放集成补充 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于 2026-10-07 在同一 IM 需求任务中明确补充，`confirmed`；适用范围为自建 IM 产品。
 - 第一阶段先完成基础版，验收通过后封版；第二阶段标准版从基础基线增量继承；第三阶段高级/定制版从标准基线增量继承。明确各阶段工作目标和功能域工程标段，冻结基线与继承回归需有证据，当前尚未实施或封版。
@@ -60,7 +84,7 @@ tags:
 - 非付费会员策略在标准阶段交付：最大等级 N 可自定义，后台每级有能力勾选表，高等级继承低等级并可增加能力；实际开放能力由后台配置。等级界面与数据库物理建表分开，不能将运行版本、会员等级和收费套餐混同。
 - 本需求文件只保留最终结果，去掉原表纠错与需求版本对照；需求表与架构表独立。架构要列服务器最低/推荐配置、外源框架确切版本，以及数据库表与字段；硬件容量仍须实施后压测，不能把设计值记作已验证性能。
 
-## 五、主营消息内核与删除扩展 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、主营消息内核与删除扩展 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于 2026-10-07 明确要求融合进需求/架构/验收三表，`confirmed`；只适用于自建 IM 产品。本文第三章旧分档由本章取代，不修改其他 IM 研究范围。
 - 主营业务始终聚焦消息传递；基础版内核仅纯文本单聊，标准版增量支持静态图/动图、音频/视频消息、文件和群聊，高级版继承标准并强化私密性和聊天体验。原有身份、运维、机器人、中间件、会员等周边仍保留，但不成为主营消息可用的必经依赖。
@@ -68,7 +92,7 @@ tags:
 - 收讫后 n 秒删除的 n 由后台配置，不在代码中写死；触发删除必须预留回调，方便未来接入其他行为。删除生命周期与扩展接口作为基础内核设计、后续版本继承；云端副本清理与高级阅后即焚分别定义。
 - 需求、架构与验收表共同维护这些边界；当前仅文档设计，代码尚未实现、三个阶段尚未验收/封版。
 
-## 六、工程交付与选型原则 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、工程交付与选型原则 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于 2026-10-07 明确要求把既有工程中低门槛部署/反部署的思路写进产品文档，并说明 AI 是主要代码实现力量，`confirmed`；适用于自建 IM 产品。
 - 旧“既有代码可完全重构”的在原工程修改解释已于 2026-10-08 被用户明确取代（`superseded`）；按[[40-项目记忆/JobsDocs-IM研究文档#七、独立新工程与本人 Swift 模板|第七章]]另起 IM 工程。旧代码仍提供值得提取的经验，不把 AI 编写等同于正确或已经验收。
@@ -76,7 +100,7 @@ tags:
 - AI 作为开发主力，架构、安全、并发、多端同步与恢复仍按高级工程标准实施并留下可重复验收证据。分标段验收后须完成集成与五端验收，不能仅以代码生成或服务启动代表基础封版。
 - 客户端数据库的原未定状态已由第七章的 SQLite 确认及第八章的工程委托更新；访问框架、其他端适配与验收由 Codex 负责，不把工程选型写成用户亲自确认或已验证。
 
-## 七、独立新工程与本人 Swift 模板 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">七、独立新工程与本人 Swift 模板 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于 2026-10-08 在同一需求任务中明确说明并要求写进产品文档，`confirmed`；适用于自建 IM，不授权当前直接创建业务代码或修改模板工程。
 - IM 另起一套独立工程，从零实现业务；不在原业务代码上修改、改名或覆盖。原代码只提取有价值的工程经验；后续标准/高级增量继承新 IM 的基础/标准封版基线。
@@ -86,7 +110,7 @@ tags:
 - 用户同意 iOS 本地消息引擎 SQLite；其后委托 Codex 确定访问框架、自建封装边界及其他端方案，详见第八章。用户深入意见针对熟悉的 iOS；工程选择与实际验证分别记录，不外推用户逐项亲自确认。
 - 产品、前端架构、后端架构、验收四份文档独立维护并互相映射；当前仅文档设计，尚未创建、安装或编译新 IM 工程。
 
-## 八、工程决策与验收责任委托 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">八、工程决策与验收责任委托 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于 2026-10-08 针对“具体版本/最低系统、SQLite封装、默认参数、硬件与SLO实测、E2EE协议及许可证仍待锁定”明确表示这些应由 Codex 完成，用户仅熟悉 iOS；责任委托为 `confirmed`，适用于自建 IM 的工程设计与后续验收，不等同于当前授权实施新业务代码。
 - Codex 负责提出并确定工程基线、平台最低系统、存储访问层、默认参数、服务器配置、容量/SLO及测试方法、安全协议与许可方案，继而完成兼容整合、部署脚本、构建、压测、安全/恢复验证及整改；用户负责产品目标和体验反馈。不把技术抉择再次交给不熟悉该领域的用户。
@@ -94,7 +118,7 @@ tags:
 - Codex 已选择高级消息主线 MLS 1.0/OpenMLS统一 Rust 内核，以及新自有源码 Apache-2.0 基线；第三方保留各自许可，不重授旧模板/JobsDocs的权利。仅一个合格协议可以交付 E2EE 子能力，真实第二协议及切换未通过前不得启用协议切换或宣称高级全量封版；第二协议的工程责任仍归 Codex。
 - 设计值、工程选定、实现完成与验收通过分开记录。当前四文档已写具体默认值与测试目标，243项保持未验收；真实依赖锁、摘要、五端构建、容量、SLO、安全及恢复证据须实际执行取得，不虚构结果。普通 Web IndexedDB 不能仅凭事务成功成为云端唯一正文清理的耐久收讫依据。
 
-## 九、聊天数据备灾约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">九、聊天数据备灾约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08明确表示聊天数据很重要、后端架构需要备灾；该产品约束为 `confirmed`，限自建IM，当前仍为文档阶段，不表示已部署或演练。
 - Codex依已确认工程委托选择基础生产单主A/异地同步温备D、独立安全journal B、第三故障域不可变归档C，以及替代同步节点E预留和独立离线恢复集F；基础具备同步耐久与受控灾备，标准再增自动HA及实际媒体资产，高级继承并加密文/端侧恢复合同。不同故障场景及采购预算维护在后端第十一章，不把四节点资源计成一台业务机。
@@ -102,14 +126,14 @@ tags:
 - 同步副本、历史备份、离线恢复集分别保护节点故障、误删/损坏及在线备份故障；正文/对象/配置/密钥恢复材料/源码镜像/任务与外发状态均列入资产清单。恢复先隔离旧写者并核对最新journal/删除/撤权/绝对截止，不能复活已删除数据或降低权限。writer_generation与回退时的restore_epoch分开，外发未知按原ID对账，不盲目重放。
 - 四文档同步增加T-56～58与ARCH-35，现共243项均未验收；Codex负责后续恢复向导、故障演练、证据和整改。源Excel/原模板不因此修改，文档检查不替代灾备通过。
 
-## 十、多端同步对标与架构图交付 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-11" data-jobs-toc="v2">十、多端同步对标与架构图交付 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08明确要求围绕同一中性IM后端与iOS/Android/鸿蒙/Web/CLI多前端的数据同步比较竞品、学习优点和规避弱点，并补充“架构，需要有架构图”；上述工作方向为 `confirmed`，限自建IM。
 - Telegram是用户提出的主要体验对照对象，也允许比较其他产品；只借鉴公开行为和协议设计，不复制竞品代码，不据此选定Telegram后端为底座。不把资料核查或主观体验判断写成同条件性能排名；讨论中的新增体验规则仍须纳入产品行为、架构和验收合同。
 - 前/后端架构交付须包含可编辑Mermaid图和阅读入口，分别表达服务/数据依赖、五端存储与分层、不同用户及同账号独立设备同步、消息接受与异地耐久、增量/完整快照、端侧事务及灾备/受控恢复；图与正文、表所有权、配置和实际实现/部署一致，既有ARCH-01/34/35承担门禁。
 - 同步图明确统一逻辑后端可以多节点部署，客户端通过协议对账而非直接复制数据库；普通推送/展示不构成耐久收讫，云端已清正文不能靠服务器给新设备复原，账号登录/后端灾备不代替用户E2EE密钥恢复。当前仅补图与文档合同，243项仍未验收。
 
-## 十一、通信方式图文与高级入口组 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-12" data-jobs-toc="v2">十一、通信方式图文与高级入口组 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08明确要求把中心化／去中心化讨论落盘为图文架构说明，倾向一级分类“中心化IM／去中心化IM”，并要求回归当前对话、补术语和逻辑边界；上述阅读与审查要求为 `confirmed`，限本IM文档。
 - 文档按两大类组织，再说明联邦、中继与设备互联等可组合路线；控制权、服务器数量、BaseURL、加密和蓝牙／Wi-Fi通道分别解释。用户表示附近蓝牙／Wi-Fi场景有价值，但尚未确定具体协议或五端支持，不记成基础封版或已实现；当前中心化同步／删除／管理／备灾保证不外推到独立运营者或设备互联。
@@ -117,33 +141,33 @@ tags:
 - 工程合同和原编号映射维护于四份主文档，新增 `IM通信方式图解.md` 作为通俗入口，本地图片与可编辑Mermaid并存。真实服务身份、签名防回滚、原ID未知结果对账、权限与灾备门禁由Codex实现验证；具体数值与可变依赖不重复抄入永久记忆。
 - 用户委托回归查漏补缺仍由Codex承担，不要求用户补后端技术判断。文档修订与图文检查不代表软件验收，现243项仍全部未验收。
 
-## 十二、面向非技术新人的产品首屏导航 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-13" data-jobs-toc="v2">十二、面向非技术新人的产品首屏导航 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08提供“方向→功能”两级列表示例，明确要求放在需求文档最前头、让完全不懂技术的新人快速抓住重点；该阅读要求为 `confirmed`，限本IM产品文档。
 - 同日补充位置与排版：用户明确纠正导航应进入“前言”之后，并用截图要求同一版本同一端的功能合并成一个列表项，用“·”串联，不重复多条“用户端”；之前放在文档标题后、前言之前的执行解释已被取代（`superseded`）。
 - 产品导航放在“前言”标题之后，提炼产品全貌和基础／标准／高级功能，以两级列表展示，标明用户端、管理后台和后台服务；同端功能写在同一条，功能名称链接到本文实际标题，详细需求继续保留。首屏不讲数据库、框架和专业架构实现，不把技术架构文档作为主要功能详情入口。
 - 首屏保留版本继承、场景选配、候选路线及当前未实现／未验收状态；群主／群管理员操作与平台管理员后台区分，免费会员能力策略与收费预留区分。此约束不表示产品新增能力已实现。
 
-## 十三、高级转账与配套账单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-14" data-jobs-toc="v2">十三、高级转账与配套账单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08明确要求高级版增加转账，并表示涉及钱就必须有账单；这两项产品约束为 `confirmed`，只适用于自建IM。
 - 高级资金模块明确包含转账和配套个人账单／后台对账；开启任何真实资金能力时账单不可缺席，基础／标准不启用。资金功能与免费聊天、收费订阅预留分开，聊天卡片和消息生命周期不取代资金权威记录。
 - 产品规则、前后端字段／状态合同及既有验收编号同步维护；默认费用、待收款期限、取消开关和实现协议由Codex选定并在项目文档记录，不冒充用户逐项亲自选定。本人账单权限、受控退款／对账、模块关停／受限账户收尾和防灾备重复付款均须实际验证，当前仍未实现，243项保持未验收。
 
-## 十四、JobsIM迁移与每份文档的同名目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-15" data-jobs-toc="v2">十四、JobsIM迁移与每份文档的同名目录 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08确认文件夹移至 `/Users/jobs/Documents/Github/JobsIM`，并明确每个 `*.md` 用与文件全名一致的文件夹包裹，便于管理其图片引用；迁移和目录约束为 `confirmed`，限当前JobsIM文档。
 - 当前文档根为 `/Users/jobs/Documents/Github/JobsIM`，五份专题包装目录直接位于根下，已按实际文件核对；旧 `/Users/jobs/Documents/Github/JobsDocs/IM需求明细表` 及迁移中间层 `/Users/jobs/Documents/Github/JobsIM/IM需求明细表` 已被取代（`superseded`）。例如主需求路径为 `IM需求明细表.md/IM需求明细表.md`；前端架构、后端架构、验收、通信方式图解同样采用含`.md`扩展名的同名目录，不只取文件名stem。原始xlsx现与主需求md同处其包装目录。
 - 本地图片／SVG置于对应文档目录，通信图解保留其完整图解资源，需求使用图的本地副本；跨文档、模板与其它外部文件引用均以包装后的md位置重新计算相对路径，本文锚点保持不变。原始xlsx继续作为输入材料保留，不能因包装目录修改表格内容。
 
-## 十五、README入口与独立文档审计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-16" data-jobs-toc="v2">十五、README入口与独立文档审计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-08要求为JobsIM写README，并要求在其中开辟独立审计／审核与打分模块，重点挑出逻辑不能自洽的地方；该内容要求为 `confirmed`，限本IM文档，排除原始xlsx。
 - 当前总入口实际为根 `README.md`，专题文件维持第十四章的包装形态；这是本次入口组织事实，不据此推断用户取消其它文档包装规则。README包含三版产品全貌、文档入口、实施顺序、现状及独立审计；同版同端功能仍合并一条。
 - 审计需交叉覆盖需求、前后端架构、验收和通信图解，问题给原文定位、影响、整改条件及扣分依据；评分评价文档逻辑／合同完整性，不能冒充实现完成度、安全认证或实际验收。已明示的待实施／实测阶段门禁不直接扣分。
 - 2026-10-08首轮只在README登记问题；用户于2026-10-09明确要求按整改意见修改原文、完成回归并同步README，此授权与闭环要求为 `confirmed`。Codex负责同步需求／字段接口／图／验收、按证据关闭问题和重新评分；文档静态回归和真实功能验收分别记录，当前243个主验收项仍未验收，不把文档检查当作业务通过。
 
-## 十六、数据库设计独立维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-17" data-jobs-toc="v2">十六、数据库设计独立维护 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源与状态：用户于2026-10-18要求重新审计需求、查漏补缺并补齐数据库设计，随后明确“后端架构不应该有数据库设计的内容，需要移除，另表（文件）写”；该文档边界为 `confirmed`，适用于 `/Users/jobs/Documents/Github/JobsIM`。
 - 数据库设计独立维护于 `数据库设计.md/数据库设计.md`，延续同名目录包装；原后端的数据库设计章节完整迁出，不在后端保留字段副本。后端维护服务职责、协议、数据所有权和部署运维，数据库文件维护表字段、关系约束、索引、类型、事务及迁移门禁；前端逻辑数据职责继续在前端文档，以链接关联物理合同。

@@ -14,15 +14,26 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、已确认范围](#jobs-toc-heading-2)
+- [二、Token 用量与对话归属](#jobs-toc-heading-3)
+- [三、双平台主分支映射](#repository-branches)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 记录经用户确认的项目范围；不保存账户身份、凭据或授权数据。
 
-## 一、已确认范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、已确认范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 用户于 2026-10-02 要求以 Python 编写 Windows / macOS 双端 Codex 桌面账户切换工具，包含 README 和两端打包入口。
 - 当前仓库根目录：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py`，用户于 2026-10-10 明确指定当前工程 `JobsCodexAccountSwitcher.py/`。2026-10-02 的桌面路径 `/Users/jobs/Desktop/JobsPythonTools.py` 已被此次指定替代（`superseded`）；不再沿用此前“Documents 路径已废弃”的判断。
@@ -33,7 +44,7 @@ tags:
 
 - 用户于 2026-10-03 确认：双击账户应自动关闭所选 ChatGPT / Codex 桌面应用、切换账户并重启；账户列表右键支持更改备注和刷新缓存，空白处右键刷新，列表可滚动；不保留人工核验完成或回滚按钮。
 
-## 二、Token 用量与对话归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、Token 用量与对话归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - **工程归属已替代（superseded，2026-10-18）：** 用户明确要求账户切换与 Token 上下行监控拆成两个同级 Python 工具，不能仅用同一主程序的不同参数或轻量启动器区分。账户工程仅管理账户；独立监控工程及置顶设置约束见 [[JobsCodexTokenMonitor-独立用量监控]]。下列统计与隐私口径继续适用于独立监控工具，2026-10-10 的合包验收仅为历史基线。
 

@@ -17,15 +17,26 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、三处集成归属](#jobs-toc-heading-2)
+- [二、命令与健康检查边界](#jobs-toc-heading-3)
+- [三、Finder 目标地图更新入口](#jobs-toc-heading-4)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > 记录代码地图安装、系统初始化与终端命令的跨仓库归属；通用依赖体检规则继续归 `jobs-macos-shell`，不在此重复维护一套规则。
 
-## 一、三处集成归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、三处集成归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 职责 | 已确认位置 |
 | --- | --- |
@@ -36,7 +47,7 @@ tags:
 
 新系统脚本已由根目录文件迁入同完整名称目录，同目录有 README。系统入口以自身位置定位相邻 `JobsCommand@iOS` 安装器，路径不依赖终端当前目录。CLI 安装与给业务项目建立地图分开。
 
-## 二、命令与健康检查边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、命令与健康检查边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 用户明确要求 `codemap` 对当前目录建图，`codemap 地址` 对手工输入或拖入的地址建图；支持含空格、中文与多目录。既有地图重建，首次初始化；不以目录存在或退出码为唯一成功证据。
 - [**CodeGraph**](https://github.com/colbymchenry/codegraph) 的官方 npm 包为 `@colbymchenry/codegraph`。安装器体检基础工具 → [**Homebrew**](https://brew.sh/) → [**Node.js**](https://nodejs.org) / [**npm**](https://docs.npmjs.com/) → CodeGraph，并以临时样例真实建图复检。
@@ -44,7 +55,7 @@ tags:
 - 现行安装器复用健康 Node/npm；缺失时通过 Brew 管理 node@24；更新或新装 CLI 使用用户独立 npm 前缀，保留原全局安装。健康检查不隐式下载平台包，建图调用关闭遥测。
 - codemap 只使用现有健康 CLI，不隐式安装；产物固定在目标 `.codegraph`，核对官方 JSON 的项目路径、输出路径、索引时间及完整状态。
 
-## 三、Finder 目标地图更新入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、Finder 目标地图更新入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源：用户于 2026-10-18 明确要求；状态：已确认；适用范围：`MacOS@Extension`。Finder 的“更新代码地图（.codegraph）”与既有 `codemap` 命令独立：健康 CLI 直接更新目标地图，CLI 缺失时允许在终端回车确认后经 Homebrew / Node/npm / 官方包安装链补齐。完整实现、版本兼容和目标隔离边界见 [[MacOS-Finder-扩展体系#五、更新目标文件夹代码地图|Finder 代码地图入口]]；本轮没有修改前两节列出的其它安装器或命令副本。
 

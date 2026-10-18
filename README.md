@@ -2,7 +2,18 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [一、目录结构](#repository-layout)
+- [二、同步脚本](#repository-script-flows)
+  - [同步Obsidian记忆.command](#jobs-toc-heading-3)
+  - [同步Obsidian自动任务.command](#jobs-toc-heading-4)
+
+</details>
+<!-- jobs-toc:end -->
 
 [目录结构](#repository-layout) · [同步脚本流程](#repository-script-flows)
 
@@ -29,7 +40,7 @@
 
 ## 二、<span id="repository-script-flows">同步脚本</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-### [同步Obsidian记忆.command](./同步Obsidian记忆.command)
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">[同步Obsidian记忆.command](./同步Obsidian记忆.command)</span><!-- jobs-toc:heading-end -->
 
 > **目的：** 把 Obsidian 当前打开 Vault 的记忆内容同步到本仓固定 Vault。
 
@@ -39,7 +50,7 @@
 * 检查预览后再按回车确认，复制新增和变化文件。
 * 保留目标独有文件，不做删除同步，最后输出日志和同步结果。
 
-### [同步Obsidian自动任务.command](./Obsidian自动任务备份/同步Obsidian自动任务.command)
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">[同步Obsidian自动任务.command](./Obsidian自动任务备份/同步Obsidian自动任务.command)</span><!-- jobs-toc:heading-end -->
 
 > **目的：** 在本机 Codex 与本仓备份目录之间同步自动任务配置。
 

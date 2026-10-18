@@ -16,15 +16,26 @@ tags:
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、项目归属](#jobs-toc-heading-2)
+- [二、桌面与数据边界](#desktop-data-boundaries)
+- [三、验证基线](#jobs-toc-heading-4)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 记录用户确认的工程拆分与桌面交互边界，不保存聊天、凭据或个人用量。
 
-## 一、项目归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目归属 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 状态：已确认。用户要求同级两个 Python 功能工程，账号切换位于 `/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexAccountSwitcher.py`，监控位于 `/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexTokenMonitor.py`。
 - 每个工具使用“外层入口 + 内层 Python 工程”，分别拥有源码、依赖、测试、README、macOS / Windows 打包入口和可单独分发的 APP / EXE。
@@ -41,7 +52,7 @@ tags:
 - 只读本地会话日志；缓存输入、推理输出已计入对应总数，不能重复相加；主代理与子代理不混算，不把未知当零。详细继承口径见 [[JobsCodexAccountSwitcher-双端账户工具#二、Token 用量与对话归属|原统计约束]]。
 - 会话钩子由监控工具管理，识别并安全替换本工具旧动作，保留其它钩子与原文备份；改变命令后仍经官方 `/hooks` 审阅，不自动写信任哈希。
 
-## 三、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 2026-10-18：账户 63 项、监控 169 项及双入口 176 项隔离环境回归通过。两套独立 Mac ARM64 APP / DMG 已生成并校验；实际监控设置按钮、置顶双向切换、取消后重启恢复、钩子标准输入 / JSON 输出和跨进程单实例唤起已验证。Windows 原生 GUI / 打包未实机验证，真实账户切换未在本轮执行。
 - 本机原有两条 Token 钩子已精确备份后迁到独立监控的第一层稳定 APP 入口，外部钩子与 `config.toml` 保持；新命令需要官方 `/hooks` 重新审阅。账户工具第一层的旧 `JobsCodexTokenWidget.app` 入口已随重打包移除。
