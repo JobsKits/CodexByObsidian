@@ -117,4 +117,11 @@ tags:
 - 备灾库是父仓子模块，真实 Git 目录位于 `JobsGenesis/.git/modules/SourceTree.command`；其 `core.worktree=../../../SourceTree.command` 复制到独立 `.git` 后可能失效。旧版 `git -C 暂存目录 config --local --unset` 会先进入失效路径并失败，原脚本还会忽略这次失败；使用 `git config --file` 直接清除暂存 `config` 与已有 `config.worktree` 的全部 `core.worktree`，仅允许无键退出码 5，随后核对实际工作树根目录、HEAD 和只读状态。
 - 安装器属于终端交互入口，不作为 Sourcetree 自定义动作挂载；维护它不新增菜单项。本地运行态与备灾态的脚本 / README 同步，隔离验证覆盖发送、最终目录改名、替换备份及失败保留目标和清理暂存；未操作真实菜单、提交或推送。新电脑须取得更新后的同名脚本才生效。
 
+## 十一、<span id="readonly-pull">只拉取仓库与安装菜单关联</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-18 明确要求；状态：已确认；创建 / 更新：2026-10-18；适用范围：SourceTree 自定义动作及只能拉取、没有推送权限的本地仓库。
+- 独立动作 `【MacOS@SourceTree】⏬只拉取远程代码.command` 通过 Terminal 执行，只同步当前仓库明确的远程上游，不提交、不推送。发现本地改动时必须红字列出风险，只有精确输入大写 `YES` 才允许舍弃；回车和其它输入均取消，不得以 SourceTree 无交互策略绕过。
+- 新增、修改或重命名 SourceTree 动作，必须同时关联 `【MacOS】安装SourceTree自定义菜单.command/` 内安装器的动作登记、`actions.plist` 模板和 README；随后同步运行态、备灾态和当前用户动作配置，保留用户已有标题。此规则已收口到现行 `jobs-macos-shell/SKILL.md` 的 SourceTree 部分，不仅修改当前机器菜单。
+- 实现保护边界：先成功 fetch 并固定提交，再允许危险确认；暂存 / 未暂存 / 未跟踪及本地独有提交均检查。忽略内容保留，子模块改动、嵌套仓库、未完成操作、目标不明确及路径覆盖风险停止，避免父仓授权扩大到子仓。
+
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
