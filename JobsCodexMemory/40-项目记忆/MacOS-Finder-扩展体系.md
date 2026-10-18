@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension
 created: 2026-09-13
-updated: 2026-09-13
+updated: 2026-10-18
 tags:
   - codex-memory
   - project
@@ -45,5 +45,21 @@ tags:
 - 根安装脚本使用 `zsh -n`，并分别验证全选、部分选择和未知标识解析。
 - `JobsTerminalOpener` 使用部分功能集合隔离构建，随后读取宿主 App 与扩展产物的 `JobsTerminalEnabledFeatures`，确认首次运行默认值与勾选项完全一致；共享配置读写还要同时进入两个 target 并通过真实构建。
 - 普通验证不得运行完整安装流程，避免注册扩展、重启 Finder 或触发真实依赖安装。
+
+## 四、IDE 打开入口与 Pod 合并 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-18 明确要求；状态：已确认（产品行为）；适用范围：本仓 Finder 右键扩展；创建 / 更新：2026-10-18。增加“用 Xcode 打开项目”“用 VSCode 打开项目”“用 Android Studio 打开项目”。用户同日后续修正：开发 / 安装扩展已经以 Xcode 为前提，Xcode 入口直接打开，不再检查安装或跳下载页；最初要求三个 IDE 统一判空的 Xcode 部分已被本条替代（superseded）。VSCode、Android Studio 仍先自检，缺失时停止项目打开并转官方下载页。Pod 安装与升级必须合为一个右键入口，不得拆分；仅处理目标文件夹的 Pod 依赖，不包含 CocoaPods 工具本身的安装 / 升级。
+- 当前源码分别位于 `JobsXcodeOpener`、`JobsVSCodeOpener`、`JobsAndroidStudioOpener`，每项保留独立宿主、扩展、Scheme、Bundle ID 和卸载入口。这三项当前是父仓直接维护的源码目录，未建立独立远端或 `.gitmodules` 登记；原有四个子模块继续独立管理。总安装器当前为七个工程、十一个可勾选菜单；Terminal 工程仍为五项。
+- VSCode、Android Studio 通过 LaunchServices 查找应用并核验 Bundle ID、App 目录和可执行文件，缺失分支打开官网下载页后立即返回。Xcode 直接用 `/usr/bin/open -a Xcode` 打开，路径作为独立参数传递，无 Shell 拼接；当前目录优先 workspace，其次 project，同优先级多个候选时明确选择，不递归猜测子工程。
+- 当前实现沿用已有工程依赖入口，将菜单标题改为“安装/升级 Pod”，保留 `pod-install` 配置 / URL 标识。用本机 `Pods/Manifest.lock` 记录判定已安装并执行 `pod update`，没有记录时执行 `pod install`；仓库自带 `Podfile.lock` 不能当作本机已安装的证据。终端确认时直接回车跳过，任意字符执行；先检查 Ruby、CocoaPods 和项目实际需要的 Bundler。该实现不自动安装或升级 CocoaPods 工具本身。
+- 验证边界：构建时使用 `JOBS_SKIP_FINDER_EXTENSION_BUILD_PHASE=1` 跳过脚本注册和 Finder 重启；Xcode 自带 `RegisterWithLaunchServices` 仍可能登记临时 App，隔离构建完成后按本次临时 App 的精确路径注销。源码 / 隔离构建通过不能代替真实 Finder 菜单与签名加载验收，不应在普通验证时运行宿主或完整安装器。
+
+## 五、更新目标文件夹代码地图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-18 明确要求；状态：已确认（入口、目标范围、Homebrew 安装链与回车确认）；适用范围：`JobsTerminalOpener` 的 CodeGraph 菜单；创建 / 更新：2026-10-18。入口统一为“更新代码地图（.codegraph）”，保持单项及 `codegraph-bootstrap` 标识兼容；目标有图时同步，无图时创建。缺失组件时调 Terminal，回车确认后才安装，并体检实际依赖链。
+- 当前官方仓库没有可确认的 CodeGraph Homebrew formula / tap，不能使用未落地的提案名。实现通过 Homebrew 准备 Node/npm，再安装官方 `@colbymchenry/codegraph` 到用户独立前缀；保留 Homebrew 系统 `YES` / 用户目录选择。健康 CLI 仅更新地图，不主动升级工具；安装分支复用健康依赖，只修缺失或损坏层，修复一次后立即复检。
+- 安装来源、路径、失败命令和每次独立日志在终端可见；环境与 PATH 仅作用于当前子进程，不写 Shell 启动配置，不改变网络代理。CLI 自检禁止 shim 隐式下载，地图操作关闭遥测；不调用 `install`、`watch`、`serve`。
+- 已核实发布版 1.6.2：`CODEGRAPH_NO_WATCH=1` 配合 `init --yes` 会进入自动 Git hooks 分支，当前入口使用 `CODEGRAPH_NO_WATCH=0` 避开。`init` 使用明确目标；`status` 可能回退父级，因此先用系统 SQLite 只读检查精确 DB 的 `nodes` 表（禁用用户 `.sqliterc`），异常 DB 直接停止；地图及直属条目符号链接也拒绝。
+- 最终 JSON 核对项目 / 输出路径、索引时间、完成状态和必需待处理计数；仅在字段存在时检查较新版本的 `filesNeedingReindex` / `filesWithParseErrors`，兼容发布版 1.6.2。构建、签名及隔离回归已验证，真实工具安装和用户业务目录建图不作为普通测试执行。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

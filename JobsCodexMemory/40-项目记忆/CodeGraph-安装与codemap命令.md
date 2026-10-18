@@ -5,7 +5,7 @@ scope: codegraph-codemap
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsCommand@iOS
 source: 2026-10-17 用户明确要求三处集成，并确认全依赖链健康体检
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-18
 tags:
   - codex-memory
   - project
@@ -43,6 +43,10 @@ tags:
 - 用户于 2026-10-17 再次确认“所有第三方依赖都做健康体检，至少 Brew、Node/npm”；`jobs-macos-shell/SKILL.md` 的 1.7.1 已明确完整依赖链、实际可用性、修复后复检及失败停止，故本任务没有重复修改全局 AGENTS 或 Skill。
 - 现行安装器复用健康 Node/npm；缺失时通过 Brew 管理 node@24；更新或新装 CLI 使用用户独立 npm 前缀，保留原全局安装。健康检查不隐式下载平台包，建图调用关闭遥测。
 - codemap 只使用现有健康 CLI，不隐式安装；产物固定在目标 `.codegraph`，核对官方 JSON 的项目路径、输出路径、索引时间及完整状态。
+
+## 三、Finder 目标地图更新入口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-18 明确要求；状态：已确认；适用范围：`MacOS@Extension`。Finder 的“更新代码地图（.codegraph）”与既有 `codemap` 命令独立：健康 CLI 直接更新目标地图，CLI 缺失时允许在终端回车确认后经 Homebrew / Node/npm / 官方包安装链补齐。完整实现、版本兼容和目标隔离边界见 [[MacOS-Finder-扩展体系#五、更新目标文件夹代码地图|Finder 代码地图入口]]；本轮没有修改前两节列出的其它安装器或命令副本。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
 
