@@ -10,7 +10,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-18
+updated: 2026-10-19
 tags:
   - codex-memory
   - project
@@ -89,6 +89,7 @@ tags:
 - [五十九、Swift 与 OC 空壳清理](#jobs-toc-heading-60)
 - [六十、CocoaPods 公共源网络测试模块](#jobs-toc-heading-61)
 - [六十一、GitHub Actions 模拟器验收边界](#jobs-toc-heading-62)
+- [六十二、三工程微应用教学 Demo](#microapp-learning-demos)
 
 </details>
 <!-- jobs-toc:end -->
@@ -551,5 +552,14 @@ tags:
 - OC 新工程对 ReactiveObjC 的适配只写入 Jobs 维护的 Podfile：保留继承的头搜索路径，加入上游 prepare 后的 `ReactiveObjC/extobjc`，并仅对 ReactiveObjC target 的 Debug / Release 设 `USE_HEADERMAP=NO`。不复制或修改第三方头，不私有化 RACExtra 的公共宏头，不扩大到其他 target；旧工程独立完整 CI 已通过，不因新工程批量依赖图的现象追加该开关。来源：2026-10-18 的隔离双配置完整 ReactiveObjC 编译、公共模块 / 头消费验证及上述 CI Pod 构建；状态：verified。实际 CI 中异常 header map 的具体产生原因尚未证实，不记录为已知 Xcode 缺陷或已证实的同名头冲突。
 - 2026-10-18 分工程验收基线：Swift `6606ecb3` 的 [run 39087121259](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/39087121259) 完整成功，27 项 hosted UIKit / Timer 测试零失败；OC 旧工程 `main` 的 `f88cc0041` [run 39101054898](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101054898) 完整成功。两者最终 ZIP 均核实为对应主 App、预期 Bundle ID、真实可执行文件、arm64 / IOSSIMULATOR 平台、Debug 动态库及主资源。状态：verified；范围仅为上述提交和运行。
 - 同日 OC 新工程 `byPods` 的 `523997452` [run 39101036560](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101036560) 独立完整成功：109 个自有 Pod 的双配置批次及 218 份成员证据完整，49 组 XCTest 共 135 项执行全部通过、零失败零跳过，10 组 harness 全过，主 App 双配置成功；源码指纹一致，Keychain 实际宿主权限审计与三份静态审计通过。ReactiveObjC 前后配置 / 宏头 SHA 一致，真实编译响应文件无 header map / VFS 入口且保留原始头搜索路径。最终产物完整 SHA256 匹配 GitHub digest，内外 ZIP 校验通过，唯一主 App 为 `JobsOCBaseConfigDemo.app`、Bundle ID 为 `com.JobsOCBaseConfigDemo.byPods`，同名可执行文件、arm64 / IOSSIMULATOR、Debug 动态库及主资源均核实。状态：verified；不代表真机 IJK 或人工 App 功能验收。
+
+## 六十二、<span id="microapp-learning-demos">三工程微应用教学 Demo</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-19 根据 iOS 招聘要求明确提出；状态：confirmed（教学范围与交付约束）、verified（本轮三工程 Debug arm64 模拟器完整主工程编译及下述页面 / 交互 / 主题复验）；创建 / 更新：2026-10-19。适用范围为本笔记第一节的 OC 新工程、OC 老工程和 Swift UIKit 基础工程。
+- 三侧各提供 5 个独立 VC，分别展示微应用 / 微程序容器、多账户 / 多会话、[**mPaaS**](https://help.aliyun.com/zh/product/49548.html) 本地平台适配、逻辑沙箱和 [**PWA**](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) 离线资源。界面必须有可操作能力；定义、演进、用法、接入步骤和真实限制直接写在相关代码注释中，简明扼要，不另建学习 `*.md`。本项目后续新增这类教学功能沿用三侧同轮覆盖和完整主工程可编译门禁。
+- OC 新旧 Demo 均在各自工程根下的 `JobsOCBaseConfigDemo/业务逻辑/功能模块/Demo@MicroAppLearning/`，随附资源为该目录的 `Resource/JobsMicroLearning.bundle/`。Swift Demo 在工程根下的 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@微应用学习/`，资源为 `JobsSwiftBaseConfigDemo/Resources/JobsMicroAppLab.bundle/`。沿用原有主工程集成方式，OC 老工程不为教学示例新增 Pod 依赖。
+- 教学边界：mPaaS 页是本地协议 / 适配练习，未接商业 SDK；“多开”演示同一宿主内账户和 Web 数据隔离，不克隆或运行其它 App；命名空间子目录是宿主逻辑隔离，不新增系统级沙箱。`file://` 加载的是 Native 离线包，不代表 [**Service Worker**](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) 已注册；资源经同源可信 HTTP(S) 部署后才能另行验证真实 SW / Cache 行为。
+- 2026-10-19 最终验证范围：三工程 Debug、arm64、iOS Simulator 的完整主工程构建均为 `BUILD SUCCEEDED`，本机证据分别为 `/tmp/jobs-micro-swift-verified.log`、`/tmp/jobs-micro-oc-new-verified.log`、`/tmp/jobs-micro-oc-old-verified.log`；15 个 Demo 页面均启动成功。三工程均通过 Bridge 允许 / 拒绝、沙箱读写 / 越界、多账户数据隔离、mPaaS 打开路由及 Native 离线包状态检测的实际交互测试。
+- 六组微应用 / PWA 页面通过实际按钮切换主题与截图复验，已修正 Swift 按钮配置背景未跟随主题及 OC 网页主题问题。两套 PWA Web 资源均在 [**Chrome**](https://www.google.com/chrome/) localhost 完成“在线注册 SW → 停止 HTTP 服务 → 普通重载并继续交互”验证；此结果只证明 Web 资源的真实 SW 离线行为，不表示 `WKWebView` 的 `file://` 模式运行了 SW。Release 构建和签名真机运行仍未验证；结论仅适用于本轮已列环境、页面与操作，不外推为全平台或所有功能保证，也不把此前 CI 成功提交的结论套用到当前未提交改动。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
