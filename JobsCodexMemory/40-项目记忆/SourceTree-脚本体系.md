@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-18
+updated: 2026-10-19
 tags:
   - codex-memory
   - project
@@ -139,8 +139,13 @@ tags:
 ## 十一、<span id="readonly-pull">只拉取仓库与安装菜单关联</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-18 明确要求；状态：已确认；创建 / 更新：2026-10-18；适用范围：SourceTree 自定义动作及只能拉取、没有推送权限的本地仓库。
-- 独立动作 `【MacOS@SourceTree】⏬只拉取远程代码.command` 通过 Terminal 执行，只同步当前仓库明确的远程上游，不提交、不推送。发现本地改动时必须红字列出风险，只有精确输入大写 `YES` 才允许舍弃；回车和其它输入均取消，不得以 SourceTree 无交互策略绕过。
+- 独立动作 `【MacOS@SourceTree】⏬只拉取远程代码.command` 通过 Terminal 执行，同步当前仓库明确的远程上游并向下检出各层父仓 gitlink 固定版本，不提交、不推送。发现本地改动时必须红字列出风险，只有精确输入大写 `YES` 才允许舍弃；回车和其它输入均取消，不得以 SourceTree 无交互策略绕过。
 - 新增、修改或重命名 SourceTree 动作，必须同时关联 `【MacOS】安装SourceTree自定义菜单.command/` 内安装器的动作登记、`actions.plist` 模板和 README；随后同步运行态、备灾态和当前用户动作配置，保留用户已有标题。此规则已收口到现行 `jobs-macos-shell/SKILL.md` 的 SourceTree 部分，不仅修改当前机器菜单。
-- 实现保护边界：先成功 fetch 并固定提交，再允许危险确认；暂存 / 未暂存 / 未跟踪及本地独有提交均检查。忽略内容保留，子模块改动、嵌套仓库、未完成操作、目标不明确及路径覆盖风险停止，避免父仓授权扩大到子仓。
+- 实现保护边界：先成功 fetch 并固定提交，再允许危险确认；暂存 / 未暂存 / 未跟踪及本地独有提交均检查。忽略内容保留，子仓源码 / 暂存指针、嵌套仓库、未完成操作、目标不明确及路径覆盖风险停止，避免父仓授权扩大到子仓。
+
+
+- 来源：用户于 2026-10-19 明确选择补齐递归只拉取，并要求 `/Users/jobs/Documents/Github` 全部同名下载入口同步；状态：用户需求已确认、实现经隔离验证；创建 / 更新：2026-10-19。只拉取先预检整棵目标提交树，再同步父仓并逐层按 gitlink 检出，允许纯 HEAD 漂移；不使用 `--remote`，不暂存、不提交、不推送。现有单仓动作对普通子模块指针变化一律停止的旧行为已替代（`superseded`），子仓源码、暂存指针、独有游离提交和未完成现场仍保护。
+- 同日实现：8 份 `【MacOS】⏬下载配置当前Git子模块（可向下同步递归）.command` 内嵌相同完整只拉取引擎，回车默认消费固定版本；显式选择维护模式保留各仓原清单、子树选择、深度切换与 `AUTO_PARENT_*` 开关。只拉取不进入 Homebrew / fzf 安装流程，`DRY_RUN=1` 明确停止；旧缓存缺工作树先保护并提示恢复。覆盖 JobsGenesis 根、Python、Gits 包、MacOS 扩展、JobsConfigOS、VScode 包、Codex 配置及 JobsBaseConfig 根；README 同步，SourceTree 运行态 / 备灾态及已安装菜单关联核验。
+- 发布边界：父仓锁定的子 SHA 必须在所选托管线路可获取；`not our ref` 由发布电脑补齐对应子仓提交，消费端删除重克隆或提交旧指针不能修复。各子仓追分支最新并自动提交父仓是维护流程，不能用于只拉取电脑消费发布版本。18 组真实 Git / PTY、15 例离线地址矩阵、下载两种入口布局及重复运行通过；本轮没有业务仓提交或推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
