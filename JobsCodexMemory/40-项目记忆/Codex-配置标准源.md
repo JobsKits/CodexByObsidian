@@ -4,7 +4,7 @@ status: active
 scope: codex-config
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs
 created: 2026-07-15
-updated: 2026-10-12
+updated: 2026-10-19
 tags:
   - codex-memory
   - project
@@ -49,6 +49,8 @@ tags:
 
 - 全局指导新增或修改先写 `JobsCodexConfigs/AGENTS.md`，再在同一任务结束前单向部署到 `/Users/jobs/.codex/AGENTS.md`，用 `cmp` 验证逐字节一致，不等待下次启动注入脚本或用户提醒。来源：用户于 2026-10-12 再次明确确认；状态：已确认；更新时间：2026-10-12。此次本地 AGENTS 同步确认不扩展为 Git 提交、推送、Skills 文件复制或 gitlink 更新授权。
 - Skills 修改默认直接写 `/Users/jobs/.agents/skills` 现行工作树；不得自动用父仓子模块、历史备份或其它副本反向覆盖它。用户于 2026-10-06 明确授权通过独立脚本手动选择双向同步，例外范围见第六节。
+- 来源：用户于 2026-10-19 明确要求；状态：已确认；适用范围：`jobs-markdown-docs` 的 README 项目统计规范；创建 / 更新：2026-10-19。`README规范-项目统计条款.md` 与现行 `/Users/jobs/.agents/skills/jobs-markdown-docs/SKILL.md` 保留在同一目录，通过主文件的相对链接按需加载，不合二为一、不用旧版主文件覆盖现行规则；项目 README 编写 / 维护及项目统计任务先读取条款全文。
+- 来源：用户于 2026-10-19 明确要求将配置仓库 `.jobs-markdown-toc/` 融入运行态文档 Skill；状态：已确认；适用范围：目录过滤器的复用资源；创建 / 更新：2026-10-19。完整模板统一放在 `/Users/jobs/.agents/skills/jobs-markdown-docs/assets/markdown-toc/`，由主规范链接独立的 `MarkdownToc.mjs`、`README.md` 与 `manifest.json`；模板清单只登记随包工具 README，其它路径按目标仓库核实、增量维护，保留既有清单，不照搬配置仓库专用名单。
 - `JobsCodexConfigs/skills` 是 `JobsSkills` 的子模块挂载，父仓只跟踪 gitlink。用户于 2026-10-03 明确要求每次改完 Codex 公约或 Skills 都完成同步：Skills 以 `/Users/jobs/.agents/skills` 为现行基准，先在 JobsSkills 子仓提交并推送，再更新父仓子模块指针；外援运行态软链接不纳入仓库。
 - 全局 `AGENTS.md` 以 `JobsCodexConfigs/AGENTS.md` 为源。若 `/Users/jobs/.codex/AGENTS.md` 含有效独有规则，先合并回标准源，再部署并逐字节比较，避免同步时丢失现行行为。
 - 同步前后检查两个仓库状态，保护已有改动；自动版本传播通过正常 Git 提交和 gitlink 完成。手动双向文件同步属于 2026-10-06 确认的独立流程，不代表授权提交、推送或改动父仓 gitlink。

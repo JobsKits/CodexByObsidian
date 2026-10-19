@@ -29,6 +29,8 @@ tags:
 - [五、更新目标文件夹代码地图](#jobs-toc-heading-6)
 - [六、Windows 平行工程](#jobs-toc-heading-7)
 - [七、双端 Flutter SDK 版本管理](#flutter-version-manager)
+- [八、Git 拉取与 Flutter 依赖提取子仓关联](#git-pull-dependency-submodules)
+- [九、双端 Flutter 第三方依赖提取](#flutter-dependency-extractor)
 
 </details>
 <!-- jobs-toc:end -->
@@ -48,7 +50,7 @@ tags:
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、安装与文档约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- 根安装器使用 macOS 原生复选框 UI，逐项选择全部右键功能，并提供“全部安装”和“取消”；同一工程中的多个已选功能只构建、注册一次。
+- 来源：用户于 2026-10-19 明确要求并在预览后修正；状态：已确认；适用范围：根安装器的功能选择窗口；创建 / 更新：2026-10-19。使用原生复选框 UI，提供“全选 / 全不选”，选好后点击“安装”，没有勾选时安装按钮置灰且回车不能绕过；同一工程中的多个已选功能只构建、注册一次。中间选项区固定，不允许滚动，按内容确定窗口尺寸，较矮屏幕使用两列保证选项和底栏完整可见。旧“全部安装”直通按钮与中间滚动方案均已替代（superseded）；取消或关闭窗口停止后续安装。
 - `JobsTerminalOpener` App 必须在主窗口提供本工程全部功能的复选框，一项功能独占一行并显示适用条件，同时提供保存、全选和全不选；保存后重新打开 Finder 右键菜单即可生效，不要求重新编译。
 - `JobsTerminalOpener` 主窗口必须允许拖动缩放并设置合理最小尺寸；内容从顶部开始排布，高度不足时使用垂直滚动承接，标题、功能项和底部说明均不得被标题栏或窗口边界裁切。
 - 仓库根 README 与多功能工程 README 的前言区域必须醒目、简洁地列出所含右键功能，并明确哪些功能可以独立勾选。
@@ -56,7 +58,7 @@ tags:
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- AppleScript 选择器使用 `osacompile` 做语法编译。
+- 当前 `Scripts/SelectFinderExtensionFeatures.swift` 选择器使用 `swiftc` 编译，并验证全选 / 全不选、空选禁用与普通 / 矮屏完整显示；旧 AppleScript / `osacompile` 验证已替代（superseded）。单独预览只返回选择结果，不运行安装器。
 - 根安装脚本使用 `zsh -n`，并分别验证全选、部分选择和未知标识解析。
 - `JobsTerminalOpener` 使用部分功能集合隔离构建，随后读取宿主 App 与扩展产物的 `JobsTerminalEnabledFeatures`，确认首次运行默认值与勾选项完全一致；共享配置读写还要同时进入两个 target 并通过真实构建。
 - 普通验证不得运行完整安装流程，避免注册扩展、重启 Finder 或触发真实依赖安装。
@@ -67,6 +69,7 @@ tags:
 - 当前源码分别位于 `JobsXcodeOpener`、`JobsVSCodeOpener`、`JobsAndroidStudioOpener`，每项保留独立宿主、扩展、Scheme、Bundle ID 和卸载入口。来源：用户于 2026-10-18 后续自行建立三个独立 Git 仓库，并明确要求与 `MacOS@Extension` 父仓绑定；状态：已确认并完成本地关联。三个子仓以 `../<同名仓>.git`、`branch = main` 登记，父仓 gitlink 指向各自 HEAD，本地元数据通过官方 `absorbgitdirs` 归集到父仓实际 Git 目录的 `modules/`；保留各自 GitHub / Gitee HTTPS 远端及工作分支。此前“父仓直接维护、无独立远端或登记”的状态已被本条替代（superseded）。原有四个子模块保持独立管理，总计七个子模块、十一个可勾选菜单；Terminal 工程仍为五项。下载清单与安装器缺失工程补齐流程须同步覆盖七项；本地关联不等于父仓已提交、推送。
 - 来源：用户于 2026-10-18 要求为 `work/`、`Scripts/` 分别补 README；状态：已确认并完成本地文档。`Scripts/SelectFinderExtensionFeatures.applescript` 是统一安装器调用的原生选择界面，目录说明与根 README 保持链接。`work/<工程名>DerivedData/` 保存构建缓存及 Debug App / 内嵌 appex，安装器直接从该路径注册，因此清理前须先通过对应卸载入口停用并注销扩展，再按需重装；不能按纯缓存直接删。统一卸载仅覆盖六个宿主，`JobsGitRemoteCopier` 用子仓专用卸载入口；该专用入口自动清理子仓内部 work，不清理父仓对应目录。父仓只保留 `work/README.md` 可跟踪，其余 work 产物通过 `/work/*` 忽略，保留 `!/work/README.md` 例外。
 - VSCode、Android Studio 通过 LaunchServices 查找应用并核验 Bundle ID、App 目录和可执行文件，缺失分支打开官网下载页后立即返回。Xcode 直接用 `/usr/bin/open -a Xcode` 打开，路径作为独立参数传递，无 Shell 拼接；当前目录优先 workspace，其次 project，同优先级多个候选时明确选择，不递归猜测子工程。
+- VSCode 点击链路：来源为用户于 2026-10-19 反馈菜单可见但无法启动，并在修复后明确确认“功能OK了”；状态：已实测确认；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension/JobsVSCodeOpener`；创建 / 更新：2026-10-19。纯代码宿主以 `main.swift` 强持有并显式挂接 AppDelegate，不能仅依赖 `@main`；`applicationWillFinishLaunching` 提前注册 URL AppleEvent。Finder 的选中项与空白目录使用独立菜单动作，在点击时查询 `selectedItemURLs()` / `targetedURL()`，不依赖转发中可能丢失的 `representedObject`。扩展仅用 `jobsvscodeopener://open?p=<base64url 路径>` 转交宿主；宿主完成应用健康检查和目录打开，异步回调后自动退出，手动运行仍显示配置窗口。Debug ad-hoc 构建、签名深验、请求编解码和主线程完成回调回归通过；真实 URL 冷启动已打开用户截图中的 Flutter 项目并正常退出，Finder 右键功能经用户确认。本地已更新原注册产物，未提交或推送。
 - 当前实现沿用已有工程依赖入口，将菜单标题改为“安装/升级 Pod”，保留 `pod-install` 配置 / URL 标识。用本机 `Pods/Manifest.lock` 记录判定已安装并执行 `pod update`，没有记录时执行 `pod install`；仓库自带 `Podfile.lock` 不能当作本机已安装的证据。终端确认时直接回车跳过，任意字符执行；先检查 Ruby、CocoaPods 和项目实际需要的 Bundler。该实现不自动安装或升级 CocoaPods 工具本身。
 - 用户于 2026-10-18 实测后明确补充：Pod 操作的大前提是目标同层同时存在 `Podfile`、`*.xcodeproj` 和 `*.xcworkspace`；缺任一项，不显示入口，也不允许宿主弹出 Terminal。此前仅要求 Podfile + xcodeproj 的两件套门禁已被替代（superseded）。工程和 workspace 必须是目录包，不递归从其它层级补齐；Finder、宿主及运行时复核保持一致。
 - 已修复的交互边界：将整段多行脚本塞入 Terminal 的交互 `do script` 会显示大量 `quote>` 续行提示，即使最终语法正确也会源码滚屏。Pod、CodeGraph 和空白 Commit 使用每次独立的私有 `.zsh` 载体（目录 0700、文件 0600），Terminal 只接收物理单行的安全启动命令；目标参数写入载体，含引号或换行也不变成交互输入。调度成功不能立即删除载体，因 AppleScript 返回不等于业务结束；由脚本最外层退出 / 信号处理精确清理本次文件及空目录，调度失败由宿主清理，不扫描其它会话。
@@ -101,5 +104,20 @@ tags:
 - 仓库关系：用户随后明确要求新增 Gitee、推送并关联父仓。macOS 新工程原先由父仓作为普通目录维护的状态已被替代（superseded）；现子仓位于 `/Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension/JobsFlutterVersionMgr`，保留 HTTPS `origin = https://github.com/JobsKits/JobsFlutterVersionMgr.git`，新增 `gitee = https://gitee.com/JobsGo/JobsFlutterVersionMgr.git`，本地及两端均用 `main`。父仓登记 `path = JobsFlutterVersionMgr`、`url = ../JobsFlutterVersionMgr.git`、`branch = main`，已用官方 `absorbgitdirs` 归集元数据。子仓 `e0b4b5c`、父仓 `a259b48` 已按子先父后推送两平台；未发布 Windows 此次改动或提交更上层 JobsGenesis。
 - 目录边界：本地 `[toc]` 是正常编辑形态。原普通目录曾由父过滤器接入；交付后初始化独立 Git，不会继承父仓的 local 配置，须按新 Git 根独立接入。现子仓自带 `.jobs-markdown-toc/`、精确属性与五份清单，父仓只管理自身四份文档，真实原始暂存 `check` 与工作区字节往返 `verify` 均通过。父安装器测试移至父仓 `Tests/FlutterInstallerIntegrationTests.rb`，保证子仓测试可独立运行；目录渲染的平台实测不由这些检查替代。
 - 验证基线：初始 macOS Debug / Release、签名深验、资源字节一致、原生路径 / 载体权限 / 退出清理及五项父安装映射回归（27 断言）通过。2026-10-19 点击修复与后台化后重新构建 Debug、深验签名和资源一致；在用户指定项目通过真实 Finder 右键确认请求送达 Terminal，后台宿主派发后正常退出，原生隔离测试和二十二项业务（169 断言）通过。用户已自行安装并进入终端操作，原“未安装扩展”的初始状态已过时；本轮更新已有 App，本轮修复未提交推送。Windows 最终确认对应 69 条夹具断言、修改文件 Parser / BOM / CRLF 与目录往返通过，真实 Windows 桌面仍待实机验收；SDK 下载、选版与项目兼容性不由这些检查替代。
+
+## 八、<span id="git-pull-dependency-submodules">Git 拉取与 Flutter 依赖提取子仓关联</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-19 已建立两个独立子 Git，并明确要求关联父仓、补齐 README 目录过滤器；状态：已确认并完成本地接入；创建 / 更新：2026-10-19；适用根目录：`/Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension`。`JobsGitPuller`、`JobsFlutterDependencyExtractor` 均以同名 `path`、`../<真实仓名>.git`、`branch = main` 登记，元数据经官方 `absorbgitdirs` 归集。此前父仓普通目录的描述已替代（superseded）；父仓现有十个独立子模块、十四项功能。
+- 两新仓保留本地 `main`、HTTPS GitHub `origin` 及 HTTPS Gitee 远端；Gitee 远端别名实际均为 `main`，与本地分支同名但职责不同，不自动改名。父仓只记录固定提交，不重复跟踪源码；原有八个子模块的提交指针保持不变。
+- 目录分别归实际 Git 根管理：Git 拉取子仓五份、依赖提取子仓六份（均包含工具 README），各自携带 `.jobs-markdown-toc/` 与精确属性；父仓移除原跨界 Git 拉取条目，仅管理自身四份。工作区往返、临时索引整文件暂存 / 原始 blob 检查 / 检出字节还原通过；真实子仓索引保持接入前版本，首次发布须由用户整文件暂存全部清单文档及工具后运行 `check`，不能把临时索引通过等同于已发布。
+- 总下载清单、安装器与原生选择器同步十工程 / 十四功能，缺失子工程走统一下载补齐；总卸载覆盖九宿主，复制 Git 地址仍用子仓专用卸载。九项隔离集成回归（50 断言）、三个入口语法与 Swift typecheck 通过；本轮未执行真实安装、注册、提交或推送。
+
+## 九、<span id="flutter-dependency-extractor">双端 Flutter 第三方依赖提取</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-19 明确要求；状态：需求已确认，实现已落盘；创建 / 更新：2026-10-19；适用范围：`/Users/jobs/Documents/Github/JobsGenesis/MacOS@Extension/JobsFlutterDependencyExtractor` 与平行 Windows 仓库同名独立包。右键入口为“提取 Flutter 第三方依赖”，各自独立安装 / 卸载并接入总面板；菜单注册与原有功能分离。
+- 用户确认的交互：提取终点支持输入或拖入，直接回车采用系统桌面；macOS 另交付桌面同名脚本文件夹 `【MacOS】提取Flutter第三方依赖.command/`，包含同名 `.command`、`ExtractFlutterDependencies.dart`、`README.md`，整体复制后可脱离 Finder 扩展运行。
+- 现行实现：两端共用无额外包依赖的 Dart 引擎，交叉核对 `pubspec.lock` 与 `.dart_tool/package_config.json`，复制 hosted / Git / path 的实际锁定 Pub 源码、资源、包内平台源码与许可证，包含直接 / 间接 / 开发依赖。Workspace 核对真实成员声明及嵌套成员链，支持标准块 / 行内列表与 `*`、`**`、`?`，仅选中项目依赖闭包；不将 Flutter / Dart SDK 或 CocoaPods / Gradle 另外下载的原生缓存包含在源码归档内。
+- 保护边界：只读项目和缓存，不自动 pub get / 下载工具；解析缺失、陈旧或版本不匹配时停止。输出每次独立命名，包含 `packages/`、`manifest.json`、原始项目 YAML / 锁文件及 README，完成后原子改名；失败不报告完整成功。目标不能落在项目或包内，包内链接物化，包外 / 循环链接拒绝。原始配置可能包含私有地址或本地路径，分享前检查。
+- 验证基线：33 项隔离提取回归、macOS 交互 49 断言及总安装映射 50 断言通过，独立 `.command` 经真实本地 Dart 完整运行；macOS Debug 隔离构建与深度签名验证通过，Windows 脚本 / 打包夹具通过，真实 Windows 桌面和本功能 Finder 签名加载仍待实机验收。本轮未执行真实扩展安装、提交或推送；子仓关联状态以前一节为准。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
