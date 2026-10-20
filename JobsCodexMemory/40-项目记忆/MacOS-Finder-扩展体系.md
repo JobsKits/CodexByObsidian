@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-20
+updated: 2026-10-21
 tags:
   - codex-memory
   - project
@@ -164,8 +164,10 @@ tags:
 
 - 来源：用户于 2026-10-20 明确要求将 `JobsCommand@iOS/其他/【MacOS】📱双击初始化iOS模拟器.command` 逻辑写入 macOS 桌面右键扩展；状态：需求已确认，源码、隔离验证与真实桌面菜单显示验收完成；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`；创建 / 更新：2026-10-20。
 - 独立普通源码目录 `JobsIOSSimulatorCreator`，菜单“新建 iOS 模拟器”，含宿主、Finder 扩展、独立安装 / 卸载并接总面板，不建子 Git。仅系统桌面空白可用，不要求 iOS 项目；普通目录与选中项不显示；唯一 `jobsiossimulatorcreator://simulator/create` 动作转交 Terminal，派发后后台宿主退出。宿主 / 扩展 ID 为 `com.jobs.iossimulatorcreator` / `com.jobs.iossimulatorcreator.findersync`。
-- 自包含业务 `Scripts/CreateIOSSimulator.zsh` 随 App 打包，不依赖原目录；去重可用 iOS Runtime，先选系统再选兼容 iPhone / iPad，健康 fzf 优先、编号回退，秒级时间 + PID 和已有名称检查防同名。自述回车继续，最终回车创建、非空取消，无交互停止。省去旧清场，不关闭 / 删除已有设备，不装工具 / Runtime、不改代理或 xcode-select；失败保留新 UDID。`--help` / `--check` 只读。
+- 自包含业务 `Scripts/CreateIOSSimulator.zsh` 随 App 打包，不依赖原目录；先选完整 iPhone / iPad 型号，再选去重后的可用 iOS Runtime，健康 fzf 优先、编号回退，秒级时间 + PID 和已有名称检查防同名。自述回车继续，最终回车创建、非空取消，无交互停止。右键入口省去旧清场，不关闭 / 删除已有设备，不装工具 / Runtime、不改代理或 xcode-select；失败保留新 UDID。`--help` / `--check` 只读。初版“先选系统再按兼容白名单筛机型”的策略于 2026-10-21 标为 `superseded`，按下一条平行核心决策收口。
+- 来源：用户于 2026-10-20 反馈另一台 Mac 右键只显示 Duo、独立脚本正常，2026-10-21 确认独立脚本封装良好并要求与右键入口平行；状态：用户决策已确认、双侧核心已统一；适用范围：`JobsCommand@iOS/其他/【MacOS】📱双击初始化iOS模拟器.command/【MacOS】📱双击初始化iOS模拟器.command` 与 `JobsIOSSimulatorCreator/Scripts/CreateIOSSimulator.zsh`。独立脚本为规范源，两份完整脚本的 `Jobs iOS simulator core` 标记块逐字节一致，运行时各自独立，不 `source` 另一仓库或外置公共库；一致性回归防止分叉。独立入口保留既有清场 / Homebrew / fzf 封装，右键保持现有设备与调试会话；两侧只读入口都在前置写操作前分流。型号列表只取 Xcode 完整 `devicetypes` 中具名 iPhone / iPad，不按某个 Runtime 白名单、版本边界或家族字段提前隐藏，组合由 `simctl create` 最终判定，明确不兼容才回选。已观察本机 iOS 27.1 支持名单只有 Duo、27.0 有 62 种设备；完整名称清单有 45 种 iPhone / 43 种 iPad，不能将显示机型等同于全部组合可创建。目标机器需重新安装以更新 App 资源；未实际创建模拟器、未提交推送。
 - 本机 Xcode 27.1 使用 `Contents/Applications/DeviceHub.app`，Bundle ID `com.apple.dt.Devices`；同时兼容同一 Xcode 的旧 Simulator 布局，不能只查旧 `Developer/Applications/Simulator.app`。Device Hub 打开后按设备名选中，不用未知深层 URL 参数。
+- 平行核心验收（2026-10-21）：同一套隔离回归对两侧分别通过 33 项 / 206 断言，核心块字节一致，覆盖独立入口前置顺序与失败停止、只读绕过前置，以及完整文件复制到中文 / 空格 / 单引号 / `$` 路径后真实执行帮助。两侧真实 `--check` 都列出 88 种 iPhone / iPad；没有真实安装、清场、创建设备或重新部署右键 App，目标机器仍需取得新源码并重装以更新资源。
 - 注册成功必须对应当前 appex 精确路径，旧路径 `+` 不算成功；独立安装清旧 LaunchServices / PlugInKit 登记但保留旧 App 文件，注册新 App 后显式初始化。总安装映射支持小写宿主 ID 覆盖，原功能保留产品名推导；源码当前 16 功能 / 12 工程（含第十二节 Flutter 运行），总卸载继续保留复制 Git 地址的专用入口。
 - 初版验证记录：Xcode 27.1 / 27A9275、arm64 Debug 双 target 构建、ad-hoc 深签和资源字节一致通过；业务 25 项 / 140 断言、原生 60 断言、独立安装 10 项 / 66 断言、父映射 19 项 / 108 断言通过，真实只读清单 / Device Hub 核验通过。未启用扩展、未重启 Finder、未真实创建模拟器；Xcode 自动登记的隔离产物已精确注销，真实菜单 / 权限 / 创建待安装验收；未提交推送。
 
