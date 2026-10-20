@@ -10,7 +10,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-19
+updated: 2026-10-21
 tags:
   - codex-memory
   - project
@@ -557,10 +557,12 @@ tags:
 
 ## 六十二、<span id="microapp-learning-demos">三工程微应用教学 Demo</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 来源：用户于 2026-10-19 根据 iOS 招聘要求明确提出；状态：confirmed（教学范围与交付约束）、verified（本轮三工程 Debug arm64 模拟器完整主工程编译及下述页面 / 交互 / 主题复验）；创建 / 更新：2026-10-19。适用范围为本笔记第一节的 OC 新工程、OC 老工程和 Swift UIKit 基础工程。
+- 来源：用户于 2026-10-19 根据 iOS 招聘要求明确提出，2026-10-21 根据截图修复布局；状态：confirmed（教学范围与交付约束）、verified（下述各轮明确列出的编译及交互范围）；创建：2026-10-19；更新：2026-10-21。适用范围为本笔记第一节的 OC 新工程、OC 老工程和 Swift UIKit 基础工程。
 - 三侧各提供 5 个独立 VC，分别展示微应用 / 微程序容器、多账户 / 多会话、[**mPaaS**](https://help.aliyun.com/zh/product/49548.html) 本地平台适配、逻辑沙箱和 [**PWA**](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) 离线资源。界面必须有可操作能力；定义、演进、用法、接入步骤和真实限制直接写在相关代码注释中，简明扼要，不另建学习 `*.md`。本项目后续新增这类教学功能沿用三侧同轮覆盖和完整主工程可编译门禁。
 - OC 新旧 Demo 均在各自工程根下的 `JobsOCBaseConfigDemo/业务逻辑/功能模块/Demo@MicroAppLearning/`，随附资源为该目录的 `Resource/JobsMicroLearning.bundle/`。Swift Demo 在工程根下的 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@微应用学习/`，资源为 `JobsSwiftBaseConfigDemo/Resources/JobsMicroAppLab.bundle/`。沿用原有主工程集成方式，OC 老工程不为教学示例新增 Pod 依赖。
 - 教学边界：mPaaS 页是本地协议 / 适配练习，未接商业 SDK；“多开”演示同一宿主内账户和 Web 数据隔离，不克隆或运行其它 App；命名空间子目录是宿主逻辑隔离，不新增系统级沙箱。`file://` 加载的是 Native 离线包，不代表 [**Service Worker**](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) 已注册；资源经同源可信 HTTP(S) 部署后才能另行验证真实 SW / Cache 行为。
+- 2026-10-21 布局修复：微应用草稿表单明确保留 12 点间距并在窄屏换行；微应用和 PWA 自有本地网页按正文自然高度撑开，由外层页面滚动，不能用固定卡片高度裁切按钮。远程 PWA 保留独立可滚动视口；Swift 自动高度显式选择启用，不影响双会话容器。OC 新旧离线安装目录与两侧 Web 缓存版本更新为 v2，避免升级后继续加载旧布局。Swift 打开 HTTPS 前复用 `jobsDismissKeyboard()` 收起 URL 键盘，防止回退后的计数按钮被遮挡。此前交互 / 主题成功未覆盖这两处布局问题，不能据此替代控件完整可见与实际点击验收。状态：verified。
+- 2026-10-21 复验基线：三工程完整 Debug、arm64、iOS Simulator 构建均成功，日志为 `/tmp/jobs-micro-layout-swift-final-build.log`、`/tmp/jobs-micro-layout-oc-new-final-build.log`、`/tmp/jobs-micro-layout-oc-old-final-build.log`。iOS 27.0 的 375×667 点最大辅助字号和 402×874 点正常字号下，三侧微应用 / PWA 均通过真实明暗按钮切换、表单间距 / 完整可见、草稿保存 / 非法参数拒绝及离线连续计数；三侧 HTTPS 实际失败后恢复本地包并继续计数通过，Swift 同时验证键盘已收起。OC 新旧 Demo 源码 / 资源一致，三份 App 的学习资源与源码校验一致。此轮只验收本地构建与 UI，Codex 未执行 Git 提交、推送或触发 CI；不扩展为 Release / 签名真机或商业 SDK 验收。
 - 2026-10-19 最终验证范围：三工程 Debug、arm64、iOS Simulator 的完整主工程构建均为 `BUILD SUCCEEDED`，本机证据分别为 `/tmp/jobs-micro-swift-verified.log`、`/tmp/jobs-micro-oc-new-verified.log`、`/tmp/jobs-micro-oc-old-verified.log`；15 个 Demo 页面均启动成功。三工程均通过 Bridge 允许 / 拒绝、沙箱读写 / 越界、多账户数据隔离、mPaaS 打开路由及 Native 离线包状态检测的实际交互测试。
 - 六组微应用 / PWA 页面通过实际按钮切换主题与截图复验，已修正 Swift 按钮配置背景未跟随主题及 OC 网页主题问题。两套 PWA Web 资源均在 [**Chrome**](https://www.google.com/chrome/) localhost 完成“在线注册 SW → 停止 HTTP 服务 → 普通重载并继续交互”验证；此结果只证明 Web 资源的真实 SW 离线行为，不表示 `WKWebView` 的 `file://` 模式运行了 SW。Release 构建和签名真机运行仍未验证；结论仅适用于本轮已列环境、页面与操作，不外推为全平台或所有功能保证，也不把此前 CI 成功提交的结论套用到当前未提交改动。
 
