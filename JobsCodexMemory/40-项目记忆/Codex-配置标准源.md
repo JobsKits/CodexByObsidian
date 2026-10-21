@@ -4,7 +4,7 @@ status: active
 scope: codex-config
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs
 created: 2026-07-15
-updated: 2026-10-19
+updated: 2026-10-21
 tags:
   - codex-memory
   - project
@@ -47,6 +47,7 @@ tags:
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、同步规则 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- 来源：用户于 2026-10-21 明确要求；状态：已确认；适用范围：Jobs 自有 Skills；创建 / 更新：2026-10-21。绑定具体仓库或固定文件路径的专项内容，从原 `SKILL.md` 提取为同一 Skill 文件夹内、与 `SKILL.md` 同级的独立附件；主文件保留相对链接及命中范围下的必读入口，保留完整约束和验证，不另建 Skill、不机械拆通用目录或示例。长期维护规则归 `jobs-codex-config-audit`，README 的 `OS@Extension` 裸露安装 / 卸载入口规则归 `jobs-markdown-docs/README规范-OS@Extension脚本布局.md`。
 - 全局指导新增或修改先写 `JobsCodexConfigs/AGENTS.md`，再在同一任务结束前单向部署到 `/Users/jobs/.codex/AGENTS.md`，用 `cmp` 验证逐字节一致，不等待下次启动注入脚本或用户提醒。来源：用户于 2026-10-12 再次明确确认；状态：已确认；更新时间：2026-10-12。此次本地 AGENTS 同步确认不扩展为 Git 提交、推送、Skills 文件复制或 gitlink 更新授权。
 - Skills 修改默认直接写 `/Users/jobs/.agents/skills` 现行工作树；不得自动用父仓子模块、历史备份或其它副本反向覆盖它。用户于 2026-10-06 明确授权通过独立脚本手动选择双向同步，例外范围见第六节。
 - 来源：用户于 2026-10-19 明确要求；状态：已确认；适用范围：`jobs-markdown-docs` 的 README 项目统计规范；创建 / 更新：2026-10-19。`README规范-项目统计条款.md` 与现行 `/Users/jobs/.agents/skills/jobs-markdown-docs/SKILL.md` 保留在同一目录，通过主文件的相对链接按需加载，不合二为一、不用旧版主文件覆盖现行规则；项目 README 编写 / 维护及项目统计任务先读取条款全文。

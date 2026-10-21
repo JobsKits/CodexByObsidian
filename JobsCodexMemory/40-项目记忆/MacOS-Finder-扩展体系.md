@@ -57,6 +57,8 @@ tags:
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、安装与文档约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- 来源：用户于 2026-10-21 根据 Flutter 运行扩展独立安装日志明确要求；状态：已确认；适用范围：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension` 下全部子功能目录的独立安装 `.command`；创建 / 更新：2026-10-21。统一在自述后直接回车安装，任意非空输入（包括空格）后回车跳过，Ctrl+C 或输入结束停止；没有可交互终端时拒绝安装。旧“回车跳过、非空输入安装”已替代（`superseded`），脚本头部、运行提示及就近 README 必须一致。总安装器仍先进入原生功能选择，空选门禁及卸载的精确 `YES` 确认继续保留，不将本约定扩大到其它业务确认。
+- 来源：用户于 2026-10-21 明确要求；状态：已确认；适用范围：`OS@Extension` 下 macOS 总安装 / 卸载及独立功能目录中的安装 / 卸载入口；创建 / 更新：2026-10-21。`MacOS@Extension` 根目录的 `【MacOS】🧩安装Finder扩展.command`、`【MacOS】🧩卸载Finder扩展.command` 直接放置；各功能目录中的安装 / 卸载入口同样直接放置，与本目录 `README.md` 平级，不额外套脚本同名文件夹。各功能保持物理目录解耦；例如 `JobsAndroidStudioOpener` 的两个入口共用该功能 README。具体路径清单与验收统一维护在 README Skill 的同级附件，不把例外推广到其它独立脚本包。
 - 来源：用户于 2026-10-19 明确要求并在预览后修正；状态：已确认；适用范围：根安装器的功能选择窗口；创建 / 更新：2026-10-19。使用原生复选框 UI，提供“全选 / 全不选”，选好后点击“安装”，没有勾选时安装按钮置灰且回车不能绕过；同一工程中的多个已选功能只构建、注册一次。中间选项区固定，不允许滚动，按内容确定窗口尺寸，较矮屏幕使用两列保证选项和底栏完整可见。旧“全部安装”直通按钮与中间滚动方案均已替代（superseded）；取消或关闭窗口停止后续安装。
 - `JobsTerminalOpener` App 必须在主窗口提供本工程全部功能的复选框，一项功能独占一行并显示适用条件，同时提供保存、全选和全不选；保存后重新打开 Finder 右键菜单即可生效，不要求重新编译。
 - `JobsTerminalOpener` 主窗口必须允许拖动缩放并设置合理最小尺寸；内容从顶部开始排布，高度不足时使用垂直滚动承接，标题、功能项和底部说明均不得被标题栏或窗口边界裁切。
@@ -105,6 +107,8 @@ tags:
 - 当前状态：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension` 使用 `.jobs-markdown-toc/` 的自包含工具和精确清单，共管理 22 份含标签说明（2026-10-21 按实际清单复验）；`Scripts/MarkdownToc.mjs` 保留同源码兼容入口，CI 继续用此入口核对清单全部原始索引内容。根 README 和 `Scripts/README.md` 说明动态目录、首次接入、日常暂存和安装 / 卸载边界；用户要求的 `Scripts` 目录用途说明已补齐。最初接入时转换器 38 项、部署器 8 项隔离回归通过，真实索引未改、未创建提交或推送；后续 CI 修复与发布见下条，远端折叠与 Windows 真实桌面仍按各自环境单独验收。
 
 - <span id="windows-ci">Windows CI 验证基线</span>：来源为用户于 2026-10-21 明确授权修复并提交推送至 GitHub，持续到 CI 通过；状态：已实现并验证；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension`。目录过滤器及兼容入口以 `bigint dev/ino` 比较目录身份，解决 Windows 路径大小写误判，保留父仓 / 嵌套仓保护；PowerShell 参数探针显式 UTF-8 输出，5.1 JSON 数组先赋值再展开；FVM 测试用字面路径 API 创建真实文件 / 目录及悬空链接，保留特殊字符覆盖。工作流未取消时继续执行全部独立检查，任一步失败仍整体失败。`main` 最终提交 `f11ce70` 已推送 GitHub，[运行 39457788523](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/39457788523) 在 Windows PowerShell 5.1 下全部 16 组检查成功，用时 3 分 9 秒；22 份目录索引与工作区往返通过，本地 40 项 TOC 回归通过。Windows 桌面菜单及 FlutterRunner `-Native` 验收仍独立执行，不由此 CI 结果替代。创建 / 更新：2026-10-21。
+
+- <span id="windows-local-regression">Windows 本地回归基线</span>：来源为用户于 2026-10-21 要求安装 PowerShell 后测试 Windows 侧右键菜单；状态：本地修复及自动回归已验证；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension`。Homebrew 当前使用 `brew install powershell`，本机为 `7.6.7`。当前十五包（含独立 `JobsFlutterSdkInspector`）；已补齐包数断言、SDK 入口模拟与专项 CI 入口，修复 `^0.x` 上界、重复环境约束取值和十五项短屏布局。13 组 PowerShell 回归共 1,322 断言、98 份 Parser / BOM、十五包基础副本一致性、28 个 C++ 项目识别夹具、38 项目录回归及 23 份文档往返通过。该结果来自 macOS，不覆盖 Windows PowerShell 5.1、WinForms、真实注册表 / argv、Explorer COM 菜单或 CMD 后台生命周期；原 Windows CI `f11ce70` 基线保留，本轮改动未提交推送。创建 / 更新：2026-10-21。
 
 ## 七、<span id="flutter-version-manager">双端 Flutter SDK 版本管理</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

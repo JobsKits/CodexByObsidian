@@ -5,6 +5,7 @@
     "JobsCodexMemory/00-记忆入口.md",
     "JobsCodexMemory/10-用户画像/长期偏好.md",
     "JobsCodexMemory/20-长期规划/长期规划.md",
+    "JobsCodexMemory/30-工作流决策/双机协同-WorkBuddy与Codex配置同步.md",
     "JobsCodexMemory/30-工作流决策/工作流决策.md",
     "JobsCodexMemory/40-项目记忆/CodeGraph-安装与codemap命令.md",
     "JobsCodexMemory/40-项目记忆/Codex-配置标准源.md",
@@ -35,7 +36,6 @@
     "JobsCodexMemory/90-系统/模板/项目记忆模板.md",
     "JobsCodexMemory/90-系统/记忆协议.md",
     "JobsCodexMemory/99-归档/归档索引.md",
-    "README.md",
-    "JobsCodexMemory/30-工作流决策/双机协同-WorkBuddy与Codex配置同步.md"
+    "README.md"
   ]
 }
