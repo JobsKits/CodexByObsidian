@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-19
+updated: 2026-10-22
 tags:
   - codex-memory
   - project
@@ -33,6 +33,9 @@ tags:
 - [九、批量推送中断后的用户选择](#resume-push)
 - [十、非管理员新电脑与安装器 Git 副本](#installer-git-copy)
 - [十一、只拉取仓库与安装菜单关联](#readonly-pull)
+- [十二、Git 动态网络双击配置入口](#dynamic-git-installer)
+- [十三、Flutter 鸿蒙独立打包入口](#flutter-ohos-packaging)
+- [十四、Flutter 体检与生成脚本的右键平行实现](#flutter-doctor-codegen)
 
 </details>
 <!-- jobs-toc:end -->
@@ -147,5 +150,25 @@ tags:
 - 来源：用户于 2026-10-19 明确选择补齐递归只拉取，并要求 `/Users/jobs/Documents/Github` 全部同名下载入口同步；状态：用户需求已确认、实现经隔离验证；创建 / 更新：2026-10-19。只拉取先预检整棵目标提交树，再同步父仓并逐层按 gitlink 检出，允许纯 HEAD 漂移；不使用 `--remote`，不暂存、不提交、不推送。现有单仓动作对普通子模块指针变化一律停止的旧行为已替代（`superseded`），子仓源码、暂存指针、独有游离提交和未完成现场仍保护。
 - 同日实现：8 份 `【MacOS】⏬下载配置当前Git子模块（可向下同步递归）.command` 内嵌相同完整只拉取引擎，回车默认消费固定版本；显式选择维护模式保留各仓原清单、子树选择、深度切换与 `AUTO_PARENT_*` 开关。只拉取不进入 Homebrew / fzf 安装流程，`DRY_RUN=1` 明确停止；旧缓存缺工作树先保护并提示恢复。覆盖 JobsGenesis 根、Python、Gits 包、MacOS 扩展、JobsConfigOS、VScode 包、Codex 配置及 JobsBaseConfig 根；README 同步，SourceTree 运行态 / 备灾态及已安装菜单关联核验。
 - 发布边界：父仓锁定的子 SHA 必须在所选托管线路可获取；`not our ref` 由发布电脑补齐对应子仓提交，消费端删除重克隆或提交旧指针不能修复。各子仓追分支最新并自动提交父仓是维护流程，不能用于只拉取电脑消费发布版本。18 组真实 Git / PTY、15 例离线地址矩阵、下载两种入口布局及重复运行通过；本轮没有业务仓提交或推送。
+
+## 十二、<span id="dynamic-git-installer">Git 动态网络双击配置入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 明确要求写入 `JobsCommand@Gits`，双击即可完成本机配置；状态：用户需求已确认、实现经隔离安装与恢复验证；创建 / 更新：2026-10-22。
+- 源仓：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Gits`。入口为 `【MacOS】🌐双击配置Git动态代理.command/【MacOS】🌐双击配置Git动态代理.command`，完整内嵌 Git 网络代码，单独携走主文件即可安装，不依赖已有 JobsMacEnv 或原仓路径。
+- 双击阅读自述后回车安装，`C` 检查、`R` 恢复；CLI 支持 `--install`、`--check`、`--restore`。运行代码部署到当前用户 Application Support 下 `JobsGitNetworkStrategy/runtime/bin/git`，仅在用户 `.zshrc` 末尾挂载受控 PATH 块，并配置已安装 Sourcetree 的 `gitCustomPath` / `gitWhichOne`；不改 `.gitconfig`、系统代理、VPN 或项目远端。
+- 默认系统代理可用时优先、关闭或不可达时探测直连；地址与端口动态读取，Git 业务最多执行一次，HTTP(S) 范围及 SSH / PAC / 多目标边界见包内 README。Sourcetree 在途任务不被结束，已运行应用保存工作后自行重启加载选择。
+- 私有快照精确保存文件与偏好的存在状态、值和类型，恢复保留用户后加的无关 Shell 正文；同值异型、失去执行权限或后续受控项冲突明确报错。同版本重复安装不叠加配置，升级可恢复上一版，恢复可重复调用。该入口是独立本机配置安装器，不是 Sourcetree 自定义动作，不新增菜单登记或修改 `SourceTree.command` 双副本。
+
+## 十三、<span id="flutter-ohos-packaging">Flutter 鸿蒙独立打包入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 要求鸿蒙与 Android 打包存在差异时补齐独立 Sourcetree 脚本；状态：需求已确认、实现经隔离检查与真实菜单加载核验；适用范围：本仓及运行库的 Flutter 打包动作；创建 / 更新：2026-10-22。
+- 入口：`【MacOS@SourceTree】📦双击打包Flutter.ohos.command/【MacOS@SourceTree】📦双击打包Flutter.ohos.command`，双位置同步；安装器登记、模板、当前用户 `actions.plist` 均已补齐，菜单名 `📦双击打包Flutter.ohos`，仓库参数 `$REPO`，旧动作及用户标题保留。
+- 面向已有 `ohos/` 的 Flutter 适配工程，默认 release HAP，支持 `--target hap|app|all`、`--mode release|debug|profile` 和 `--flutter-sdk`；需要匹配工程的鸿蒙适配 SDK / DevEco 工具链，普通 Flutter Android SDK 不替代。FVM 固定 SDK 缺失或不具备所选包型能力时停止，不自动下载或升级工具链、不创建平台、不改签名。
+- 两份 `zsh -n`、25 项假工具链检查、PTY 确认、44 项安装器隔离检查及 Sourcetree 重启后“自定义操作”可见性通过；真实工程构建、签名、安装和上架未执行。增量构建允许已有非空产物，不能把目录中旧产物存在等同于本次新生成或签名发布已验收。
+
+## 十四、<span id="flutter-doctor-codegen">Flutter 体检与生成脚本的右键平行实现</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 明确要求审查升级两个现有脚本并补齐双端右键入口；状态：需求已确认、源码已实现；创建 / 更新：2026-10-22。`【MacOS@SourceTree】🐦Flutter项目体检.command` 与 `【MacOS@SourceTree】🐦Flutter自动化生产代码.command` 继续独立、自包含、双位置同步。
+- macOS `JobsFlutterDoctor/Scripts/InspectFlutterProject.zsh`、`JobsFlutterCodegen/Scripts/GenerateFlutterCode.zsh` 分别携带原脚本完整副本，按字节一致性防分叉；修改原脚本须同步资源并重新构建安装，不能依赖源仓绝对路径。Windows 对应独立包保持相同生成器启用规则和 FVM 停止边界。入口、风险和验证范围见 [[MacOS-Finder-扩展体系#flutter-doctor-codegen|双端体检与代码生成]]。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

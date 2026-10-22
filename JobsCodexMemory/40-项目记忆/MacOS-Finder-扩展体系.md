@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-21
+updated: 2026-10-22
 tags:
   - codex-memory
   - project
@@ -36,6 +36,11 @@ tags:
 - [十二、双端 Flutter 项目右键运行](#flutter-project-runner)
 - [十三、桌面右键新建 iOS 模拟器](#ios-simulator-creator)
   - [13.1、沙盒桌面识别与实测验收](#ios-simulator-desktop-verification)
+- [十四、双端 Flutter 打包右键入口](#flutter-packager)
+- [十五、双端 Flutter 项目体检与自动化生产代码](#flutter-doctor-codegen)
+- [十六、单文件运行授权右键入口](#single-file-run-authorization)
+- [十七、双端桌面 Git 动态代理配置入口](#git-dynamic-proxy-menu)
+- [十八、双端桌面右键新建 Android 模拟器](#android-simulator-creator)
 
 </details>
 <!-- jobs-toc:end -->
@@ -186,5 +191,48 @@ tags:
 - 来源：用户于 2026-10-20 反馈真实桌面缺少入口后的本机诊断与 GUI 验收；状态：已实测确认；适用范围：`JobsIOSSimulatorCreator` 的 Finder 扩展；创建 / 更新：2026-10-20。扩展进程初始化日志证实，`FileManager` 的 `.desktopDirectory` 与 `NSHomeDirectoryForUser(NSUserName())` 均被沙盒重定向至容器 `Data/Desktop`；只监控该别名时，真实桌面菜单没有派发回调。此前把 Foundation 用户 Home API 当成真实 Home 来源的判断同样标为 `superseded`。
 - 现行实现：用 [**Darwin**](https://developer.apple.com/documentation/darwin) 的 `getpwuid_r(getuid())` 取得真实 Home，真实 `Home/Desktop` 优先，保留系统解析的桌面别名；监控根目录 `/` 并兼容已知桌面路径，菜单生成与点击仍严格只接受桌面 container。监控根范围不等于开放普通文件夹菜单，全部 items 与普通 folder background 继续隐藏。已知桌面按完整路径做纯词法规范化及白名单匹配，命中不依赖 `stat`、目录存在、包标记或资源元数据可读；可解析符号链接只作为兼容，不把沙盒元数据失败当成隐藏入口的条件。
 - 验收：真实桌面菜单截图 `JobsDesktopMenuOpen.png` 中本套扩展只显示“新建 iOS 模拟器”；2026-10-20 22:21:32（Asia/Shanghai）的真实 appex 日志记录 `Menu kind=1 target=/Users/jobs/Desktop candidate=/Users/jobs/Desktop`。根回归现为 3 项 / 49 条 Ruby 断言及 177 条 Swift 断言，原生回归现为 66 断言；覆盖根监控、模拟沙盒 Home 重定向、真实 passwd Home 优先、已知桌面元数据不可用，以及普通 folder / 全部 items 拒绝。最终重建部署后的仓库截图 `work/JobsIOSSimulatorDesktopMenu.png` 再次确认桌面只新增模拟器入口，`work/JobsIOSSimulatorFolderMenu.png` 确认普通文件夹菜单没有模拟器入口且保留旧通用项；实际桌面与普通文件夹菜单均已验收，全部选中项边界仍由隔离回归覆盖。未执行真实创建设备，不把菜单显示等同于 Terminal 自动化授权或创建流程已验收。
+
+## 十四、<span id="flutter-packager">双端 Flutter 打包右键入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 指定 SourceTree 的 Android / iOS 打包脚本并明确要求，随后要求在 `OS@Extension` 增加鸿蒙打包且只在 Flutter 项目文件夹右键出现；状态：产品需求已确认，源码及本功能隔离回归完成；创建 / 更新：2026-10-22。适用目录为 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsFlutterPackager` 和同级 `WindowsOS@Extension/JobsFlutterPackager`。
+- 两端菜单均命名为“Flutter打包”，一个独立包 / 安装单元，只在当前层 `pubspec.yaml` 确认 `dependencies.flutter.sdk: flutter` 的真实项目根目录显示；不通过扫描父子目录放宽范围。已接入各自总安装器，并保留本包独立安装 / 卸载入口，不新增子 Git。
+- 终端内严格使用 fzf 选择 Android / iOS / HarmonyOS（鸿蒙）；Android 再选 APK、AAB 或两者，鸿蒙再选 HAP、APP 或两者，默认 release。原 Android / iOS 的 mode / flavor 与签名行为保留；鸿蒙只用工程默认 product / target，拒绝非空 flavor，避免适配 SDK 静默回退 default。先检查工具，再 pub get 和构建，失败立即停止；业务自包含，不依赖 SourceTree 路径。
+- 鸿蒙需要已有 `ohos/build-profile.json5` / `ohos/oh-package.json5`、匹配的鸿蒙 Flutter SDK、HarmonyOS SDK 与健康 Node.js / npm / ohpm / hvigorw / Java；逐个检查 HAP / APP CLI 能力后才解析依赖。支持 `FLUTTER_OHOS_SDK` 显式选 SDK、`OHOS_BUILD_TARGET=hap|app|all`；macOS 另有 `--flutter-sdk` / `--ohos-target`。优先现有 FVM SDK，鸿蒙固定 SDK 缺失时不自动下载或切换。保留签名、平台和工具版本；Windows 结束后精确恢复进程环境。鸿蒙只作为已有 Flutter打包 的第三个平台，不增加菜单项或安装单元。
+- macOS 使用独立宿主、Finder Sync、URL `jobsflutterpackager://package/run` 和私有终端载体；Windows 采用独立 C++ 动态菜单 handler，在插入菜单前过滤项目。Windows 选 iOS 时，在任何依赖解析 / 构建前提示必须使用 macOS + Xcode 并停止，不自动操作远程 Mac。
+- 缺 fzf 明确给出安装命令并停止，不退回编号菜单、不自动安装升级工具。Android 按 mode / flavor 验证非空产物并允许 Gradle 合法缓存；iOS 不将旧 IPA 或单独 xcarchive 报成新 IPA。打包是前台终端任务，关闭窗口会影响构建。
+- 验证边界：鸿蒙接入后 macOS 业务回归 55 项 / 507 断言、共享项目与菜单边界 58 断言、AppDelegate 单次派发 5 断言通过；Windows PowerShell 7 假工具链业务回归 164 断言通过（含 fzf 中文 UTF-8 临时设置与恢复）。覆盖普通目录 / 父目录 / 平台子目录 / 多选隐藏、SDK 能力拒绝、工具链失败、取消、产物和返回码；可复用已有非空鸿蒙增量产物并提示模式与签名核对。真实 Flutter 构建、Windows PowerShell 5.1 / 批处理、MSVC 编译 / Explorer 加载及安装后菜单仍须目标机器验收；未部署启用扩展、提交或推送。跨功能全量回归与并行新增扩展状态分别记录，不用本功能通过替代全仓通过。
+
+## 十五、<span id="flutter-doctor-codegen">双端 Flutter 项目体检与自动化生产代码</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 要求先审查升级 SourceTree 的 Flutter 项目体检、自动化生产代码两个脚本，再在双端增加同功能右键菜单；状态：需求已确认、源码已实现；创建 / 更新：2026-10-22。适用目录为 `/Users/jobs/Documents/Github/JobsGenesis/SourceTree.command` 及 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 下的两平台扩展仓库。
+- 两端各有独立 `JobsFlutterDoctor`、`JobsFlutterCodegen` 安装单元并接入总安装面板，仅精确 Flutter 项目根目录显示；macOS 转交 Terminal，Windows 使用原生动态菜单并转交可见终端。不新增内部子 Git。
+- macOS 将升级后的 SourceTree 两个完整脚本分别打包为 `InspectFlutterProject.zsh`、`GenerateFlutterCode.zsh`，源码与打包资源均校验字节一致；运行时不读取另一仓库。以后升级原脚本须同步这两个资源并重新构建安装。Windows 使用独立 PowerShell 实现对齐行为。
+- 体检默认 `doctor -v`，区分命令结束与诊断通过；生成默认 `pub get` 后执行依赖声明与配置明确启用的生成器，无生成器时仅拉取依赖。默认不清缓存、不额外传强制删除冲突参数，生成器仍可改写自身管理的产物；危险清理 / 删除冲突选项须精确 `YES`。项目已声明 FVM 但 SDK 不可用时停止，不切全局 SDK、不隐式安装。
+- SourceTree / macOS 的 `--check` 与 Windows 的 `Scripts/Check.ps1` 检查项目和命令计划，前者另解析 SDK 路径；均不调用 SDK 或执行项目业务。原脚本运行态和备灾态继续双位置同步；新扩展未自动安装启用，Windows 原生编译、Explorer 加载和真实项目业务仍需目标机器验收。
+
+## 十六、<span id="single-file-run-authorization">单文件运行授权右键入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 指定 `JobsCommand@Others/【MacOS】⚙️运行授权.command`，要求写入右键菜单且只在目标为单文件时出现、文件夹不出现；状态：产品要求已确认，源码与隔离验证完成；创建 / 更新：2026-10-22。适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`。
+- 独立普通源码目录 `JobsRunAuthorizer`，菜单“运行授权”，保留独立安装 / 卸载并接入总面板，功能标识 `run-authorize`；无新增子 Git。宿主 / 扩展 ID 为 `com.jobs.JobsRunAuthorizer` / `com.jobs.JobsRunAuthorizer.FinderSyncExtension`，URL scheme 为 `jobsrunauthorizer`。
+- 仅选中一个普通本地文件显示，不限制后缀；目录、应用 / 工程包、符号链接、多选及任何空白菜单不显示。菜单点击、宿主派发、终端执行分别复检；终端等待确认期间按设备号与 inode 拒绝替换后的对象。
+- 原脚本真实核心只有 `chmod +x`，新增业务保持当前 umask 和该语义，不增加隔离属性清理、不执行目标、不递归、不自动 sudo。Terminal 展示路径后回车继续，任意非空输入取消、EOF 停止；确认后才创建私有会话日志。打包业务自包含，原双击脚本及其 README 保留。
+- 验证：业务 15 项 / 192 断言、真实菜单源码 76 条 Swift 断言、URL / 私有载体 38 断言及独立安装回归通过；Debug 两 target 构建、深度签名、打包脚本字节一致通过。Xcode 自动登记的隔离产物按精确临时路径注销，未启用扩展或刷新 Finder；真实菜单与 Terminal 自动化需安装后验收，未提交推送。
+
+## 十七、<span id="git-dynamic-proxy-menu">双端桌面 Git 动态代理配置入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 明确要求将 `JobsCommand@Gits/【MacOS】🌐双击配置Git动态代理.command` 纳入 `OS@Extension` 的系统桌面右键，并写 macOS / Windows 双端；状态：需求与项目约束已确认，源码已实现、验证边界另记；创建 / 更新：2026-10-22。
+- 两仓各自新增普通源码目录 `JobsGitProxyConfigurator`，功能标识 `git-proxy-configure`，菜单“配置 Git 动态代理”，接入各自总安装面板并保留裸露的独立安装 / 卸载入口，不新增内部 Git。仅系统桌面空白显示，普通目录背景和选中项隐藏。早先第十三节“桌面只加入 iOS 模拟器”的独占表述已 superseded；后续明确新增的 Android 模拟器和本入口同样允许桌面显示。
+- 菜单安装 / 注册只建立入口，不自动配置 Git；点击后在可见终端阅读范围并回车安装，C 只读检查，R 确认后精确恢复。卸载菜单不撤回另行安装的 Git 动态运行态；需要恢复时从配置流程执行，不能把卸载菜单说成已恢复网络环境。
+- macOS 完整打包现行独立 `.command` 并逐字节对账，保持私有快照、用户 Shell 与 Sourcetree 受控项。后台宿主仅接受固定 URL，单次去重派发；初始化参数只启用扩展，不打开配置终端。
+- Windows 使用系统 PowerShell 5.1 / .NET 编译真实 `git.exe`，动态运行态独立于菜单发布目录。只写用户 PATH 与专用文件，快照保留类型、缺失 / 空值及字节，遇后续修改停止；系统静态代理可达优先、失败再直连，原生 Git 业务最多一次。机器 PATH 可能早于用户 PATH，需用专用终端或在 Sourcetree 等应用选择 shim，不宣称所有终端 / GUI 已接管。
+- 支持现有标准系统 HTTP / HTTPS / SOCKS 代理，不绑定 VPN 品牌或固定端口；PAC / 应用私有代理不执行或猜测，TUN 走系统路由。跨端隔离测试、macOS 原生构建与签名不替代真实 Windows Explorer / PowerShell 5.1、GUI 管道、Ctrl+C 和实际远端验收；本轮没有提交、推送或自动安装用户 Git 配置。
+
+## 十八、<span id="android-simulator-creator">双端桌面右键新建 Android 模拟器</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-22 指定独立 Android 启动脚本并要求与 iOS 同等待遇、明确双端；状态：需求已确认，源码与隔离回归已实现；创建 / 更新：2026-10-22。范围为 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsAndroidSimulatorCreator`、同级 `WindowsOS@Extension/JobsAndroidSimulatorCreator`，以及 `JobsCommand@Flutter/运行/【MacOS】🚀双击启动Android模拟器.command/`。
+- 两端均独立安装 / 卸载并接总面板，菜单“新建 Android 模拟器”仅系统桌面空白显示，点击直接新建，不要求 Flutter 项目。macOS 固定 `jobsandroidsimulatorcreator://simulator/create` → 私有 Terminal 载体 → 自包含 `--create`；双击脚本无参数可选已有 / 新建，两份完整脚本逐字节相同。第十三节旧“桌面空白仅 iOS”范围由本条补充为 iOS / Android 两项；普通目录与选中项继续不加入模拟器入口。
+- SDK / Java / SDK 工具 / emulator 按实际依赖检查；缺失组件须确认后补齐、安装后复检、失败停止。CLT 从 Google 官方 XML 解析稳定归档，校验摘要，在 SDK 同卷私有 stage 暂存并新增独立版本，保留旧工具与全部 AVD；不自动接受许可证、不改代理或 Shell 配置。Mac 支持 Apple Silicon / Intel，fzf 健康优先、编号回退；Windows 使用原生 DesktopBackground handler 与 PowerShell 5.1，x64 模拟器与硬件加速需可用。稳定 minor / ext API 均可解析，不包含代号预览。
+- 验证基线：Mac 脚本 36 组 / 246 断言，桌面菜单 241 条 Swift 断言、宿主 / 安装 / 安全传输回归通过；两 target Debug 构建、深度签名、已打包核心字节一致、本机扩展精确路径启用通过。真实 Desktop 目录空白菜单同时显示 iOS / Android 两项。Windows Android 业务 38、修复 36、桌面 C++ 规则 9 断言及架构 / 安装 / Parser 验证通过；Windows MSVC 编译、Explorer 实机加载仍待验。
+- 本机只读检查 SDK / Java 21 / emulator / fzf 可用，缺 CLT 与完整 ARM 手机 / 平板映像；用户首次新建可按提示确认安装。此次未下载 SDK 归档或映像、未创建 / 启动真实 AVD；未提交或推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
