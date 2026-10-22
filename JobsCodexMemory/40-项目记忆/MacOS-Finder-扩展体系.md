@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-22
+updated: 2026-10-23
 tags:
   - codex-memory
   - project
@@ -41,6 +41,7 @@ tags:
 - [十六、单文件运行授权右键入口](#single-file-run-authorization)
 - [十七、双端桌面 Git 动态代理配置入口](#git-dynamic-proxy-menu)
 - [十八、双端桌面右键新建 Android 模拟器](#android-simulator-creator)
+- [十九、双端桌面右键新建鸿蒙模拟器](#harmony-simulator-creator)
 
 </details>
 <!-- jobs-toc:end -->
@@ -231,8 +232,20 @@ tags:
 
 - 来源：用户于 2026-10-22 指定独立 Android 启动脚本并要求与 iOS 同等待遇、明确双端；状态：需求已确认，源码与隔离回归已实现；创建 / 更新：2026-10-22。范围为 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsAndroidSimulatorCreator`、同级 `WindowsOS@Extension/JobsAndroidSimulatorCreator`，以及 `JobsCommand@Flutter/运行/【MacOS】🚀双击启动Android模拟器.command/`。
 - 两端均独立安装 / 卸载并接总面板，菜单“新建 Android 模拟器”仅系统桌面空白显示，点击直接新建，不要求 Flutter 项目。macOS 固定 `jobsandroidsimulatorcreator://simulator/create` → 私有 Terminal 载体 → 自包含 `--create`；双击脚本无参数可选已有 / 新建，两份完整脚本逐字节相同。第十三节旧“桌面空白仅 iOS”范围由本条补充为 iOS / Android 两项；普通目录与选中项继续不加入模拟器入口。
-- SDK / Java / SDK 工具 / emulator 按实际依赖检查；缺失组件须确认后补齐、安装后复检、失败停止。CLT 从 Google 官方 XML 解析稳定归档，校验摘要，在 SDK 同卷私有 stage 暂存并新增独立版本，保留旧工具与全部 AVD；不自动接受许可证、不改代理或 Shell 配置。Mac 支持 Apple Silicon / Intel，fzf 健康优先、编号回退；Windows 使用原生 DesktopBackground handler 与 PowerShell 5.1，x64 模拟器与硬件加速需可用。稳定 minor / ext API 均可解析，不包含代号预览。
+- 旧策略（2026-10-22，逐项安装确认部分为 `superseded`，按下条自动补齐决策执行）：SDK / Java / SDK 工具 / emulator 按实际依赖检查；缺失组件须确认后补齐、安装后复检、失败停止。CLT 从 Google 官方 XML 解析稳定归档，校验摘要，在 SDK 同卷私有 stage 暂存并新增独立版本，保留旧工具与全部 AVD；不自动接受许可证、不改代理或 Shell 配置。Mac 支持 Apple Silicon / Intel，fzf 健康优先、编号回退；Windows 使用原生 DesktopBackground handler 与 PowerShell 5.1，x64 模拟器与硬件加速需可用。稳定 minor / ext API 均可解析，不包含代号预览。
+- <span id="android-auto-toolchain">自动健康体检与补齐（2026-10-23）</span>：用户实测缺 CLT 时回车默认跳过，明确纠正“缺乏工具链要健康体检，不足的补齐”。此为双端 Android 模拟器及独立脚本的已确认产品约束。首屏清楚声明自动补齐范围，回车后自动检查 SDK 根目录、Java、CLT、emulator（Windows 另含 ADB）；健康依赖复用，缺失或损坏自动安装 / 修复一次并立即复检，失败显示层级、退出码和日志。取消旧逐项 YES / 非空安装门禁，不以给安装链接或默认跳过代替完成补齐。缺 Java 时使用官方摘要校验的用户级 Temurin 21，不改全局 Java / Shell 配置；映像为空自动查询官方清单，用户选中后直接安装。SDK 许可证仍由本人阅读确认，不自动回答 yes。`--check` 只读；Mac `--prepare` 只体检、补齐完整工具链，不查询映像或创建设备。
+- 2026-10-23 验证：Mac 50 组 / 356 断言与独立审查通过，Windows 106 条 Android 断言及架构 / Parser 验证通过。已在本机真实运行 `--prepare`，首屏一次回车后自动下载约 155 MB 的 Google 官方 ARM Command-line Tools 23.0，完成摘要 / 长度校验、同卷私有暂存与独立目录安装；sdkmanager / avdmanager / emulator 复检通过。既有 SDK、Java 21 与 emulator 直接复用，没有下载映像、接受 SDK 许可证或创建 AVD。 已重新构建安装本机扩展，深度签名与打包 / 独立脚本字节核对通过；从已安装 App 资源再次运行 `--prepare` 直接复用健康工具链，没有重复下载。
 - 验证基线：Mac 脚本 36 组 / 246 断言，桌面菜单 241 条 Swift 断言、宿主 / 安装 / 安全传输回归通过；两 target Debug 构建、深度签名、已打包核心字节一致、本机扩展精确路径启用通过。真实 Desktop 目录空白菜单同时显示 iOS / Android 两项。Windows Android 业务 38、修复 36、桌面 C++ 规则 9 断言及架构 / 安装 / Parser 验证通过；Windows MSVC 编译、Explorer 实机加载仍待验。
-- 本机只读检查 SDK / Java 21 / emulator / fzf 可用，缺 CLT 与完整 ARM 手机 / 平板映像；用户首次新建可按提示确认安装。此次未下载 SDK 归档或映像、未创建 / 启动真实 AVD；未提交或推送。
+- 2026-10-22 历史只读检查（现状见上条 2026-10-23 验证）：SDK / Java 21 / emulator / fzf 可用，当时缺 CLT 与完整 ARM 手机 / 平板映像；用户首次新建可按提示确认安装。此次未下载 SDK 归档或映像、未创建 / 启动真实 AVD；未提交或推送。
+
+- 验证记录（本入口）：macOS 模块 169 条隔离断言、桌面菜单与中央安装映射回归、双 target Debug 构建、深度签名及打包脚本字节对账通过；Windows 新模块 85 条隔离断言通过，原生 Windows 桌面与 GUI 输入输出边界仍待实机。测试新增的 macOS 宿主登记已精确清理，未运行真实 Git 配置或重启 Finder。
+
+## 十九、<span id="harmony-simulator-creator">双端桌面右键新建鸿蒙模拟器</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 明确要求“有官方模拟器支持才写”双端桌面右键脚本；状态：需求与官方创建接口已确认，源码已实现；创建 / 更新：2026-10-23。目录为 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsHarmonySimulatorCreator`、同级 `WindowsOS@Extension/JobsHarmonySimulatorCreator`，功能标识 `harmony-simulator-create`，菜单“新建鸿蒙模拟器”。仅系统桌面空白显示，不要求 Flutter 项目，普通目录背景和选中项菜单不显示；独立安装 / 卸载并接入两端总面板，不新增内部 Git。
+- 本地模拟器按官方支持范围限定 Apple Silicon Mac / x64 Windows；运行时检查硬件与真实 CLI 能力，不把 Android `emulator` 当成鸿蒙工具。使用已有 DevEco Emulator / Command Line Tools，支持 `HARMONY_EMULATOR_BIN`、`DEVECO_STUDIO_HOME`、`TOOL_HOME` 显式定位，坏路径停止，不静默换工具。此入口不套用 Android 模拟器的自动补齐策略：工具或本地镜像缺失时给出 DevEco 准备方式并停止，不自动下载、接受许可或修改代理。
+- 业务只选择已下载 Release 镜像，沿用 DevEco 已配置的镜像 / 实例默认路径；确认后再次查重，调用官方 `-create NAME -deviceType TYPE -osVersion VERSION`，再通过 `-list -details` 核对唯一名称、产品类型与系统版本。创建失败或回读不明确时保留现场，不覆盖、删除或自动重试；启动保留官方许可交互。`--check` / `-Check` 只查询，不创建、启动或下载。官方详情文档只列字段、未给实例 JSON 顶层样例，真实工具输出、许可与创建仍须目标机器验收。
+- macOS 为独立 App + Finder Sync，宿主 / 扩展 ID 为 `com.jobs.harmonysimulatorcreator` / `com.jobs.harmonysimulatorcreator.findersync`，固定 URL `jobsharmonysimulatorcreator://simulator/create`，通过私有 Terminal 载体单次派发；Windows 为独立原生 DesktopBackground handler，兼容现有 PowerShell 入口。Mac 两 target 隔离 Debug 构建、深度签名与打包脚本字节对账已通过，Xcode 自动产生的临时系统登记已精确注销，PlugInKit 前后状态一致；未部署启用扩展、下载镜像或创建真实模拟器，Windows 实机验收另记。
+- 2026-10-23 隔离基线：Mac 业务 / fzf 25 组 / 206 断言、传输 66、宿主 26、独立安装 10 组 / 66、总映射 8 组 / 40 通过，桌面与旧总入口回归通过；Windows 假 CLI 业务 50、纯 C++ 桌面门禁 13、根级集成 1,051 断言通过。两仓文档 TOC、语法和差异检查通过；这些结果不替代真实 DevEco JSON、许可、虚拟化、创建启动与 Windows 5.1 / Explorer 实机验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
