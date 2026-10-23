@@ -5,7 +5,7 @@ scope: JobsKeyboardRecorder
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others
 source: 用户于 2026-10-17 明确要求仅程序运行期间允许创建下载目录中的 JobsKeyboardRecorder
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-23
 tags:
   - codex-memory
   - project
@@ -36,7 +36,9 @@ tags:
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 仓库路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others`。
-- 脚本包路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others/【MacOS】JobsKeyboardRecorder.command`，主脚本与 `README.md` 同级维护。
+- 脚本包路径：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Others/MacOS/【MacOS】JobsKeyboardRecorder.command`，主脚本与 `README.md` 同级维护。
+
+平台目录按 [[JobsGenesis-脚本双端目录]] 维护；Windows 对应入口位于 `JobsCommand@Others/WindowsOS/`，同样遵守下述会话边界。
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、已确认约束 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

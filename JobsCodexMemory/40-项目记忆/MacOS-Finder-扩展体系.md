@@ -42,6 +42,11 @@ tags:
 - [十七、双端桌面 Git 动态代理配置入口](#git-dynamic-proxy-menu)
 - [十八、双端桌面右键新建 Android 模拟器](#android-simulator-creator)
 - [十九、双端桌面右键新建鸿蒙模拟器](#harmony-simulator-creator)
+- [二十、统一 Flutter 功能归集与清理入口](#flutter-tools-consolidation)
+- [二十一、双端桌面 Android 模拟器检测与修复](#android-simulator-repair)
+- [二十二、桌面与文件夹空白处切换隐藏文件显示](#hidden-files-toggle)
+- [二十三、单个 IPA 文件免编译重签右键入口](#ipa-resigner)
+- [二十四、iOS 工程辅助菜单与安装面板分组](#ios-tools-and-installer-groups)
 
 </details>
 <!-- jobs-toc:end -->
@@ -57,6 +62,7 @@ tags:
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、功能与工程边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 来源：用户于 2026-09-13 明确确认。一个 Finder 右键菜单功能应视为一个独立安装单元；新增能力优先采用“一项右键功能对应一个工程”的结构。
+  - Flutter 的菜单粒度已由用户于 2026-10-23 明确调整，旧独立顶层入口策略在 macOS Flutter 场景为 `superseded`，以[统一 Flutter 功能归集](#flutter-tools-consolidation)为准；其它功能边界不因此扩大。
 - 现有 `JobsTerminalOpener` 是兼容例外：同一 App + Finder Sync Extension 暂时承载 `用终端打开`、`pod install`、`flutter pub get`、`CodeGraph 代码地图` 和 `空白 Commit 并 Push` 五项功能，但必须把五项分别展示为复选框，不能只提供整个工程的总开关。
 - 已替代（2026-09-13）：功能组合只在构建时固化、变更必须重新安装的旧方案不再使用。构建值只作为首次运行默认值；安装器和已安装 App 共用持久化配置，Finder 扩展每次生成菜单时读取当前选择。
 - `空白 Commit 并 Push` 只对普通文件夹提供菜单；Git 命令健康、当前文件夹是否位于 Git 工作树、当前分支、暂存区和推送远程必须全部在 Terminal 内校验。暂存区非空时不允许创建所谓空白 Commit。
@@ -247,5 +253,53 @@ tags:
 - 业务只选择已下载 Release 镜像，沿用 DevEco 已配置的镜像 / 实例默认路径；确认后再次查重，调用官方 `-create NAME -deviceType TYPE -osVersion VERSION`，再通过 `-list -details` 核对唯一名称、产品类型与系统版本。创建失败或回读不明确时保留现场，不覆盖、删除或自动重试；启动保留官方许可交互。`--check` / `-Check` 只查询，不创建、启动或下载。官方详情文档只列字段、未给实例 JSON 顶层样例，真实工具输出、许可与创建仍须目标机器验收。
 - macOS 为独立 App + Finder Sync，宿主 / 扩展 ID 为 `com.jobs.harmonysimulatorcreator` / `com.jobs.harmonysimulatorcreator.findersync`，固定 URL `jobsharmonysimulatorcreator://simulator/create`，通过私有 Terminal 载体单次派发；Windows 为独立原生 DesktopBackground handler，兼容现有 PowerShell 入口。Mac 两 target 隔离 Debug 构建、深度签名与打包脚本字节对账已通过，Xcode 自动产生的临时系统登记已精确注销，PlugInKit 前后状态一致；未部署启用扩展、下载镜像或创建真实模拟器，Windows 实机验收另记。
 - 2026-10-23 隔离基线：Mac 业务 / fzf 25 组 / 206 断言、传输 66、宿主 26、独立安装 10 组 / 66、总映射 8 组 / 40 通过，桌面与旧总入口回归通过；Windows 假 CLI 业务 50、纯 C++ 桌面门禁 13、根级集成 1,051 断言通过。两仓文档 TOC、语法和差异检查通过；这些结果不替代真实 DevEco JSON、许可、虚拟化、创建启动与 Windows 5.1 / Explorer 实机验收。
+
+## 二十、<span id="flutter-tools-consolidation">统一 Flutter 功能归集与清理入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 从 Flutter 项目 `.java-version` 和 Finder 截图明确要求项目级 Java 安装 / 切换，并追加双端“安装/切换 Flutter@OpenHarmony SDK”；状态：需求已确认；适用范围：`OS@Extension/MacOS@Extension/JobsFlutterTools` 与 `OS@Extension/WindowsOS@Extension/JobsFlutterTools`（OpenHarmony 双端，Java 本轮为 macOS）。两个 SDK 入口相邻，Java 归同一开发辅助组，不新增外层 Flutter 菜单。OpenHarmony 选版须来自 CPF-Flutter 实际标签并固定 commit，独立缓存、项目 FVM 绑定；原生和鸿蒙同一工作目录同一时刻只有一套绑定，须支持两个入口往返切换，不设置全局 Flutter。Java 使用 jEnv / `.java-version`，声明为 `17` 的现有项目须能识别；Flutter 的 Java 发现优先级不能仅靠 `JAVA_HOME` 覆盖，实际 Gradle daemon 需本次进程参数绑定，后台运行保留参数，既有 Gradle JVM criteria 冲突须报告。用户项目本次只读检查，不自动执行 SDK 下载、Java 安装或版本切换。
+  - 2026-10-23 实现与验证：macOS 鸿蒙管理 18 组 / 121 断言、Java 17 组 / 115 断言、切回官方 59 组 / 423 断言及真实菜单 / 传输 168 断言通过；Windows 新增鸿蒙 46、统一包 160、架构 509、模块 120 断言通过，并加入既有 CI。macOS 在原 `work/JobsFlutterToolsDerivedData` 重建、深度签名和全部 18 份工具资源逐字节核对通过，已更新同一路径登记、启用并刷新 Finder。真实 SDK 安装 / 三端出包和 Windows 实机尚未验证，用户 Flutter 工程仅执行只读检查；未提交推送。
+
+- 来源：用户于 2026-10-23 对 Finder 截图明确要求“把外层的干掉，所有 Flutter 的功能归集于 Flutter 功能的内部”；状态：需求已确认；创建 / 更新：2026-10-23。适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`，现行统一安装包为 `JobsFlutterTools`。
+- Flutter 开发、SDK、依赖、打包、体检、修复和清理统一放入“Flutter开发相关辅助工具”；后续 Flutter 功能继续加入该包的固定动作表及子菜单，不再新增外层 Flutter 专属入口。七个旧 Flutter 工程保留兼容源码，安装入口转交统一包；Terminal 旧 pub-get 动作标识保留兼容，菜单不再单独加入。
+- 来源：用户于 2026-10-23 指定 `JobsCommand@Flutter` 的 `import =＞package` 工具，确认它属于 Flutter 修复，要求 README 直接说明核心功能并去除历史修复 / 升级描述；状态：需求已确认。macOS 入口归入统一包的“Flutter项目修复”，仅精确 Flutter 根文件夹及其内部空白菜单显示。新增动作使用 `repair-package-imports`；已有 `repair-imports` 是中文 URI 编码修复，必须保留，不能混用或替代。相对 import 转换是静态操作，无需 FVM / Flutter SDK；包内自包含资源与独立主脚本同步，安装后不依赖外部源码目录。适用目录为 `JobsCommand@Flutter/MacOS/小工具/【MacOS】⚙️import =＞package💣.command/` 与 `OS@Extension/MacOS@Extension/JobsFlutterTools`（均位于本仓族根 `/Users/jobs/Documents/Github/JobsGenesis/`）。
+- 此修复按引用文件位置解析，只转换真实指向本项目 `lib/` 的普通 Dart `import`（含条件 URI）；保护已有协议、注释 / 字符串、`export` / `part`、生成 / 第三方 / 链接。真实终端先预览，输入 `YES` 才备份写入；`--check` / `--dry-run` 全程只读。日志与原文备份在系统临时目录 `jobs-flutter-imports.XXXXXX/`，源码写入前复检内容、身份和清单，取消 / EOF 不写源码。2026-10-23 已通过 18 组隔离业务回归（含目录名与开关同名时仍需终端确认）、150 条真实 Swift 菜单 / 传输断言与独立 39 条终端检查；Debug 构建、深度签名和三份脚本字节对账通过，在既有 `work/JobsFlutterToolsDerivedData` 更新启用并刷新 Finder。原始需求的 README 已重写为实际功能示例与操作边界；未运行用户工程修复、提交或推送，真实 Finder 画面未单独复核。
+- 外层“清理 Flutter 构建产物”与原内层维护仅部分重叠：前者是无需 SDK 的静态白名单产物删除，后者有项目 FVM 的 `clean + pub get`、依赖和共享缓存维护。不能仅隐藏前者而丢掉其能力。现归入“Flutter清理维护工具”子菜单中的“清理当前项目构建产物”和“依赖与缓存维护”；新 `clean-build-artifacts` 在 FVM 门禁之前分发，旧 `maintenance` 动作保留。
+- 产物清理沿用 Terminal 原完整脚本并在统一包内自包含打包，两份逐字节一致；先预览，精确输入 `CLEAN` 才删除。Flutter 根目录隐藏通用外层清理，即使同层含原生工程标记也不回退成原生入口；单独选中已识别的原生 iOS / Android / 鸿蒙平台工程仍按平台处理。共享缓存、源码、锁文件、Pods 和 FVM SDK 的原保护边界保留。
+- 识别一致性覆盖块映射、单行 flow、引号和无 `lib/` 的合法 Flutter 声明；清单损坏、超限、重复或误导项拒绝。2026-10-23 已通过真实 Swift 菜单 / 传输、清理白名单、无 FVM 分发及安装映射隔离回归；两包在原 `work/*DerivedData` 路径重建成功、深度签名与打包脚本字节核对通过，精确路径登记为启用并刷新 Finder。真实右键可见性尚未单独复核，UI 验收时 Finder 窗口持续发生用户变更；未执行用户工程清理、提交或推送。
+
+## 二十一、<span id="android-simulator-repair">双端桌面 Android 模拟器检测与修复</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 指定将 Android 模拟器一键检测与修复纳入系统桌面右键，并要求写入 `OS@Extension` 的 macOS / Windows 双端；状态：需求与项目范围已确认，源码实现与验证分别记录；创建 / 更新：2026-10-23。
+- 两端各新增普通源码目录 `JobsAndroidSimulatorRepairer`，功能标识 `android-simulator-repair`，菜单“Android 模拟器检测与修复”，仅系统桌面空白显示；独立安装 / 卸载并接入总面板，不新增内部 Git，不依赖旧 JobsCommand 路径或兄弟功能目录。原 `JobsCommand@Flutter/MacOS/小工具/【MacOS】🛠️Android 模拟器一键检测与修复.command` 保留。
+- 仅处理在线本机模拟器，精确设备号并复查 QEMU / AVD 身份；只读检查保留异常退出码。恢复安装位置、检查实际 `/data`，按确认执行编译缓存重置及单一精确包名卸载；卸载会删除该应用数据。不批量卸载内置应用，不执行 Wipe Data，不把配置写入等同于扩容成功。
+- 容量调整先停机并确认进程与锁释放，完整备份 AVD 后再改配置，不缩容；不可靠定位、链接或外置 userdata 路径拒绝自动写入。启动后复核实际容量和剩余空间，失败保留备份并返回异常；不自动改代理或全局环境。
+
+## 二十二、<span id="hidden-files-toggle">桌面与文件夹空白处切换隐藏文件显示</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 指定 `JobsCommand@Flutter/MacOS/小工具/【MacOS】⚙️双击显示隐藏文件.command`，要求把功能放入右键菜单，并明确作用范围为系统桌面、任意文件夹空白处；状态：产品需求已确认，源码与隔离验证完成；创建 / 更新：2026-10-23。适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`，原双击脚本保留显示隐藏文件行为。
+- 独立普通源码目录 `JobsHiddenFilesToggler`，功能标识 `hidden-files-toggle`，菜单“显示 / 隐藏文件”，接总安装 / 卸载及原生选择器，并保留裸露的独立安装 / 卸载入口；不新增内部 Git。只在 Finder container 回调显示，桌面 nil target 允许，选中项、工具栏和侧边栏菜单不显示。
+- 宿主 / 扩展 ID 为 `com.jobs.hiddenfilestoggler` / `com.jobs.hiddenfilestoggler.findersync`，固定 URL `jobshiddenfilestoggler://finder/toggle`，两种 URL 回调单次去重。点击直接通过 CFPreferences 同步读取、规范布尔、反转写回及校验 `com.apple.finder/AppleShowAllFiles`，再刷新当前用户的 Finder；不弹 Terminal、不模拟按键或请求辅助功能权限。菜单出现范围为空白处，显示状态对该用户整个 Finder 生效；不改文件名、权限或文件隐藏属性。
+- 安装与 `--initialize-finder-extension` 仅初始化菜单，不触发切换；卸载保留最后一次显示偏好。源码和隔离菜单 / 派发 / 偏好 / 安装测试、双 target Debug 构建及深度签名通过；临时系统登记已按精确路径注销，本机偏好保持原值。真实安装后的桌面 / 目录菜单及点击刷新尚须实机验收；未提交推送。
+
+- 2026-10-23 验证：Mac 新业务 25 组 / 182 断言、独立安装 66、总映射 34、Swift 传输 66、宿主 26、新桌面门禁 14 及邻接回归通过；Debug 双 target、深度签名和打包核心字节对账通过，Xcode 临时登记已精确清理。Windows 新业务 96、Architecture 499、Catalog 47、ActionModules 120、纯 C++ 桌面 9 断言及 16 包模板一致性通过；已接 CI 业务与原生编译检查，尚未推送触发。独立安全审查通过，文档 TOC / 链接检查通过；未真实安装、刷新 Finder、修改本机 AVD、提交或推送。真实 Finder 菜单、Windows 5.1 / MSVC / Explorer 与既有 userdata 迁移仍待目标机。
+
+## 二十三、<span id="ipa-resigner">单个 IPA 文件免编译重签右键入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 明确要求重签功能纳入右键菜单，且只有后缀为 `ipa` 的文件才显示；状态：需求已确认、源码与隔离验证通过；创建 / 更新：2026-10-23。仓库为 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`，独立安装单元 `JobsIPAResigner`，功能标识 `ipa-resign`、菜单“IPA 免编译重签”，已接独立及总安装 / 卸载入口。
+- 只接受单个普通 `.ipa` 文件，后缀大小写兼容；其它后缀、目录、目录包、符号链接、多选和空白位置隐藏。点击、URL 解码、宿主与 Terminal 执行前复核；路径作为唯一位置参数传递，不使用原业务脚本不支持的 `--file`。
+- 规范源为 `/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@iOS/其他/【MacOS】✍️IPA免编译重签.command/【MacOS】✍️IPA免编译重签.command`，扩展的 `Scripts/ResignIPA.command` 与其逐字节一致并随 App 打包，双击原入口保留。先显示业务自述并回车确认，保持原团队与 Bundle ID，验证成功后原路径覆盖 IPA，再询问设备安装；旧包不自动备份，安装失败保留重签结果。
+- 右键私有载体只复制完整业务脚本，不复制源码旁的“描述文件”目录；默认使用用户 Xcode 缓存，补充文件目录用于独立脚本入口。主脚本、扩展及 Scripts 就近 README 已按功能颗粒度对账。
+- 菜单 81 条、传输 51 条断言、独立安装 15 项 / 97 断言、总映射 8 项 / 27 断言及类型、Shell、plist 检查通过；临时 Debug 两 target 构建、深度签名与打包资源字节校验通过。构建自动产生的临时系统登记已精确注销，未启用扩展或刷新 Finder，真实菜单、Terminal 自动化权限与真机重签安装仍需目标机验收；未提交推送。
+
+## 二十四、<span id="ios-tools-and-installer-groups">iOS 工程辅助菜单与安装面板分组</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-23 明确列出 JobsCommand@iOS 的九个脚本，要求进入 macOS iOS 项目目录右键；随后要求总安装面板按用途分组，每组和底部全局各有“全选 / 全不选”，并根据预览指定 `Pod Install` 与 `Pod Update` 相邻、首字母大写；状态：产品要求已确认；创建 / 更新：2026-10-23。适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`。
+- `JobsIOSTools` 为自包含 App + Finder Sync，随包保留十项业务脚本、固定动作表和独立安装 / 卸载入口，原双击脚本保留。十项为 iOS 缓存清理、禁用 CocoaPods 构建沙盒、安装 CocoaPods、CDN 切换 GitHub 源、提取 Pod 文件、Pod Update、Xcode 依赖查询、更新本地仓库、本地 Pod 编译检查、安装 / 升级 JobsCodeSnippets。当前层工程标记决定普通 iOS 工具显示；编译检查额外要求当前目录直接存在普通 `*.podspec` 文件，含隐藏文件，只有子层存在或同名目录不满足；不在系统桌面显示。菜单、点击、宿主和终端分发均复核目标。
+- 来源：用户于 2026-10-23 指定将 JobsCodeSnippets 安装脚本加入 iOS 工程右键，要求已有安装升级、保护暂存内容、合并仍冲突时恢复最初状态并提示人工合并；状态：需求已确认。固定动作 `ios-code-snippets` 通过 `--finder <项目>` 调用与独立源逐字节相同的随包脚本，实际目标始终为 `$HOME/Library/Developer/Xcode/UserData/CodeSnippets`，不是所选工程。规范源位于 `/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@iOS/配置相关/【MacOS】⚙️双击安装JobsCodeSnippets.command/`，修改时同步 Tools 资源与 SourceManifest 哈希。
+- 片段升级在私有完整副本中先 stash 暂存 / 未暂存 / 未跟踪内容，再沿当前分支明确上游 fetch、无 commit 合并，分别三方恢复工作区与暂存部分；不自动生成分支提交或推送。分叉成功保留待提交合并；失败时真实目录、HEAD 和原始 index 不动，保留候选冲突现场并提示手动合并。发布前核对文件内容、权限、修改时间和链接目标；同级原始备份保留，固定锁阻止重复更新。非空非 Git、外部元数据、特殊 index 标记、未完成操作等不可靠状态保留并停止；本机真实片段只读检查，网络更新与 Finder 部署另验。
+- CodeSnippets 验证：原生 zsh 隔离核心 23 组 / 113 断言通过，菜单分发 / 资源 3 组 / 22 断言及安装映射 10 组 / 40 断言通过；覆盖同文件部分暂存、已有 stash、分叉待提交、ignored 同名碰撞、失败原始字节保护与内容 / 权限 / 链接并发变化。独立源和 Tools 副本 cmp 与 SHA-256 一致，语法与文档目录检查通过；未实际安装扩展、更新真实片段、提交或推送。
+- 总安装面板固定分为 IDE、Git、文件与通用工具、Flutter、iOS / CocoaPods、模拟器六组。每项恰好属于一组；组内按钮只影响本组，底部按钮作用于全部，组与总计数实时更新。全不选时安装按钮置灰，回车同样不能提交。窗口不滚动，按真实控件尺寸使用两列 / 三列及矮屏紧凑间距；替代第二节旧固定“矮屏两列”的布局表述，保留原有空选门禁和工程去重。
+- 功能逐项选择、同工程只构建注册一次；重新安装与已有 iOS 功能取并集，部分卸载保留其它项。显示标题 `Pod Install` / `Pod Update` 不改变实际小写命令、既有动作 ID 或 Pod Install 的原生终端执行方式。安装菜单不自动运行清理、Pod 安装更新或编译检查。
+- 验证：真实 AppKit 组内 / 全局控件、空选回车、四种屏幕尺寸与 UI 预览通过；iOS 隔离业务、私有路径载体、隐藏 Podspec 及 URL 双回调去重通过；双 target Debug 构建通过。真实扩展启用、Finder 菜单、Terminal 自动化权限及用户工程业务仍须安装后验收；本任务未执行清理或 Pod 业务、提交、推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-22
+updated: 2026-10-23
 tags:
   - codex-memory
   - project
@@ -45,6 +45,8 @@ tags:
 ## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > SourceTree 脚本、同名 README 和脚本行为文档的双位置维护边界。
+
+2026-10-23 用户确认平台划分：两根中的原动作包均迁入 `MacOS/`，Windows 对应实现放 `WindowsOS/`。本文历史路径在没有平台层时的记录保留；后续实际寻址在根与包名之间加 `MacOS/`。带 ASCII 冒号的 Flutter 运行包已改为全角 `：`；菜单按新路径迁移并保留用户标题。详见 [[JobsGenesis-脚本双端目录]]。
 
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、必须同步的位置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
