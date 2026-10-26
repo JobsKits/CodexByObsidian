@@ -51,6 +51,7 @@ tags:
 - [二十六、双端 Git 文件夹提交回退右键菜单](#git-commit-rollback)
 - [二十七、双端菜单图标与运行权限状态](#menu-icons-and-execution-state)
 - [二十八、桌面固定顺序、动态隐藏动作与 IDE 打开约束](#desktop-order-ide-scope-maintenance)
+- [二十九、Git 分组按安装状态显示 Sourcetree 入口](#git-sourcetree-opener)
 
 </details>
 <!-- jobs-toc:end -->
@@ -365,5 +366,13 @@ tags:
 - 2026-10-26 本机部署与验收（verified）：新 `JobsDesktopTools` 双 target 在自有 `work/DerivedData` 构建、深度签名及登记通过；首次只迁移原六个明确启用叶子，六旧菜单扩展已停用且 App 保留，当前共九个启用安装单元。原三份功能配置与 AppleShowAllFiles 偏好逐字保留，十四份复制源码 / 资源与来源一致。Finder 对真实桌面路径背景实测三新建连续、两修复和“🙈 隐藏文件”的固定顺序，未点击模拟器或隐藏业务。IDE 聚合沿原注册路径更新，Finder 对空目录、Android、iOS 和纯 macOS 工程实测符合对应三个 IDE 打开条件，未实际打开 IDE。原 App / 配置 / 登记及偏好只读快照保留在系统临时目录 `JobsContextMenus-before-20261026-18932-hyrhr1`，桌面事务备份另见安装日志。
 - 最终 IDE 交叉复核补齐未知元数据边界：已有工程元数据不可读、编码 / XML 损坏、超过 1 MiB 或明确工作区引用无法解析 / 循环时，不能当作非 iOS 误放行 VSCode / Android Studio；有效 Flutter 根仍优先，正常 macOS、SDK 宏与纯 Package 保持可用。Mac 三份检测器同字节，229 条菜单与 108 条识别回归通过，四份相关 README 已说明边界，最终原生构建与原路径登记同步验证。
 - 验证基线：聚合菜单 170 条 Swift、宿主 12 条、事务 / 资源 11 组 44 条、六旧兼容入口 54 组 210 条、五根桌面映射 20 组 35 条、iOS 根 13 组 48 条、Flutter 根 37 组 477 条均通过；原隐藏菜单独立 44 条及业务 / Delegate 回归通过。Windows 隐藏功能为本轮新补的独立包，菜单绑定显式 Show / Hide，后台已达目标时不重复写；二十九源码目录、二十一包、三十四选择项。Windows IDE 78 / C++60、隐藏 28 / C++16、架构 645、业务 156、面板 30、Catalog 57 及文档往返通过。Windows 原生 MSVC / Explorer / 真实设置仍须目标机验证；未改真实 Windows 偏好，两端未提交推送。
+
+## 二十九、<span id="git-sourcetree-opener">Git 分组按安装状态显示 Sourcetree 入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-26 明确要求 Git 分组加入“用 Sourcetree 打开”，没有安装时不展示；状态：需求 confirmed；适用范围：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-10-26。两端统一“🌳 用 Sourcetree 打开”，位于 Git 分组首项，只接受有效工作树普通目录；从子目录打开最近的仓库根，嵌套 Git、子模块与 linked worktree 保留各自工作树。菜单生成和点击前重新检查应用及 Git；未安装或安装文件已移除则隐藏，不自动安装应用或执行 Git 写操作。
+- macOS 归 `JobsProjectTools`，功能 ID `git-sourcetree`；通过 `Shared/SourcetreeApplication.swift` 验证真实 App 标识与可执行文件，宿主以文件 URL 打开仓库。Windows 独立 `JobsSourcetreeOpener`，ID `open-sourcetree`，原生 handler 查 App Paths / 常用安装位置，与回退 handler 复用 Git 父菜单，后台复核后调用 `SourceTree.exe log -f`。两端总安装、卸载、维护映射及 README 已接入，不改变其它功能选择。
+- 首轮验证：Mac 菜单、应用检测、特殊路径、异步回调、安装配置及集成回归通过，宿主与扩展构建、深度签名校验通过；本机在原路径更新登记并启用，原九项选择保持，仅新增 `git-sourcetree`。更新前 App / 配置 / 登记备份位于系统临时目录 `JobsSourcetree-before-bq42GF`；当时 Finder 画面工具返回 `cgWindowNotFound`，未验真实点击。Windows 隔离回归及便携 C++ 检查通过，真实 MSVC / Explorer / 应用启动待目标机验证；Mac 的首次“真实点击待验”状态由下条实测替代（superseded）。
+- 用户反馈与实际修复（2026-10-26，confirmed / verified）：用户反馈菜单点击无效。`JobsProjectTools` 只有 `@main NSApplicationDelegate`、没有 nib / storyboard，也没有显式委托连接；AppKit 的该入口仅调用 `NSApplicationMain`，不会创建或挂接委托，导致 URL 请求无人处理。现移除 `@main`，增加宿主 target 的 `main.swift`，进入事件循环前创建并强持有 `AppDelegate`、设置 `NSApplication.shared.delegate`。此前直接构造委托的派发测试绕过启动缺陷，新增生产入口回归验证 weak delegate / URL handler 的强引用保持、真实生命周期注册和空闲退出（15 条断言与 target membership 检查），原 6 条派发与 26 条打开行为继续通过。
+- 实际验收：本机原路径重新构建、深度签名和启用通过，全部十项配置与更新前逐字节一致；备份在系统临时目录 `JobsSourcetreeHost-before-A34yZc`。主代理真实操作 Finder，在 `OS@Extension` 内右键 `MacOS@Extension → Git操作 → 用 Sourcetree 打开`，Sourcetree 实际出现 `MacOS@Extension (Git)` 窗口，窗口 URL 精确对应本仓绝对路径，后台宿主随后自动退出。没有执行 Git 写操作、提交或推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
