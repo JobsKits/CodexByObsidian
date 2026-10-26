@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-24
+updated: 2026-10-26
 tags:
   - codex-memory
   - project
@@ -542,6 +542,8 @@ tags:
 - 2026-10-18 Swift 换机验收：来源为用户回传的 `report.txt`、`report 2.txt` 及随后明确确认；状态：verified（报告中的完整下载）、confirmed（用户确认完整安装）；适用目录：另一台 Mac 的 `/Users/wx996768/Documents/Gitee/JobsSwiftBaseConfigDemo`；创建 / 更新时间：2026-10-18。原终端没有代理环境变量，Git 未连接系统已启用的 `127.0.0.1:7990` 显式代理；原链路 Raw 握手被重置，两种 HTTP 协议的 Git 克隆均触及脚本 60 秒限时，其后的断包错误不能当作远端重置证据。显式使用 `http://127.0.0.1:7990` 后，Raw podspec 的 JSON / 身份校验通过，官方 codeload 归档 `8,701,761` 字节在约 `2.72` 秒完成且 tar 校验通过，同一 [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) `2.9.3` 浅克隆完整接收 `8.28 MiB` 并成功。用户随后确认，以一次性 `env` 代理环境执行完整 `pod install` 成功；该次原终端链路未使用 7990 显式代理的问题已验收。结论仅适用于这台电脑此次环境，不代表所有下载失败同因，也不代表全工程、全环境或后续构建均已验收；未变更全局 Git、未删除 Pods / 锁文件。
 
 ## <span id="jobs-toc-heading-62" data-jobs-toc="v2">六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+
+- 2026-10-26 Swift CI 的 Flutter 准备须在独立步骤直接调用现有环境配置与资源准备脚本，显式设置 `JOBS_FLUTTER_AUTO_SETUP=1`；Podfile 无 TTY 时仍跳过辅助写任务，不能依赖该标记绕过外层交互保护。资源准备只允许“无 TTY + 精确 1”自动执行，TTY 回车确认及 `check-only` / `skip` 优先级保留。第一次真实 `pub get` 可能因生成文件时间戳而保留旧绝对路径；沿用两份配置备份、移出后再次官方生成及失败恢复流程，不手改生成源码。CI 由 `podfile_readiness.rb --verify-project` 硬检查当前 SDK / module 路径、registrant podspec 及 iOS engine，准备失败不进入安装；安装步骤单独固定 `JOBS_SPECS_SOURCE=cdn`，本机交互默认自动选源不变。来源：用户此次要求修复并授权 GitHub 推送、真实临时目录迁移与 [run 40280564217](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/40280564217)；状态：verified；创建 / 更新：2026-10-26。修复提交 `36b83b9855c00a0f13277b2670c2c31fa5c3c1de` 的完整工作流已成功，涵盖 64 个自有 Pod、主 App / 测试包、27 项宿主测试零失败与上传。实际下载产物为 167,153,753 字节，完整 SHA256 与 GitHub digest 一致；内外 ZIP 完整性、唯一主 App 身份、预期 Bundle ID、arm64 / IOSSIMULATOR、SDK 27.1、Debug 动态库与主资源均已核验。不扩展为真机或人工功能验收。
 
 - 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败，2026-10-24 要求父仓四工程的 iPhone Duo 适配包含远端 workflow 成功；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-24。工程绝对路径沿用本笔记第一节及文件头，不由历史通过记录推断最新提交整条 CI 已通过。
 - 2026-10-18 用户明确验收标准：Swift 及 OC 新旧工程的 workflow 修复，必须以对应修复提交的完整 GitHub workflow 正常成功结束为任务完成标志；本地编译、局部回归或仅推送修复均属于中间验证，不能提前报完成。状态：confirmed；适用范围：本节的三处 iOS 工程。

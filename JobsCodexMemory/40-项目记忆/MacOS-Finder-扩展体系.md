@@ -50,6 +50,7 @@ tags:
 - [二十五、双端桌面 Harmony 模拟器检测与修复](#harmony-simulator-repair)
 - [二十六、双端 Git 文件夹提交回退右键菜单](#git-commit-rollback)
 - [二十七、双端菜单图标与运行权限状态](#menu-icons-and-execution-state)
+- [二十八、桌面固定顺序、动态隐藏动作与 IDE 打开约束](#desktop-order-ide-scope-maintenance)
 
 </details>
 <!-- jobs-toc:end -->
@@ -350,5 +351,19 @@ tags:
 - macOS 白名单脚本、无扩展 shebang 与 Mach-O MH_EXECUTE（含 Universal）作为格式资格；执行状态按任一 POSIX 0111 位，与解除 a-x 一致。关闭 NSMenu 自动启用以保留置灰。请求与宿主复核格式，独立 Shell 脚本保留原普通单文件权限操作语义。Windows 按本平台执行 / 脚本后缀和当前用户 ExecuteFile 探测，权限未知时两项置灰，后台同步拒绝普通文档，不重复写已达目标的 ACL。
 - 2026-10-26 验证：Mac 两个真实菜单测试共 194 条 Swift 断言、两套格式 / 传输测试各 63 条、授权业务 192 / 解除 204 断言通过；其它菜单与图标覆盖 / 唯一性回归通过。14 个当前启用 App 已沿原 DerivedData 路径构建、深度签名、原路径登记并刷新 Finder；三份功能配置逐字节保留。原生 Finder 实际右键验证了 0644 脚本、0755 脚本的互斥置灰，以及 0755 README 隐藏两项，未点击权限业务。更新前 App / 配置 / 登记备份位于系统临时目录 `JobsFinderMenu-before-20261026-43484-19tdirr`。
 - Windows 本机隔离验证 957 项通过，含权限 60、C++ 菜单策略 30、Catalog 55、Architecture 614、Flutter 派发 160、文档目录 38；28 个包与原生叶子 / 组标题覆盖及唯一性通过。真实 MSVC / Explorer / Windows ACL 尚需目标机验证，本轮未注册 Windows 菜单或修改真实 ACL。两端未提交推送。
+
+
+## 二十八、<span id="desktop-order-ide-scope-maintenance">桌面固定顺序、动态隐藏动作与 IDE 打开约束</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-26 连续通过桌面与空 work 文件夹截图明确要求，并指定 MacOS / WindowsOS 同步；状态：产品约束 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-10-26。
+- 两端隐藏文件菜单必须同时变化 emoji 与下一步动作：当前隐藏时“👁️ 显示文件”，当前显示时“🙈 隐藏文件”。不再把两种动作写在同一菜单标题内；读取异常则状态不可用并置灰，不能猜测。菜单只读状态，用户点击后才改变当前用户全局文件管理器显示偏好；不改文件属性。此条替代第二十二节及旧菜单图标快照的固定“显示 / 隐藏文件”标题（superseded）；安装面板可保留功能总称。
+- macOS 桌面自有菜单需由同一 FinderSync 按固定表生成，三个创建入口连续：“新建 iOS → 新建 Android → 新建 Harmony”，之后 Android 检测修复、Harmony 检测修复、隐藏文件动作；未启用叶子直接省略，普通文件夹背景仍仅提供隐藏开关。采用自包含 `JobsDesktopTools` 聚合并保持六个叶 ID、原独立安装入口兼容；本要求替代这六项旧“各自独立菜单扩展决定顺序”的部署方式，原业务不重写。不要把其它应用菜单的相对位置当成本仓可控能力。
+- IDE 入口首先排除空目录；仅 `.DS_Store`、`Thumbs.db`、`desktop.ini` 也算无意义空目录，其余隐藏项包括 `.git` 算内容。Android Studio 仅 Android 原生 / Flutter 官方 / Flutter 鸿蒙根目录；VSCode 对非 iOS 的非空普通目录；Xcode 仅有明确 iOS 平台证据的当前工程目录或有效工程包。Flutter 根含 `ios/` 子目录仍 Flutter 优先，单独进入 `ios/` 才按本层原生工程；纯 macOS 工程或单独 `Package.swift` 不自动判 iOS。拒绝普通文件归一父目录、链接、多选等绕过；菜单与执行前同义复核。此条替代第四节旧“所有 Xcode 工程等价于 iOS”“任意目录均可 Android Studio”的范围（superseded）。Windows 没有 Xcode 菜单；不顺带改变 Visual Studio 既有范围。
+- 用户明确要求将上述打开约束写进相关 README；总览、聚合包与独立 IDE 包说明须和实现一致。用户进一步说明为了下次修改，Mac 总 `【MacOS】🧩安装Finder扩展.command` 及 Windows 总入口/真实编排器必须保留可检索维护注释，说明“面板选项 → 功能 ID → 包/聚合工程 → 菜单实现 → 宿主业务/资源 → 安装产物 → 持久配置”的映射。找不到某个菜单标题时，应顺该映射检查当前源码、旧别名、系统登记产物和 Git 历史，不能仅凭一次文字搜索就断言它来自仓外。
+
+
+- 2026-10-26 本机部署与验收（verified）：新 `JobsDesktopTools` 双 target 在自有 `work/DerivedData` 构建、深度签名及登记通过；首次只迁移原六个明确启用叶子，六旧菜单扩展已停用且 App 保留，当前共九个启用安装单元。原三份功能配置与 AppleShowAllFiles 偏好逐字保留，十四份复制源码 / 资源与来源一致。Finder 对真实桌面路径背景实测三新建连续、两修复和“🙈 隐藏文件”的固定顺序，未点击模拟器或隐藏业务。IDE 聚合沿原注册路径更新，Finder 对空目录、Android、iOS 和纯 macOS 工程实测符合对应三个 IDE 打开条件，未实际打开 IDE。原 App / 配置 / 登记及偏好只读快照保留在系统临时目录 `JobsContextMenus-before-20261026-18932-hyrhr1`，桌面事务备份另见安装日志。
+- 最终 IDE 交叉复核补齐未知元数据边界：已有工程元数据不可读、编码 / XML 损坏、超过 1 MiB 或明确工作区引用无法解析 / 循环时，不能当作非 iOS 误放行 VSCode / Android Studio；有效 Flutter 根仍优先，正常 macOS、SDK 宏与纯 Package 保持可用。Mac 三份检测器同字节，229 条菜单与 108 条识别回归通过，四份相关 README 已说明边界，最终原生构建与原路径登记同步验证。
+- 验证基线：聚合菜单 170 条 Swift、宿主 12 条、事务 / 资源 11 组 44 条、六旧兼容入口 54 组 210 条、五根桌面映射 20 组 35 条、iOS 根 13 组 48 条、Flutter 根 37 组 477 条均通过；原隐藏菜单独立 44 条及业务 / Delegate 回归通过。Windows 隐藏功能为本轮新补的独立包，菜单绑定显式 Show / Hide，后台已达目标时不重复写；二十九源码目录、二十一包、三十四选择项。Windows IDE 78 / C++60、隐藏 28 / C++16、架构 645、业务 156、面板 30、Catalog 57 及文档往返通过。Windows 原生 MSVC / Explorer / 真实设置仍须目标机验证；未改真实 Windows 偏好，两端未提交推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
