@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-24
+updated: 2026-10-26
 tags:
   - codex-memory
   - project
@@ -48,6 +48,8 @@ tags:
 - [二十三、单个 IPA 文件免编译重签右键入口](#ipa-resigner)
 - [二十四、iOS 工程辅助菜单与安装面板分组](#ios-tools-and-installer-groups)
 - [二十五、双端桌面 Harmony 模拟器检测与修复](#harmony-simulator-repair)
+- [二十六、双端 Git 文件夹提交回退右键菜单](#git-commit-rollback)
+- [二十七、双端菜单图标与运行权限状态](#menu-icons-and-execution-state)
 
 </details>
 <!-- jobs-toc:end -->
@@ -326,5 +328,27 @@ tags:
 - Mac 还可在全部模拟器停机、实例及 SDK 路径可信时，完整备份单一实例后修复失效 `config.ini` SDK 路径；SDK / HDC 健康检测、备份逐文件对账、发布前 inode / 原内容 hash / 停机复检，拒绝链接及控制字符路径，避免覆盖并发改动。两端固定名称 / 路径 / 类型 / 版本及本地文件身份；Mac 要求并固定 UUID，Windows 在字段存在时固定 UUID，防确认期间同名实例重建。Windows 本轮范围为诊断及冷启动，不声称具有 Mac 的 SDK 配置写入能力。
 - Mac App / 扩展标识 `com.jobs.harmonysimulatorrepairer` / `.findersync`，固定 URL `jobsharmonysimulatorrepairer://simulator/repair`。业务 18 组 / 120 断言、独立安装 10 组 / 66、传输 66、宿主去重 26、新真实菜单 14 条 Swift 断言、总映射通过；双 target 临时 Debug 构建、深度签名和随包核心字节一致通过，临时登记已精确清理。Windows 假 CLI / 安装 / 源码门禁、C# 编译及组合回归 1,099 条断言通过；已接 CI 的三包 MSVC 编译和临时 NTFS ACL 回归，真实 Windows / DevEco / Explorer 待实机。
 - 当前安装数量：2026-10-24 依据双端真实选择器及根映射，Mac 51 项 / 14 安装单元 / 28 源码工程，Windows 32 项 / 19 包 / 27 源码目录。保留原分组及空选门禁。Mac 根回归中有 1 项既有 Flutter 资源对账因 SourceTree 旧目录路径失效未通过，与本次新增代码无关；未扩大修改范围。未真实安装、重启用户模拟器、提交或推送。
+
+## 二十六、<span id="git-commit-rollback">双端 Git 文件夹提交回退右键菜单</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-26 指定 SourceTree 的“♻️双击Git（识别子Git） 提交回退”功能，要求进入 macOS / Windows 系统右键，且只对 Git 管理的文件夹显示；状态：需求 confirmed；创建 / 更新：2026-10-26。两端源码分别位于 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsGitRollback` 与 `WindowsOS@Extension/JobsGitRollback`，标识 `git-rollback`，入口“Git操作 → Git 提交回退”。
+- 支持根目录、工作树内部普通目录、嵌套 Git、子模块 gitfile 与 linked worktree；无效内层 `.git` 不借用外层仓库通过，文件、多选、链接、裸仓和 Git 元数据目录隐藏。仅处理所选目录所属最近工作树，不递归 reset 子仓、不联网 fetch、不提交推送。
+- 保留六模式：upstream soft / hard、历史提交 soft / hard、tag hard、reflog hard。fzf 子层 `←` 回模式层，Esc / 空选 / EOF 不执行；hard 要精确 `YES`，固定提交并复核仓库、分支、HEAD、索引和改动。soft 保留索引和工作区且要求祖先；hard 可能删除阻碍目标检出的未跟踪路径，不承诺全部保留。
+- macOS 完整打包 SourceTree 核心，运行时不依赖另一仓库；后台宿主和 Terminal 执行前复核最近工作树根与实际 gitdir，拒绝 core.worktree 改绑，Git 环境隔离只限子进程；独立入口转交 `JobsProjectTools` 单项，统一 Git 菜单共六项，原 IDE / Git 选择保留。独立 / 聚合构建、签名、传输、目录识别、回退门禁及总面板隔离回归通过；本机已在既有原路径更新构建并启用，旧 App / 配置 / 登记备份位于系统临时目录 `JobsGitRollback-before-4Wxmm9aG`。初次交付仅完成登记，GUI 工具当时返回 `cgWindowNotFound`，菜单未验收；该“画面待验”状态已由下述用户反馈和真实菜单验证取代（superseded）。未对用户仓库执行回退。
+- Windows 使用独立原生动态 ContextMenu handler，菜单回调只读 Git 元数据，点击后独立 PowerShell 窗口确认；安装需匹配架构 MSVC / Windows SDK。原生编译、Explorer 显示和 Windows PowerShell 5.1 目标机仍需实机验收，本机没有运行中的 Windows VM。不把 macOS 的 PowerShell 7 隔离验证等同 Windows 实机通过。
+
+- 最终验证：macOS 最新统一产物再次构建、深度签名、资源 cmp 与精确路径启用均通过，原八项选择完整保留；Mac 当前 52 项 / 14 安装单元 / 29 源码工程，Windows 33 项 / 20 包 / 28 源码目录。Windows 隔离 Git / UTF8 编码回归、可移植 C++ 元数据、总安装 / 业务模块 / 架构回归通过；PS5.1 默认 ASCII 的中文选择故障与 32 位注册表视图边界已修，写入中的 reset 不受固定只读超时强杀。原生编译与 PS5.1 检查已接 CI 源码，但未提交推送或触发远端运行。两仓目录过滤器清单和字节往返已核验。
+
+- 用户反馈与真实菜单修复（2026-10-26，confirmed / verified）：用户截图显示大 Git 根文件夹没有整个 Git操作组，并明确要求大 Git / 子 Git 均显示。生产配置仍以 Foundation Home API定位，在 Finder 沙盒中指到容器空目录，导致 enabledFeatures 返回空并隐藏 IDE / Git 全组。现改用 getpwuid_r(getuid())读取真实账户 Home 下原 EnabledFeatures.txt；缺失或无效配置仍保持关闭，不创建容器副本、不默认全开。新增14条生产配置回归，原272菜单与5派发断言、两target类型检查及本机原路径构建签名均通过。
+- 真实验收：主代理通过原生 Finder 菜单实际右键 `/Users/jobs/Documents/Github/JobsGenesis`（大 Git）和 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`（子 Git），两处均读到“Git操作 → Git 提交回退”，子 Git 子菜单还实际选中该叶子但没有点击执行。九项原配置逐字保留；更新前App / 配置 / 登记备份在系统临时目录 `JobsGitMenuVisibility-before-kxWnOOAa`。已部署修复；未执行真实回退、提交或推送。
+
+
+## 二十七、<span id="menu-icons-and-execution-state">双端菜单图标与运行权限状态</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-26 通过 README 右键截图明确要求，状态：confirmed；适用范围：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 双端，创建 / 更新：2026-10-26。所有自有右键菜单在名称前加与脚本作用相近的 emoji，不同功能不重复；同功能跨平台与兼容入口保持一致，父菜单与不同叶子各用独立标识。只改显示标题，不改动作 ID、传输或安装选择；示例为 `📋 复制绝对路径`、`📦 Flutter打包`、`⏪ Git 提交回退`、`🔓 运行授权`、`🔒 解除运行授权`。
+- 两个权限入口只对单个可执行 / 脚本格式文件显示；README、文本、图片等普通文档即使误有执行权限也不显示。适用文件上两项都保留：已有运行权限则授权置灰、解除可点，没有权限则反向；点击复核目标和权限。此条替代第十六节及旧索引的“单个普通文件不限后缀”菜单范围（superseded）；目录、包、链接、多选、空白菜单仍排除。两个扩展继续独立安装卸载，不合并安装单元。
+- macOS 白名单脚本、无扩展 shebang 与 Mach-O MH_EXECUTE（含 Universal）作为格式资格；执行状态按任一 POSIX 0111 位，与解除 a-x 一致。关闭 NSMenu 自动启用以保留置灰。请求与宿主复核格式，独立 Shell 脚本保留原普通单文件权限操作语义。Windows 按本平台执行 / 脚本后缀和当前用户 ExecuteFile 探测，权限未知时两项置灰，后台同步拒绝普通文档，不重复写已达目标的 ACL。
+- 2026-10-26 验证：Mac 两个真实菜单测试共 194 条 Swift 断言、两套格式 / 传输测试各 63 条、授权业务 192 / 解除 204 断言通过；其它菜单与图标覆盖 / 唯一性回归通过。14 个当前启用 App 已沿原 DerivedData 路径构建、深度签名、原路径登记并刷新 Finder；三份功能配置逐字节保留。原生 Finder 实际右键验证了 0644 脚本、0755 脚本的互斥置灰，以及 0755 README 隐藏两项，未点击权限业务。更新前 App / 配置 / 登记备份位于系统临时目录 `JobsFinderMenu-before-20261026-43484-19tdirr`。
+- Windows 本机隔离验证 957 项通过，含权限 60、C++ 菜单策略 30、Catalog 55、Architecture 614、Flutter 派发 160、文档目录 38；28 个包与原生叶子 / 组标题覆盖及唯一性通过。真实 MSVC / Explorer / Windows ACL 尚需目标机验证，本轮未注册 Windows 菜单或修改真实 ACL。两端未提交推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
