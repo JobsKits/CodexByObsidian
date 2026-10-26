@@ -5,12 +5,13 @@ scope: jobs-ios-repos
 repositories:
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo
+  - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsFlutterBaseConfigDemo
   - /Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods
   - /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-21
+updated: 2026-10-24
 tags:
   - codex-memory
   - project
@@ -90,6 +91,7 @@ tags:
 - [六十、CocoaPods 公共源网络测试模块](#jobs-toc-heading-61)
 - [六十一、GitHub Actions 模拟器验收边界](#jobs-toc-heading-62)
 - [六十二、三工程微应用教学 Demo](#microapp-learning-demos)
+- [六十三、四工程挂载脚本的交互完整性](#jobs-toc-heading-64)
 
 </details>
 <!-- jobs-toc:end -->
@@ -541,7 +543,7 @@ tags:
 
 ## <span id="jobs-toc-heading-62" data-jobs-toc="v2">六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-20。工程绝对路径沿用本笔记第一节，不由历史通过记录推断最新提交整条 CI 已通过。
+- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败，2026-10-24 要求父仓四工程的 iPhone Duo 适配包含远端 workflow 成功；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-24。工程绝对路径沿用本笔记第一节及文件头，不由历史通过记录推断最新提交整条 CI 已通过。
 - 2026-10-18 用户明确验收标准：Swift 及 OC 新旧工程的 workflow 修复，必须以对应修复提交的完整 GitHub workflow 正常成功结束为任务完成标志；本地编译、局部回归或仅推送修复均属于中间验证，不能提前报完成。状态：confirmed；适用范围：本节的三处 iOS 工程。
 - Swift 与 OC 新工程的测试设备按当前 Xcode Simulator SDK 主版本选择可用 arm64 iPhone，再按数字 runtime 版本排序；不让已启动的旧系统抢占。Swift 在依赖安装前，以最低 iOS 15.6 编译并实际运行 WebKit overlay 加载探针，不通过提高部署版本或弱化链接绕过问题。首次启动准备预算为 10 分钟。
 - OC 新工程 CI 全 job 使用 `JOBS_SIMULATOR_ONLY=1`，两个 Jobs 自有 podspec 在该模式排除真机专用 IJK，保留 AVPlayer / ControlView；默认本地安装不设此变量，切换模式须重新 `pod install`。安装模式连同架构写入源码指纹和结果身份；此模式的通过结果不能作为真机 IJK 验收。旧工程依赖原本未启用 IJK，不照搬新工程的 Pod 装配方式。
@@ -555,6 +557,12 @@ tags:
 - 2026-10-18 分工程验收基线：Swift `6606ecb3` 的 [run 39087121259](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/39087121259) 完整成功，27 项 hosted UIKit / Timer 测试零失败；OC 旧工程 `main` 的 `f88cc0041` [run 39101054898](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101054898) 完整成功。两者最终 ZIP 均核实为对应主 App、预期 Bundle ID、真实可执行文件、arm64 / IOSSIMULATOR 平台、Debug 动态库及主资源。状态：verified；范围仅为上述提交和运行。
 - 同日 OC 新工程 `byPods` 的 `523997452` [run 39101036560](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101036560) 独立完整成功：109 个自有 Pod 的双配置批次及 218 份成员证据完整，49 组 XCTest 共 135 项执行全部通过、零失败零跳过，10 组 harness 全过，主 App 双配置成功；源码指纹一致，Keychain 实际宿主权限审计与三份静态审计通过。ReactiveObjC 前后配置 / 宏头 SHA 一致，真实编译响应文件无 header map / VFS 入口且保留原始头搜索路径。最终产物完整 SHA256 匹配 GitHub digest，内外 ZIP 校验通过，唯一主 App 为 `JobsOCBaseConfigDemo.app`、Bundle ID 为 `com.JobsOCBaseConfigDemo.byPods`，同名可执行文件、arm64 / IOSSIMULATOR、Debug 动态库及主资源均核实。状态：verified；不代表真机 IJK 或人工 App 功能验收。
 
+- 2026-10-24 四工程的新 SDK 验收基线：范围为 `/Users/jobs/Documents/Github/JobsBaseConfig` 下文件头所列 OC 老工程、Swift UIKit、SwiftUI 与 Flutter，不包含独立目录的 OC 新工程。四条构建 / 回归 workflow 均明确选择 Xcode 27.1 / iOS 27.1 SDK，保留原最低系统版本；验收时四个 GitHub `main` 均与下列完整成功运行的 head SHA 一致。父仓 [d2dd577e329accdfdbab01594460a041dbf9cfa3](https://github.com/JobsKits/JobsBaseConfig/commit/d2dd577e329accdfdbab01594460a041dbf9cfa3) 已发布，远端四个 gitlink 与成功 SHA 一致，README 保留精确运行链接及未验收边界。状态：verified；这是精确提交基线，不覆盖并行任务尚未提交的工作区改动。
+- 对应成功运行：OC `9b4d51561ed1d15304fdcc735857edaf6ab1dc17` 的 [run 40054135112](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/40054135112) 完整主 App 构建、打包及上传成功；Swift `80e7ec2f14ad83fe7599f767e0a2d1d09d573fa7` 的 [run 40049391857](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/40049391857) 覆盖 64 个自有 Pod、主 App / 测试包及 27 项 hosted 测试，零失败；SwiftUI `17c8bba89bb2a084eee23d51c37842abd281e5ec` 的 [run 40050717252](https://github.com/JobsKits/JobsSwiftUIBaseConfigDemo/actions/runs/40050717252) 覆盖 Debug / Release 完整 App；Flutter `76f061460d9ccb1a454685c140174305c779a204` 的 [run 40049224954](https://github.com/JobsKits/JobsFlutterBaseConfigDemo/actions/runs/40049224954) 覆盖明确清单内的 Dart 分析、21 项回归与默认入口的完整 iOS Simulator App，不代表教学示例全仓分析或全部测试均通过。OC 另有 [协议图 run 40049466303](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/40049466303) 成功，其全部触发输入至上述 OC 提交保持不变；四仓已提交且启用的 workflow 共五份，均有对应成功记录。来源：本任务 GitHub 运行、远端分支与独立只读复核；状态：verified。
+- OC 老工程对 SDK 27.1 的依赖兼容只在 Jobs 维护的 Podfile 中，将 `ZFPlayer` 与 `AFNetworking` 两个 target 的 `CLANG_ENABLE_MODULES` 设为 `NO`，保留公共 modulemap / `DEFINES_MODULE` 及消费者模块编译；原版第三方源码不修改。两个完整 framework 与启用模块的消费者编译链接均已验证，最终由上述完整 App workflow 复验通过；不把此开关扩大到其它依赖。Jobs 自有布局代码若经过返回父类的 DSL 后调用子类方法，应从原有强类型对象分开调用，保留执行次序；不能只检查新加的相邻调用，须追溯整条链的已有前缀。来源：本任务 Xcode 27.1 的真实编译失败、原版依赖探针及修复后的 CI；状态：verified。
+- 上述四工程最终 App 产物均已真实下载：外层 SHA256 与 GitHub digest 一致，内外 ZIP 完整性通过，预期主 App 身份、可执行文件、arm64 Simulator 架构及 Mach-O / plist 中的 SDK 27.1 均已核验；SwiftUI 的 Debug / Release 分别验包，Flutter 另含 x86_64。OC 主包为 `com.JobsOCBaseConfigDemo`，不能混同 OC 新工程的 `.byPods` 包；Swift 为 `com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo`，SwiftUI 为 `com.jobs.jobsswiftuibaseconfigdemo`，Flutter 为 `com.example.jobsFlutterBaseConfigDemo`。来源：2026-10-24 对应成功运行的原始 artifacts、校验摘要与实际解包检查；状态：verified。
+- Duo 验收边界：上述构建 / 自动回归不等于闭合、半折、展开与左右分屏的实际姿态交互均通过；本地 Duo 模拟器启动曾报 `Data Migration Failed`，完整原生姿态体验仍未验收。折痕保留区、铰链特效、相机双屏及 App Store 截图 / 上架不属于本轮基础动态布局基线。来源：本任务实际运行与交付范围；状态：verified（失败现象及验证边界）。
+
 ## 六十二、<span id="microapp-learning-demos">三工程微应用教学 Demo</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-19 根据 iOS 招聘要求明确提出，2026-10-21 根据截图修复布局；状态：confirmed（教学范围与交付约束）、verified（下述各轮明确列出的编译及交互范围）；创建：2026-10-19；更新：2026-10-21。适用范围为本笔记第一节的 OC 新工程、OC 老工程和 Swift UIKit 基础工程。
@@ -565,5 +573,12 @@ tags:
 - 2026-10-21 复验基线：三工程完整 Debug、arm64、iOS Simulator 构建均成功，日志为 `/tmp/jobs-micro-layout-swift-final-build.log`、`/tmp/jobs-micro-layout-oc-new-final-build.log`、`/tmp/jobs-micro-layout-oc-old-final-build.log`。iOS 27.0 的 375×667 点最大辅助字号和 402×874 点正常字号下，三侧微应用 / PWA 均通过真实明暗按钮切换、表单间距 / 完整可见、草稿保存 / 非法参数拒绝及离线连续计数；三侧 HTTPS 实际失败后恢复本地包并继续计数通过，Swift 同时验证键盘已收起。OC 新旧 Demo 源码 / 资源一致，三份 App 的学习资源与源码校验一致。此轮只验收本地构建与 UI，Codex 未执行 Git 提交、推送或触发 CI；不扩展为 Release / 签名真机或商业 SDK 验收。
 - 2026-10-19 最终验证范围：三工程 Debug、arm64、iOS Simulator 的完整主工程构建均为 `BUILD SUCCEEDED`，本机证据分别为 `/tmp/jobs-micro-swift-verified.log`、`/tmp/jobs-micro-oc-new-verified.log`、`/tmp/jobs-micro-oc-old-verified.log`；15 个 Demo 页面均启动成功。三工程均通过 Bridge 允许 / 拒绝、沙箱读写 / 越界、多账户数据隔离、mPaaS 打开路由及 Native 离线包状态检测的实际交互测试。
 - 六组微应用 / PWA 页面通过实际按钮切换主题与截图复验，已修正 Swift 按钮配置背景未跟随主题及 OC 网页主题问题。两套 PWA Web 资源均在 [**Chrome**](https://www.google.com/chrome/) localhost 完成“在线注册 SW → 停止 HTTP 服务 → 普通重载并继续交互”验证；此结果只证明 Web 资源的真实 SW 离线行为，不表示 `WKWebView` 的 `file://` 模式运行了 SW。Release 构建和签名真机运行仍未验证；结论仅适用于本轮已列环境、页面与操作，不外推为全平台或所有功能保证，也不把此前 CI 成功提交的结论套用到当前未提交改动。
+
+## <span id="jobs-toc-heading-64" data-jobs-toc="v2">六十三、四工程挂载脚本的交互完整性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+
+- 来源：用户于 2026-10-24 发现 OC 的 `pod install` 挂载脚本交互减少，明确要求覆盖 OC 新旧、Swift UIKit 与 SwiftUI 工程整改；状态：confirmed（范围与交互要求）；创建 / 更新：2026-10-24。四工程绝对路径见本笔记第一节。
+- 维护安装辅助脚本时必须逐项保护既有功能和用户选择，不能因为 Hook 标记、自动识别目录、默认离线或后台调度而静默绕过确认、安装 / 升级选择及危险操作授权。终端保留真实键盘输入；无 TTY、输入结束及取消不得默认为授权。自动化只读 / 跳过应明确可选，辅助任务失败必须如实显示，保留原 CocoaPods 安装结果。
+- 按各工程真实集成维护：Swift UIKit 的 Flutter / FVM、SPM 和 Unity 功能继续保留；SwiftUI 原无这些挂载，不凭目录或其它工程清单擅自新增。自动定位已知工程路径可以保留，不为恢复确认强迫重复拖入目录。
+- 用户同日明确补充 SwiftUI 真机 Run 构建后须在工程根目录创建 `build/真机.ipa`。沿用本笔记第四十九节的签名和唯一产物规则，主 App 的 `Save Build IPA` 必须位于资源复制等阶段之后；这属于主 App 构建阶段，不冒充整个 Scheme 或 App 运行结束回调。隔离脚本与工程配置检查不能替代真实真机 Run 验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

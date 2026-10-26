@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-23
+updated: 2026-10-24
 tags:
   - codex-memory
   - project
@@ -47,6 +47,7 @@ tags:
 - [二十二、桌面与文件夹空白处切换隐藏文件显示](#hidden-files-toggle)
 - [二十三、单个 IPA 文件免编译重签右键入口](#ipa-resigner)
 - [二十四、iOS 工程辅助菜单与安装面板分组](#ios-tools-and-installer-groups)
+- [二十五、双端桌面 Harmony 模拟器检测与修复](#harmony-simulator-repair)
 
 </details>
 <!-- jobs-toc:end -->
@@ -225,6 +226,10 @@ tags:
 - 原脚本真实核心只有 `chmod +x`，新增业务保持当前 umask 和该语义，不增加隔离属性清理、不执行目标、不递归、不自动 sudo。Terminal 展示路径后回车继续，任意非空输入取消、EOF 停止；确认后才创建私有会话日志。打包业务自包含，原双击脚本及其 README 保留。
 - 验证：业务 15 项 / 192 断言、真实菜单源码 76 条 Swift 断言、URL / 私有载体 38 断言及独立安装回归通过；Debug 两 target 构建、深度签名、打包脚本字节一致通过。Xcode 自动登记的隔离产物按精确临时路径注销，未启用扩展或刷新 Finder；真实菜单与 Terminal 自动化需安装后验收，未提交推送。
 
+- 来源：用户于 2026-10-24 根据运行授权菜单明确要求增加“解除运行授权”，并指定 WindowsOS / MacOS 均须实现；状态：需求 confirmed、源码与隔离验证完成；适用范围：`OS@Extension` 双端。Mac 新增独立 `JobsRunAuthorizationRevoker`（`run-revoke`），仅一个普通文件显示，Terminal 回车后执行 `chmod a-x` 清除 u/g/o 全部执行位；保留原 `JobsRunAuthorizer` 的 `chmod +x` / umask 语义，二者分别安装卸载。拒绝目录、包、链接、多选与空白；只读、身份复检、权限回读、内容 / ACL / 隔离属性保护齐备，不把清执行位称为完整快照恢复或防解释器读取。
+- Windows 新增独立 `JobsRunAuthorizer` / `JobsRunAuthorizationRevoker`（`run-authorize` / `run-authorization-revoke`），当前用户本地 NTFS 普通单文件的 `ExecuteFile` ACL 成对控制，精确 `YES` 后操作；不改 ExecutionPolicy / MOTW。原始 DACL 与本次前后状态精确记录，允许同一文件正常编辑后再切换，身份或外部 ACL 变化停止；失败按当前预期状态安全回滚。拒绝重解析点、硬链接、UNC 等不可靠目标；卸载菜单不还原已修改权限。保留读权限的解释器仍可读取脚本。
+- 2026-10-24 验证：Mac 撤权业务 16 组 / 204 断言、真实菜单 76、URL / 载体 38、独立安装 15 组 / 97、总映射 7 组 / 34 通过；两个 target 临时 Debug 构建、深签与脚本资源逐字节核对通过，Xcode 临时宿主登记已精确注销。Windows 两个 C# 类型编译及权限流程 19 条隔离断言通过，真实 NTFS ACL / Windows 5.1 / Explorer 仍待实机。不执行用户文件、未实际安装新扩展、未提交推送。
+
 ## 十七、<span id="git-dynamic-proxy-menu">双端桌面 Git 动态代理配置入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-22 明确要求将 `JobsCommand@Gits/【MacOS】🌐双击配置Git动态代理.command` 纳入 `OS@Extension` 的系统桌面右键，并写 macOS / Windows 双端；状态：需求与项目约束已确认，源码已实现、验证边界另记；创建 / 更新：2026-10-22。
@@ -255,6 +260,12 @@ tags:
 - 2026-10-23 隔离基线：Mac 业务 / fzf 25 组 / 206 断言、传输 66、宿主 26、独立安装 10 组 / 66、总映射 8 组 / 40 通过，桌面与旧总入口回归通过；Windows 假 CLI 业务 50、纯 C++ 桌面门禁 13、根级集成 1,051 断言通过。两仓文档 TOC、语法和差异检查通过；这些结果不替代真实 DevEco JSON、许可、虚拟化、创建启动与 Windows 5.1 / Explorer 实机验收。
 
 ## 二十、<span id="flutter-tools-consolidation">统一 Flutter 功能归集与清理入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-24 通过安装面板截图明确要求；状态：需求已确认，源码与隔离验证完成；适用仓库为本笔记登记路径。菜单与安装面板中的中文平台名统一使用 `OpenHarmony`，运行入口为“从终端运行 Flutter 项目”，完整清理入口为“清理当前 Flutter 项目构建产物”。“清理 Android / OpenHarmony 构建产物”允许 Flutter 根目录、Android 原生根目录、OpenHarmony 原生根目录及其内部空白菜单；仅该清理项扩展为空白菜单，通用终端与代码地图范围不变。Terminal 宿主强制 `--android-openharmony`，Flutter 只清已识别的两平台产物及对应 `build/app`、`build/ohos`，保留 iOS、桌面、`.dart_tool`；完整 Flutter 清理仍由 Flutter 子菜单承担。此范围替代下文旧“Flutter 根目录隐藏通用清理”约定（`superseded`）。Windows 本轮只同步已有菜单命名，清理仍限 Flutter / Android，不虚增平台能力；未重新安装扩展、执行真实清理或提交推送。
+
+- 来源：用户于 2026-10-24 根据总安装窗口截图，明确要求把二级子菜单功能显示为独立安装选项，并补充 WindowsOS 侧同步；状态：需求已确认。适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 双平台。macOS Flutter 为十九个可执行叶子动作（打包三平台、体检两类、修复四项、清理两项及开发辅助），总面板为五十项 / 十二个安装单元；Windows 按已实现的十四个 Flutter 动作展开，总面板二十九项 / 十六个包，平台能力不强行虚增。分组及全局全选 / 全不选、空选不能提交继续保留。
+  - 实现约束：勾选须实际过滤菜单与点击 / 宿主派发，空父菜单隐藏，同一包只安装一次；本次选了 Flutter 时精确替换该包动作，防止旧全选配置并回，未选整个 Flutter 包时保留原安装。macOS 配置为当前真实用户应用支持目录的 `JobsFinderExtensions/flutter-tools-features.conf`，缺失兼容全开，空或损坏关闭；旧聚合打包请求仅全部三平台启用时允许。独立 macOS Flutter 安装全开，卸载清配置，注册成功后才发布总面板选择。窗口按控件选两列 / 三列，超高仅中间区滚动且底栏固定；此为新功能颗粒度的布局事实，替代此前固定不滚动描述（`superseded`，仅本安装器）。
+  - 验证：macOS 原生窗口已实际打开并核对五十项完整显示，四种屏幕布局 / 分组按钮 / 空选门禁、单动作替换 / 旧别名 / 构建注册失败保持旧配置、菜单与宿主开关隔离回归通过；未真实部署、启用或执行 Flutter 业务，Windows 选择 / 安装计划 / 状态 / 既有包与架构六组共 863 条断言、PowerShell Parser / BOM 及纯 C++ 白名单 / 状态指针夹具通过；Windows WinForms / MSVC / Explorer 桌面实机仍待验。Windows 原生 DLL 每次展开和点击读取包根 `menu-state.txt` 当前 release 与动作，和 JSON 状态一同事务发布并回滚；初次从旧实现升级须重启 Explorer 或注销一次，安装器不自动终止窗口。
 
 - 来源：用户于 2026-10-23 从 Flutter 项目 `.java-version` 和 Finder 截图明确要求项目级 Java 安装 / 切换，并追加双端“安装/切换 Flutter@OpenHarmony SDK”；状态：需求已确认；适用范围：`OS@Extension/MacOS@Extension/JobsFlutterTools` 与 `OS@Extension/WindowsOS@Extension/JobsFlutterTools`（OpenHarmony 双端，Java 本轮为 macOS）。两个 SDK 入口相邻，Java 归同一开发辅助组，不新增外层 Flutter 菜单。OpenHarmony 选版须来自 CPF-Flutter 实际标签并固定 commit，独立缓存、项目 FVM 绑定；原生和鸿蒙同一工作目录同一时刻只有一套绑定，须支持两个入口往返切换，不设置全局 Flutter。Java 使用 jEnv / `.java-version`，声明为 `17` 的现有项目须能识别；Flutter 的 Java 发现优先级不能仅靠 `JAVA_HOME` 覆盖，实际 Gradle daemon 需本次进程参数绑定，后台运行保留参数，既有 Gradle JVM criteria 冲突须报告。用户项目本次只读检查，不自动执行 SDK 下载、Java 安装或版本切换。
   - 2026-10-23 实现与验证：macOS 鸿蒙管理 18 组 / 121 断言、Java 17 组 / 115 断言、切回官方 59 组 / 423 断言及真实菜单 / 传输 168 断言通过；Windows 新增鸿蒙 46、统一包 160、架构 509、模块 120 断言通过，并加入既有 CI。macOS 在原 `work/JobsFlutterToolsDerivedData` 重建、深度签名和全部 18 份工具资源逐字节核对通过，已更新同一路径登记、启用并刷新 Finder。真实 SDK 安装 / 三端出包和 Windows 实机尚未验证，用户 Flutter 工程仅执行只读检查；未提交推送。
@@ -293,13 +304,27 @@ tags:
 
 ## 二十四、<span id="ios-tools-and-installer-groups">iOS 工程辅助菜单与安装面板分组</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- 来源：用户于 2026-10-24 要求核对两项 iOS 清理并在重叠时保留构建产物入口；状态：已核实并实现；适用仓库同本笔记。两项均涉及 DerivedData，现仅保留“清理 iOS/Xcode 构建产物”；旧 `ios-clean-cache` URL、配置及安装 / 卸载参数统一迁移到 `ios-clean-build-artifacts`。移除随包旧缓存脚本，不将其删除 Pods、锁文件和所有工程 DerivedData 的更大范围行为合入保留入口；当前工程白名单、预览和 `CLEAN` 确认不变。活动 iOS 动作由十二项变十一项，面板 iOS 分组含 IPA 为十二项，本清理合并使原五十项减少一项；工作区另有并行新增两项，结束时按当前选择器与安装映射核对为五十一项 / 十四安装单元。本条替代下文旧缓存入口与旧数量（`superseded`）。菜单、传输、配置迁移、资源同字节及四种屏幕尺寸布局已通过隔离验证；真实扩展重装和用户工程清理未执行。
+
+- 来源：用户于 2026-10-24 通过两张菜单截图明确要求归并层级；状态：需求已确认；适用仓库同本笔记；创建 / 更新：2026-10-24。`Pod Install` 和 iOS/Xcode 构建产物清理进入 `JobsIOSTools` 的“iOS / CocoaPods 辅助工具”二级菜单，新增动作 `ios-pod-install`、`ios-clean-build-artifacts`，辅助工具共十二项。Pod 保留 `Podfile` + 同层 `*.xcodeproj` 门禁及原生单行命令，清理保留原完整脚本、`CLEAN` 确认和 Flutter 根目录排除；原 Terminal 外层仅保留通用终端、Android / 鸿蒙清理、代码地图。安装选择 `pod_install` 保持兼容，iOS 清理独立勾选，原通用清理选择只管理 Android / 鸿蒙。
+- 同次确认：新增一级“Git操作”，下含拉取 Git 到最新、打开 / 复制 Git 远程地址、配置动态代理、空白 Commit 并 Push 五项；沿用 `JobsProjectTools`，IDE 三项仍为一级入口。只对有效 Git 普通文件夹及内部空白处显示，支持根目录、子目录、子模块和 linked worktree；普通非 Git 目录、文件、包、多选、损坏元数据和桌面空白隐藏。该范围替代 `git-dynamic-proxy-menu` 旧 macOS 桌面限定及旧分散 Git 外层入口（superseded，仅此场景；Windows 不变）。当时总面板为 32 项 / 12 个现行安装单元，现行 Flutter 叶子粒度见[统一 Flutter 功能归集](#flutter-tools-consolidation)；迁移保留旧勾选、停用旧代理菜单并原子收回 Terminal 外层空白提交项，不自动运行 Git 业务或修改代理配置。
+- 2026-10-24 验证：iOS 9 组 / 106 断言、真实 Git 菜单 255 断言、Git 迁移 9 项、宿主双回调去重 4 断言、旧代理兼容 7 项 / 40 断言，以及根安装 / 菜单、Terminal 传输和四种屏幕布局回归通过。三个包已在原登记路径构建、签名验证、脚本资源字节核对后更新启用并刷新 Finder；配置原文及注册状态备份在 `work/menu-regroup-2026-10-24`。未执行真实 Pod 安装、清理、拉取 / 提交 / 推送或代理配置；真实 Finder 菜单观察遇到用户持续切换窗口，未单独完成画面验收；未提交推送。
+
 - 来源：用户于 2026-10-23 明确列出 JobsCommand@iOS 的九个脚本，要求进入 macOS iOS 项目目录右键；随后要求总安装面板按用途分组，每组和底部全局各有“全选 / 全不选”，并根据预览指定 `Pod Install` 与 `Pod Update` 相邻、首字母大写；状态：产品要求已确认；创建 / 更新：2026-10-23。适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`。
 - `JobsIOSTools` 为自包含 App + Finder Sync，随包保留十项业务脚本、固定动作表和独立安装 / 卸载入口，原双击脚本保留。十项为 iOS 缓存清理、禁用 CocoaPods 构建沙盒、安装 CocoaPods、CDN 切换 GitHub 源、提取 Pod 文件、Pod Update、Xcode 依赖查询、更新本地仓库、本地 Pod 编译检查、安装 / 升级 JobsCodeSnippets。当前层工程标记决定普通 iOS 工具显示；编译检查额外要求当前目录直接存在普通 `*.podspec` 文件，含隐藏文件，只有子层存在或同名目录不满足；不在系统桌面显示。菜单、点击、宿主和终端分发均复核目标。
 - 来源：用户于 2026-10-23 指定将 JobsCodeSnippets 安装脚本加入 iOS 工程右键，要求已有安装升级、保护暂存内容、合并仍冲突时恢复最初状态并提示人工合并；状态：需求已确认。固定动作 `ios-code-snippets` 通过 `--finder <项目>` 调用与独立源逐字节相同的随包脚本，实际目标始终为 `$HOME/Library/Developer/Xcode/UserData/CodeSnippets`，不是所选工程。规范源位于 `/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@iOS/配置相关/【MacOS】⚙️双击安装JobsCodeSnippets.command/`，修改时同步 Tools 资源与 SourceManifest 哈希。
 - 片段升级在私有完整副本中先 stash 暂存 / 未暂存 / 未跟踪内容，再沿当前分支明确上游 fetch、无 commit 合并，分别三方恢复工作区与暂存部分；不自动生成分支提交或推送。分叉成功保留待提交合并；失败时真实目录、HEAD 和原始 index 不动，保留候选冲突现场并提示手动合并。发布前核对文件内容、权限、修改时间和链接目标；同级原始备份保留，固定锁阻止重复更新。非空非 Git、外部元数据、特殊 index 标记、未完成操作等不可靠状态保留并停止；本机真实片段只读检查，网络更新与 Finder 部署另验。
 - CodeSnippets 验证：原生 zsh 隔离核心 23 组 / 113 断言通过，菜单分发 / 资源 3 组 / 22 断言及安装映射 10 组 / 40 断言通过；覆盖同文件部分暂存、已有 stash、分叉待提交、ignored 同名碰撞、失败原始字节保护与内容 / 权限 / 链接并发变化。独立源和 Tools 副本 cmp 与 SHA-256 一致，语法与文档目录检查通过；未实际安装扩展、更新真实片段、提交或推送。
-- 总安装面板固定分为 IDE、Git、文件与通用工具、Flutter、iOS / CocoaPods、模拟器六组。每项恰好属于一组；组内按钮只影响本组，底部按钮作用于全部，组与总计数实时更新。全不选时安装按钮置灰，回车同样不能提交。窗口不滚动，按真实控件尺寸使用两列 / 三列及矮屏紧凑间距；替代第二节旧固定“矮屏两列”的布局表述，保留原有空选门禁和工程去重。
+- 总安装面板固定分为 IDE、Git、文件与通用工具、Flutter、iOS / CocoaPods、模拟器六组。每项恰好属于一组；组内按钮只影响本组，底部按钮作用于全部，组与总计数实时更新。全不选时安装按钮置灰，回车同样不能提交。按真实控件尺寸使用两列 / 三列及矮屏紧凑间距；超高滚动与当前数量以[Flutter 安装叶子粒度](#flutter-tools-consolidation)为准，旧固定不滚动描述已替代；此布局也替代第二节旧固定“矮屏两列”的表述，保留原有空选门禁和工程去重。
 - 功能逐项选择、同工程只构建注册一次；重新安装与已有 iOS 功能取并集，部分卸载保留其它项。显示标题 `Pod Install` / `Pod Update` 不改变实际小写命令、既有动作 ID 或 Pod Install 的原生终端执行方式。安装菜单不自动运行清理、Pod 安装更新或编译检查。
 - 验证：真实 AppKit 组内 / 全局控件、空选回车、四种屏幕尺寸与 UI 预览通过；iOS 隔离业务、私有路径载体、隐藏 Podspec 及 URL 双回调去重通过；双 target Debug 构建通过。真实扩展启用、Finder 菜单、Terminal 自动化权限及用户工程业务仍须安装后验收；本任务未执行清理或 Pod 业务、提交、推送。
+
+## 二十五、<span id="harmony-simulator-repair">双端桌面 Harmony 模拟器检测与修复</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-24 根据 Android 模拟器检测修复菜单要求补齐英文名称的 Harmony 对应功能，并指定 WindowsOS / MacOS 两侧右键菜单；状态：需求 confirmed、源码与隔离验证完成；创建 / 更新：2026-10-24。双端各有独立普通目录 `JobsHarmonySimulatorRepairer`，标识 `harmony-simulator-repair`，菜单“Harmony 模拟器检测与修复”；仅系统桌面空白显示，不需要 Flutter 项目。独立安装 / 卸载和总面板均接入，不新增内部 Git。
+- 使用已有官方 DevEco Emulator，诊断 CLI、Release 镜像和实例，精确选择已有本机模拟器；不套 Android adb / pm，不自动下载或接受许可。冷启动使用官方 `-bootMode coldboot`（能力探测，6.1.0 Release 起支持），运行实例先停止并轮询 `isRunning=false`，再启动回读 true；保留应用与数据，不使用 reset / wipe。未知字段、停止失败、状态超时或实例身份改变均停止。官方运行状态不代表 OS 开机或 HDC 已就绪，真实启动仍单独验收。
+- Mac 还可在全部模拟器停机、实例及 SDK 路径可信时，完整备份单一实例后修复失效 `config.ini` SDK 路径；SDK / HDC 健康检测、备份逐文件对账、发布前 inode / 原内容 hash / 停机复检，拒绝链接及控制字符路径，避免覆盖并发改动。两端固定名称 / 路径 / 类型 / 版本及本地文件身份；Mac 要求并固定 UUID，Windows 在字段存在时固定 UUID，防确认期间同名实例重建。Windows 本轮范围为诊断及冷启动，不声称具有 Mac 的 SDK 配置写入能力。
+- Mac App / 扩展标识 `com.jobs.harmonysimulatorrepairer` / `.findersync`，固定 URL `jobsharmonysimulatorrepairer://simulator/repair`。业务 18 组 / 120 断言、独立安装 10 组 / 66、传输 66、宿主去重 26、新真实菜单 14 条 Swift 断言、总映射通过；双 target 临时 Debug 构建、深度签名和随包核心字节一致通过，临时登记已精确清理。Windows 假 CLI / 安装 / 源码门禁、C# 编译及组合回归 1,099 条断言通过；已接 CI 的三包 MSVC 编译和临时 NTFS ACL 回归，真实 Windows / DevEco / Explorer 待实机。
+- 当前安装数量：2026-10-24 依据双端真实选择器及根映射，Mac 51 项 / 14 安装单元 / 28 源码工程，Windows 32 项 / 19 包 / 27 源码目录。保留原分组及空选门禁。Mac 根回归中有 1 项既有 Flutter 资源对账因 SourceTree 旧目录路径失效未通过，与本次新增代码无关；未扩大修改范围。未真实安装、重启用户模拟器、提交或推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

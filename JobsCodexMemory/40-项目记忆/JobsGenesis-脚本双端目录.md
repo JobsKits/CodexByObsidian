@@ -5,7 +5,7 @@ scope: JobsGenesis-platform-scripts
 repository: /Users/jobs/Documents/Github/JobsGenesis
 source: 2026-10-23 用户明确要求五个脚本仓按 MacOS 和 WindowsOS 划分
 created: 2026-10-23
-updated: 2026-10-23
+updated: 2026-10-26
 tags:
   - codex-memory
   - project
@@ -26,6 +26,7 @@ tags:
 - [一、适用范围](#jobs-toc-heading-2)
 - [二、平台功能与命名](#jobs-toc-heading-3)
 - [三、SourceTree 与记录器边界](#jobs-toc-heading-4)
+- [四、Windows 本机与虚拟机测试计划](#windows-compatibility-testing)
 
 </details>
 <!-- jobs-toc:end -->
@@ -55,5 +56,15 @@ tags:
 - SourceTree 运行副本根仍为 `/Users/jobs/SourceTree.command`，动作目标迁至其 `MacOS/包名/脚本名`；备灾根仍在本仓同名子仓。双副本同步和菜单备份规则继续适用，详见 [[SourceTree-脚本体系]]。
 - Windows SourceTree 提供当前用户 `customactions.xml` 安装/精确恢复入口，菜单动作转交独立终端确认，危险操作精确输入 `YES`。
 - Windows 键盘记录器必须可见、手动开始/停止、会话归属清楚；入口或终端结束后停止监听，不允许关闭后继续写入或重建输出目录。原已确认约束见 [[JobsKeyboardRecorder-运行边界]]。
+
+## 四、<span id="windows-compatibility-testing">Windows 本机与虚拟机测试计划</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-24 明确表示持有从 [**Windows**](https://www.microsoft.com/windows) XP 开始的系统，计划开始本机与虚拟机测试；状态：confirmed（测试意向），当时为测试意向，最新已验范围见本节验证记录；创建 / 更新：2026-10-24。
+- 当前关注范围为本仓 `OS@Extension/WindowsOS@Extension` 右键菜单与 `JobsPythonTools.py` 打包的 Windows EXE。旧系统的实际兼容性需要逐项核对，不能把持有系统或计划测试写成已经支持，也不能将现有 CI / macOS 回归等同于 Windows 桌面验收。
+- 来源：用户于 2026-10-24 明确要求将 Windows 系统限制写入对应 `README.md`，并再次强调用户最关心最低支持；状态：confirmed（文档要求）。上级总览与可独立交付包的就近说明须在前部直接标明“最低支持系统”，当前基线为 Windows 10 64 位（x64），并保留最低 build 未锁定、实机兼容性待验证的边界；详细说明继续列出目标系统、架构、依赖限制和实机验证状态。Python 源码 / 构建要求与成品运行条件分开，基础菜单可安装不代表外部工具业务可用。
+
+- 来源：用户于 2026-10-25 明确提供运行中的 Windows 虚拟机，授权用它测试本仓 Windows 脚本并纠错；同日要求测试时不要让电脑锁住；状态：confirmed（授权与保活需求）、verified（本机识别到 VMware Fusion 的 Windows 11 ARM 虚拟机），Windows 原生测试结果另据实际日志记录。后续可利用该虚拟机执行安全隔离回归，并分别记录系统、架构、PowerShell 版本与跳过项；ARM 结果不能替代 x64 或 XP 等旧系统验收。长时间测试使用任务期间的临时保活，结束后撤回，不持久关闭密码或锁屏保护；遇到系统已经锁定时由用户手动解锁，不绕过认证。
+
+- 验证记录（2026-10-26，verified）：Windows 11 ARM64 build 26300、系统 Windows PowerShell 5.1.26100.9711 / STA，先完整执行 38 套主回归，再对失败项定向修复重测；各套最新原生结果合并为 33 Passed、5 Partial、0 Failed / TimedOut，不能表述成最终快照完整重跑全部 38 套。Partial 包含符号链接权限不足及未启用的真实原生工具链分支，不计作通过；实际桌面菜单、真实 SDK / EXE 构建、x64 和旧系统仍未验。Python BAT 独立补充原生通过 202 项断言（28 个安全片段，stderr 为空）；中文 BAT 使用 UTF-8 / CRLF，Git 属性固定检出行尾，测试使用真实隐藏控制台并拒绝异常输出。源码哈希与逐套日志保存在仓库 `Tests/Reports/windows11-arm64-2026-10-26/summary.json`。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
