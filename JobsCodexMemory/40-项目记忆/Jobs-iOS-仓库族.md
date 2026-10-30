@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-10-26
+updated: 2026-10-29
 tags:
   - codex-memory
   - project
@@ -92,6 +92,8 @@ tags:
 - [六十一、GitHub Actions 模拟器验收边界](#jobs-toc-heading-62)
 - [六十二、三工程微应用教学 Demo](#microapp-learning-demos)
 - [六十三、四工程挂载脚本的交互完整性](#jobs-toc-heading-64)
+- [六十四、三工程设备越狱风险检测](#device-guard-integration)
+  - [64.1、当前启动接入与预留接口](#device-guard-launch-gate)
 
 </details>
 <!-- jobs-toc:end -->
@@ -307,6 +309,7 @@ tags:
 - 来源：用户于 2026-07-24 明确确认。导航标题包含 `@` 时，`@` 前为主标题、后为副标题；按第一个 `@` 拆分并上下展示，后续 `@` 保留在副标题中。没有 `@` 时继续使用单行标题。
 - Swift 侧通过 `jobsSetupGKNav(title:)` 完成基础导航配置，再写入自定义 `gk_navTitleView`；OC 侧复用 `GKCustomNavigationBarExtra gk_navTitleViewBy:` 与 `textModel` / `subTextModel`，不修改第三方 `GKNavigationBar` 源码。
 - 双行标题继续复用公共导航层自动注入的主题按钮，保留页面已有业务按钮；页面不得为标题修复重复创建局部主题入口。
+- 来源：用户于 2026-10-27 要求三侧首页省略 `JobsBaseConfig@` 并点击进入各自仓库，随后用 OC 截图指出临时构建目录泄漏到副标题；状态：confirmed（显示与跳转要求）、verified（已安装 OC App 的目录元数据污染来源及两侧 SE3 / iOS 27.0 首页显示回归）；创建 / 更新：2026-10-27。首页仓库副标题使用稳定名称：Swift 为 `JobsSwiftBaseConfigDemo`，OC 旧为 `JobsOCBaseConfigDemo`，OC 新为 `JobsOCBaseConfigDemo@ByPods`；点击分别进入 Swift 仓库、OC `main` 仓库及 OC `byPods` 分支。`JobsProjectFolderName` / `SRCROOT` / `PROJECT_DIR` 等构建目录元数据可保留作诊断，不得再作为首页仓库显示名来源；只移除前缀仍会暴露任意临时目录。该首页规则独立于上文通用 `@` 主副标题拆分语义。本轮 OC 验证重编并重链接首页变更对象，复用其它缓存对象，不作为全部并行源码的完整重建验收；Swift 通过语法解析。
 
 ## <span id="jobs-toc-heading-34" data-jobs-toc="v2">三十三、Swift / OC Demo 完整对齐与中性分组 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -362,7 +365,12 @@ tags:
 
 ## <span id="jobs-toc-heading-42" data-jobs-toc="v2">四十一、OC 公共主题刷新边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- 来源：用户于 2026-10-27 对比三端交互及 OC 信息页截图提出；状态：confirmed（交互与界面要求）；适用范围：本笔记第一节三工程。OC 新旧左侧菜单选项沿用 Swift 的连贯跳转，抽屉收起与目标页面推入同步启动，不先等首页复位；用户与设备信息页三端统一内缩主题卡片、清晰文字层级和条目数，两组 section 整体可点击并独立展开 / 收起，保留全部用户属性、复制及系统隐私限制说明。
+- 来源：用户于 2026-10-27 在本机信息模块任务中连续确认；状态：confirmed（布局与说明约束）；创建 / 更新：2026-10-27；适用范围：本笔记第一节三工程的用户与设备信息页。展开时，标题区与首行 cell 的交界须直角贴合，只保留整组外缘圆角；收起后独立标题恢复四角圆。状态、标题 / 计数 / 箭头、圆角、列表重载与同步布局须在同一局部禁动画事务内完成，不能出现先直角再变圆角的中间帧。根 README 用通俗说明区分普通 App 无直接读取 UDID / IMEI 接口、UDID 的设备确认描述文件与后端回传流程，以及 IMEI 无法保证同途径返回；当前尚未接采集后端，受限行只复制说明，不以 IDFV 冒充 UDID。重要限制保留红色加粗，纯排版整理不得改正文、代码、链接和锚点。
+- 来源：2026-10-27 本地并行验收实测及用户授权分工；状态：verified（缓存行为）、confirmed（本次分工边界）；创建 / 更新：2026-10-27。同一信息页同时由多个聊天维护时，先按消息工具权限取得授权并明确单一写入方；各自使用独占工作副本、DerivedData、App 产物和明确 UUID 的模拟器，不能一边构建一边被另一任务恢复 / 替换产物。迁移旧 Xcode 缓存时，PCM / PCH 可能在压缩 AST 中绑定旧 ModuleCache 绝对路径，简单字节搜索不能证明可迁移；须在新目录重新生成这类预编译产物，对象文件是否复用由正常增量构建判断。保留依赖扫描元数据和失败日志，不为缓存问题改第三方源码、降低校验或继续写旧共享目录。
+- 来源：用户于 2026-10-27 对比 OC 与 Swift 抽屉截图明确指定；状态：confirmed（视觉要求）；适用范围：OC 新旧与 Swift UIKit 基础工程。抽屉菜单统一保留系统 disclosure 指示箭头的自然比例，白天与黑夜均须可见，不再将箭头图片拉伸进固定正方形。公共 Cell DSL 为未显式指定外观的原生箭头局部绑定 App 主题；移除箭头或改用自定义附件时解除绑定，保留调用方显式外观，不把此需求扩大为 Window 或控制器树的全局外观覆盖。
 - 来源：用户于 2026-08-01 连续完成 OC 新、老工程主题回归与崩溃修复。主题适配必须覆盖公共导航层的返回图标、返回文字、背景、主副标题，以及侧滑抽屉、左上角功能菜单、当前可见 Cell 和控件；不能只切换根 Window 或页面背景。功能菜单图标按普通、选中、高亮及组合状态使用语义主题色生成。
+- 来源：用户于 2026-10-27 根据白天模式截图明确要求去掉全局导航栏左右按钮底色；状态：confirmed（视觉要求）；适用范围：本笔记第一节的 OC 新工程与 OC 老工程；创建 / 更新：2026-10-27。全局返回按钮、主题入口及右侧操作入口保持透明背景，图标与文字继续使用有效主题前景色；首次创建、页面返回和主题刷新不得重新叠加次级底色、背景图或系统共享底板。修复收口到 Jobs 自维护的公共导航层和对应实现，不在单个 Demo 页面局部补丁，不修改第三方导航源码；本条不记录尚未完成的视觉验证结论。
 - 业务页面优先消费公共语义色和公共导航主题管线，不修改第三方导航库源码；页面已有动作与主题入口继续遵守右上角唯一列表入口。
 - 主题中心广播绑定时，不能直接枚举可能被回调反向解绑的弱引用 `NSMapTable`。先快照有效键，再逐个执行刷新回调，避免回调期间集合变更触发 `Collection was mutated while being enumerated`；可见页面、抽屉和控件随后按当前主题即时刷新。
 
@@ -462,13 +470,15 @@ tags:
 
 - 来源：用户于 2026-10-05 明确要求并追加 SwiftUI 工程；状态：confirmed；创建 / 更新时间：2026-10-05；适用范围：本笔记仓库映射中的 OC 新工程、OC 老工程、Swift 工程和 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftUIBaseConfigDemo`。
 - `JobsDebugPanel` 在 OC 新工程与 Swift 工程下沉为本地 Pod；OC 老工程将同一源码、资源和 Demo 直接集成于主工程，保持同一功能标准。
-- 面板仅在 Debug 出现。最前方入口为圆形 UIButton，只用背景图；点击进入表格工具页，长按仅关闭本次运行的入口，重启 App 自动恢复。
+- 历史入口行为（2026-10-05；对 Swift UIKit / OC 新旧三工程已被[摇动入口决策](#debug-panel-shake-entry)替代，`superseded`）：面板仅在 Debug 出现。最前方入口为圆形 UIButton，只用背景图；点击进入表格工具页，长按仅关闭本次运行的入口，重启 App 自动恢复。
 - AppDelegate 配置默认环境功能，环境模型承载 URL 和备注，一级工具页进入二级环境选择页；切换必须连接到实际网络请求配置。
 - 自定义功能用专用模型封装 Cell 标题、可选图片和点击行为，通过点语法链式 DSL 注册，按配置先后展示；四个 Demo 都要实现并完成编译验证。
 - SwiftUI 工程使用独立的 SwiftUI 本地 Pod，界面和导航用 SwiftUI 实现，不能直接复用 UIKit 面板替代。
 - 用户于 2026-10-05 追加确认：调试面板的主题与入口拖动问题必须同步修复 OC 新旧、Swift UIKit、SwiftUI 及啄木鸟 iOS 的五处副本。菜单、环境页和已打开页面都跟随宿主的有效主题；UIKit 宿主的 App 外观与系统外观可能不同，必须覆盖两者错配。入口可拖动且保持点击打开、长按仅本次隐藏和重启恢复，拖动不能误触这两种动作；不能为框架另造与宿主脱节的主题状态。
 - 用户于 2026-10-05 再次确认：圆形 bug 入口点击打开调试面板，再次点击应退出本次调试导航并返回打开前的宿主页面；菜单、环境二级页及自定义工具详情统一遵循此行为。独立 Demo 也纳入宿主主题适配，检查原生 Cell 背景、文字、选中态和附件，不能仅适配框架菜单。发现一处同类缺陷时统一核查上述五处集成，并先从保留对话和本节核对范围；不把尚未集成框架的工程列为已修复。
 - 2026-10-05 验证基线：四端 Debug / 原生 Release 模拟器编译成功，环境选择、冷启动持久化、真实 GET、功能顺序和长按恢复实测通过。Swift UIKit 既有 Flutter 模块在模拟器 Release 验证中使用 `FLUTTER_BUILD_MODE=debug`，不等同于完整 Flutter Release 或签名真机包；本轮未验证真机 Release。成品 Swift Pod 已另用于 [[啄木鸟维修平台#四、前端环境切换|啄木鸟 iOS 调试入口替换]]。
+
+- <span id="debug-panel-shake-entry">2026-10-28 三工程摇动入口决策</span>：来源为用户本次截图与明确要求；状态：confirmed；创建 / 更新时间：2026-10-28；适用范围仅为本笔记映射中的 Swift UIKit、OC 新工程和 OC 老工程。黄色虫子悬浮入口启动默认隐藏，摇动手机后显示；保留长按隐藏，隐藏时不弹出 deinit / dealloc 提示，再次摇动可恢复，重复摇动复用已有浮层，重新启动仍等待摇动。环境选择继续持久化，普通页面的销毁提示开关不因隐藏入口而改变。本条替代上述三工程的“启动自动出现、长按隐藏至重启”旧交互；历史 SwiftUI 与啄木鸟维护范围没有在本次变更中同步，不据此记为已改或已验收。
 
 ## <span id="jobs-toc-heading-55" data-jobs-toc="v2">五十四、OC / Swift 自建 Pods 所有权与演进目标 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -545,16 +555,19 @@ tags:
 
 - 2026-10-26 Swift CI 的 Flutter 准备须在独立步骤直接调用现有环境配置与资源准备脚本，显式设置 `JOBS_FLUTTER_AUTO_SETUP=1`；Podfile 无 TTY 时仍跳过辅助写任务，不能依赖该标记绕过外层交互保护。资源准备只允许“无 TTY + 精确 1”自动执行，TTY 回车确认及 `check-only` / `skip` 优先级保留。第一次真实 `pub get` 可能因生成文件时间戳而保留旧绝对路径；沿用两份配置备份、移出后再次官方生成及失败恢复流程，不手改生成源码。CI 由 `podfile_readiness.rb --verify-project` 硬检查当前 SDK / module 路径、registrant podspec 及 iOS engine，准备失败不进入安装；安装步骤单独固定 `JOBS_SPECS_SOURCE=cdn`，本机交互默认自动选源不变。来源：用户此次要求修复并授权 GitHub 推送、真实临时目录迁移与 [run 40280564217](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/40280564217)；状态：verified；创建 / 更新：2026-10-26。修复提交 `36b83b9855c00a0f13277b2670c2c31fa5c3c1de` 的完整工作流已成功，涵盖 64 个自有 Pod、主 App / 测试包、27 项宿主测试零失败与上传。实际下载产物为 167,153,753 字节，完整 SHA256 与 GitHub digest 一致；内外 ZIP 完整性、唯一主 App 身份、预期 Bundle ID、arm64 / IOSSIMULATOR、SDK 27.1、Debug 动态库与主资源均已核验。不扩展为真机或人工功能验收。
 
-- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败，2026-10-24 要求父仓四工程的 iPhone Duo 适配包含远端 workflow 成功；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-24。工程绝对路径沿用本笔记第一节及文件头，不由历史通过记录推断最新提交整条 CI 已通过。
+- 来源：用户于 2026-10-17 要求修复 OC 新旧与 Swift 的 GitHub workflow 失败，2026-10-24 要求父仓四工程的 iPhone Duo 适配包含远端 workflow 成功，2026-10-28 明确要求 OC 的 main / byPods 均成功并授权此次修复提交、推送及验证；状态：confirmed（覆盖范围）、verified（下述实现及明确列出的分工程验收）；创建：2026-10-17，更新：2026-10-29。工程绝对路径沿用本笔记第一节及文件头，不由历史通过记录推断最新提交整条 CI 已通过。
 - 2026-10-18 用户明确验收标准：Swift 及 OC 新旧工程的 workflow 修复，必须以对应修复提交的完整 GitHub workflow 正常成功结束为任务完成标志；本地编译、局部回归或仅推送修复均属于中间验证，不能提前报完成。状态：confirmed；适用范围：本节的三处 iOS 工程。
 - Swift 与 OC 新工程的测试设备按当前 Xcode Simulator SDK 主版本选择可用 arm64 iPhone，再按数字 runtime 版本排序；不让已启动的旧系统抢占。Swift 在依赖安装前，以最低 iOS 15.6 编译并实际运行 WebKit overlay 加载探针，不通过提高部署版本或弱化链接绕过问题。首次启动准备预算为 10 分钟。
 - OC 新工程 CI 全 job 使用 `JOBS_SIMULATOR_ONLY=1`，两个 Jobs 自有 podspec 在该模式排除真机专用 IJK，保留 AVPlayer / ControlView；默认本地安装不设此变量，切换模式须重新 `pod install`。安装模式连同架构写入源码指纹和结果身份；此模式的通过结果不能作为真机 IJK 验收。旧工程依赖原本未启用 IJK，不照搬新工程的 Pod 装配方式。
-- OC 新旧工程主 target 的 Debug / Release 均启用 `GCC_PRECOMPILE_PREFIX_HEADER=YES`，复用各自既有前缀头。旧工程两配置 Objective-C / C 的实际 PCH 与代表源码编译已验证；新工程只改主 target 的工程设置，不改 PCH 正文或第三方源码。新工程 App 每配置保留 1800 秒真实进程限时，外层步骤为 65 分钟，容纳双配置与收尾；run 39101036560 中 Debug / Release 分别以 1172.87 / 1167.19 秒成功结束。新工程验证证据为实际配置解析及端到端成功，`-quiet` 日志未直接展示 PCH 编译命令，不据此声称已抓到该命令。
+- OC 新旧工程主 target 的 Debug / Release 均启用 `GCC_PRECOMPILE_PREFIX_HEADER=YES`，复用各自既有前缀头。旧工程两配置 Objective-C / C 的实际 PCH 与代表源码编译已验证；新工程只改主 target 的工程设置，不改 PCH 正文或第三方源码。2026-10-29 新工程 CI 的 App 每配置期限改为 3600 秒、外层步骤 125 分钟，整个 job 仍为 320 分钟；本地默认构建期限仍为 1800 秒。此设置替代原 CI 的 1800 秒 / 65 分钟预算：run 40775139975 的 Release 被 1800 秒期限终止，不能据其局部成功验收。新预算在下述 run 40799400287 完整通过。`-quiet` 日志未直接展示 PCH 编译命令，不据此声称已抓到该命令。
 - Swift hosted 测试须避开首次通知授权弹窗：仅共享 Scheme 的 TestAction 配置 `JOBS_HOSTED_TESTS=1`，AppDelegate 在该环境跳过授权请求，正常启动沿用原流程；测试准备阶段等待真实 `UIApplication.applicationState == .active`，不以发送前台通知冒充实际前台状态，不削弱 Timer 的后台暂停行为或原有断言。来源：2026-10-18 同一任务的冷启动复现及完整 CI；状态：verified。
 - Swift 与 OC 旧工程打包按 `${products_dir}/${SCHEME}.app` 精确取主 App，并核对 plist、非 `.xctrunner` Bundle ID、可执行名及文件存在；不能使用目录枚举到的第一个 `.app`。Swift 的 build-for-testing 会同时产生 UI 测试 Runner，workflow 绿灯仍须核对实际下载产物身份。来源：2026-10-18 错包实证及修复后的 ZIP 核验；状态：verified。
 - Swift CI 使用 `.github/tests/JobsPodsUpgrade/validate_builds.rb --batch-pods` 一次构建全部自有根 target，默认逐 Pod 与 `--pods` 定向模式保留。系统 `plutil` 读取已安装 Pods 项目，按真实 UUID、native / aggregate 类型、产品类型和配置核对成员；临时 workspace / Scheme 仅写日志目录，不修改生成的 Pods 项目。批次真实成功退出后成员才通过，成员共享批次日志、独立耗时为 null；失败、中断、生成器失败均不得误报通过。`JobsAppIconRibbon` 的 macOS 生成器仍独立编译。来源：2026-10-20 用户授权提交推送的超时修复；状态：verified。
 - 2026-10-20 Swift `477104b6` 的 [run 39406444088](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/39406444088) 在 Xcode 26.3 完整成功：验收时 64 个自有根 target（63 native、1 aggregate），批次 549.67 秒、图标生成器 5.58 秒，整个 Pod 步骤 9 分 16 秒；182 项验证器断言及 27 项 hosted UIKit / Timer 测试通过、零失败，主 App / 测试包编译与产物上传通过。最终产物已下载，大小 177,176,631 字节且 SHA256 匹配 GitHub digest；内外 ZIP 完整性通过，唯一主 App 为 `JobsSwiftBaseConfigDemo.app`，Bundle ID 为 `com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo`，同名可执行文件、arm64 / IOSSIMULATOR、被引用的 Debug dylib、`Assets.car` 和 `JobsMicroAppLab.bundle` 均核实。此前两次已结束失败是逐 Pod 编译达到 60 分钟时限，不能归因于当时尚未加入的微应用 Demo。状态：verified；范围仅为上述提交与运行。
-- OC 新工程 CI 的自有 Pod 编译按 Debug / Release 各启动一次批量构建，仍覆盖原有 109 个根 target（106 个 native、3 个 aggregate）及其依赖，不改默认逐 Pod 模式或独立组件测试阶段。批次记录真实进程、退出码及耗时，成员记录共享批次证据且耗时为 null；校验当前源码指纹、成员、配置、Scheme / workspace / command 绑定，失败、超时、进程状态未收集或源码变更均不得接受为成功。来源：2026-10-18 的 70 项批量结果门禁回归及 run 39101036560 的双配置构建成功；状态：verified，整条 workflow 的最终验收另列。
+- OC 新工程 CI 的自有 Pod 编译按 Debug / Release 各启动一次批量构建；2026-10-29 已审清单为 110 个根 target（107 个 native、3 个 aggregate），包含新增 JobsOCDeviceGuard，两个配置共 220 份成员证据。三个 aggregate 为 JobsAppIconRibbon、JobsGetWindow、JobsOCProtocols；原 109 个清单属于 2026-10-18 基线。默认逐 Pod 模式保留。批次记录真实进程、退出码及耗时，成员记录共享批次证据且耗时为 null；校验当前源码指纹、成员、配置、Scheme / workspace / command 绑定，失败、超时、进程状态未收集或源码变更均不得接受为成功。清单必须与已审 `baseline.expected_pods` 精确一致，不以动态数量自动接受新增模块。来源：批量门禁回归及下述完整 CI 的真实 manifest；状态：verified。
+- OC 新工程 CI 显式启用 `--separate-test-builds`：每套先 `build-for-testing`，构建期限 1800 秒；成功后再 `test-without-building`，实际测试期限仍为 600 秒。两阶段保持同 scheme、配置、模拟器、输出目录及签名策略，准备记录含真实 PID，测试必须绑定最新成功准备；后续失败 / 超时不能被旧成功遮蔽，分离 / 默认模式缓存不混用。官方 `.xcresult`、Keychain 实际宿主权限、Snowflake 双配置和 10 组 harness 保留，回归总步骤期限为 120 分钟。安装步骤固定 CDN，并只追加当前进程 Git HTTP/1.1 配置、保留既有 `GIT_CONFIG_COUNT`，不改全局 Git。超时测试夹具保留 5 秒有界启动及真实就绪证据，生产进程组与截止时间实现未因夹具修复而改动。来源：本轮修复、双 Ruby 回归及完整 CI；状态：verified；更新：2026-10-29。
+- 2026-10-29 OC 两分支精确验收：`main` 的 `e0ca6e6c86ecc0b6da41a82576f3116b8f3f3e6d` [run 40724681100](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/40724681100) 完整成功，本轮未修改 main；`byPods` 的 `9b111c14af10bd6a567e94c526128c368468b002` [run 40799400287](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/40799400287) 完整成功，验收时两远端分支均与上述 head 一致。新工程为 Xcode 26.3 / Simulator SDK 26.2 / iPhone 16 runtime 26.2，110 Pods 双配置、49 Pods 共 50 套 Stability 配置、50 份准备绑定、10 组 harness、Keychain 产物权限审计均通过；逐份重读 `.xcresult` summary 与实际 test tree，142 个测试方法全部通过、零失败零跳过，JobsOCDeviceGuard 为 7/7。主 App Debug / Release 实际退出 0，分别为 1337.24 / 1405.58 秒，全部记录源码指纹一致。旧工程为 Xcode / SDK 27.1，不把两边工具链混为一致。来源：GitHub 最终结论、真实记录及独立产物审计；状态：verified。
+- 上述两分支最终 App 均已下载并核验 SHA256 与 GitHub digest、内外 ZIP、唯一 JobsOCBaseConfigDemo.app、同名可执行及 arm64 / IOSSIMULATOR。main artifact `12834141861` 为 100430467 字节、Bundle ID `com.JobsOCBaseConfigDemo`、SDK 27.1；byPods artifact `12872209999` 为 151507808 字节、Bundle ID `com.JobsOCBaseConfigDemo.byPods`、SDK 26.2，主程序及引用的 Debug dylib 均匹配。此次为模拟器构建与自动回归验收，未启动最终 App，不代表真机 IJK、全部人工功能或 Duo 姿态体验通过。只向 GitHub origin 推送本次 CI 修复，未推 Gitee 或父仓。状态：verified；更新：2026-10-29。
 - OC 新工程对 ReactiveObjC 的适配只写入 Jobs 维护的 Podfile：保留继承的头搜索路径，加入上游 prepare 后的 `ReactiveObjC/extobjc`，并仅对 ReactiveObjC target 的 Debug / Release 设 `USE_HEADERMAP=NO`。不复制或修改第三方头，不私有化 RACExtra 的公共宏头，不扩大到其他 target；旧工程独立完整 CI 已通过，不因新工程批量依赖图的现象追加该开关。来源：2026-10-18 的隔离双配置完整 ReactiveObjC 编译、公共模块 / 头消费验证及上述 CI Pod 构建；状态：verified。实际 CI 中异常 header map 的具体产生原因尚未证实，不记录为已知 Xcode 缺陷或已证实的同名头冲突。
 - 2026-10-18 分工程验收基线：Swift `6606ecb3` 的 [run 39087121259](https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/39087121259) 完整成功，27 项 hosted UIKit / Timer 测试零失败；OC 旧工程 `main` 的 `f88cc0041` [run 39101054898](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101054898) 完整成功。两者最终 ZIP 均核实为对应主 App、预期 Bundle ID、真实可执行文件、arm64 / IOSSIMULATOR 平台、Debug 动态库及主资源。状态：verified；范围仅为上述提交和运行。
 - 同日 OC 新工程 `byPods` 的 `523997452` [run 39101036560](https://github.com/JobsKits/JobsOCBaseConfigDemo/actions/runs/39101036560) 独立完整成功：109 个自有 Pod 的双配置批次及 218 份成员证据完整，49 组 XCTest 共 135 项执行全部通过、零失败零跳过，10 组 harness 全过，主 App 双配置成功；源码指纹一致，Keychain 实际宿主权限审计与三份静态审计通过。ReactiveObjC 前后配置 / 宏头 SHA 一致，真实编译响应文件无 header map / VFS 入口且保留原始头搜索路径。最终产物完整 SHA256 匹配 GitHub digest，内外 ZIP 校验通过，唯一主 App 为 `JobsOCBaseConfigDemo.app`、Bundle ID 为 `com.JobsOCBaseConfigDemo.byPods`，同名可执行文件、arm64 / IOSSIMULATOR、Debug 动态库及主资源均核实。状态：verified；不代表真机 IJK 或人工 App 功能验收。
@@ -582,5 +595,19 @@ tags:
 - 维护安装辅助脚本时必须逐项保护既有功能和用户选择，不能因为 Hook 标记、自动识别目录、默认离线或后台调度而静默绕过确认、安装 / 升级选择及危险操作授权。终端保留真实键盘输入；无 TTY、输入结束及取消不得默认为授权。自动化只读 / 跳过应明确可选，辅助任务失败必须如实显示，保留原 CocoaPods 安装结果。
 - 按各工程真实集成维护：Swift UIKit 的 Flutter / FVM、SPM 和 Unity 功能继续保留；SwiftUI 原无这些挂载，不凭目录或其它工程清单擅自新增。自动定位已知工程路径可以保留，不为恢复确认强迫重复拖入目录。
 - 用户同日明确补充 SwiftUI 真机 Run 构建后须在工程根目录创建 `build/真机.ipa`。沿用本笔记第四十九节的签名和唯一产物规则，主 App 的 `Save Build IPA` 必须位于资源复制等阶段之后；这属于主 App 构建阶段，不冒充整个 Scheme 或 App 运行结束回调。隔离脚本与工程配置检查不能替代真实真机 Run 验收。
+
+## 六十四、<span id="device-guard-integration">三工程设备越狱风险检测</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-27 明确要求将设备越狱检测分别用 OC、Swift 封装并接入对应项目，OC 老项目直接集成主功能、不增加 Pod；状态：confirmed（需求与集成形态）；创建 / 更新：2026-10-27；适用范围为本笔记三仓映射。
+- Swift 独立组件为 `JobsByPods/JobsSwiftDeviceGuard@Pods`；OC 新工程为 `JobsByPods/JobsOCDeviceGuard@Pods`；OC 老工程对应源码集中于 `JobsOCBaseConfigDemo/OCBaseConfig/JobsMixFunc/JobsOCDeviceGuard`。OC 两侧核心与 Demo 同语义维护，旧工程显式补实现文件的 Sources 成员和同步组清单。
+- 历史口径（superseded，启动行为已由[当前启动接入](#device-guard-launch-gate)替代）：用户于 2026-10-27 要求 README 说明当时仅输出检测报告与 `shouldRestrict` 限制建议，Demo 仅展示判定，没有自动拦截启动、登录、支付、下单或网络请求；当时“Demo 限制其演示敏感动作”的描述不准确。组件无法接管 iOS 安装流程、`isJailbroken == false` 不等同设备安全这两项边界继续有效。
+
+### 64.1、<span id="device-guard-launch-gate">当前启动接入与预留接口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-10-27 提供启动检测截图，明确要求 Pod 接入 OC / Swift 宿主代码并预留未来接口；状态：confirmed（启动接入需求与三端实现形态）；创建 / 更新：2026-10-27；适用范围为本笔记三仓映射。
+- Swift 使用宿主 `JobsDeviceLaunchGate`，OC 两侧使用宿主 `JobsOCDeviceGuardLaunchGate`。`AppDelegate` 在后续显式业务初始化前同步只读检测并冻结进程级报告和判定；默认只在 `report.isJailbroken` 为真时返回启动成功并跳过后续业务初始化，各 Scene 直接创建独立原生全屏拦截根页面，不创建正常业务根页面、开屏或 Flutter 引擎。现有生命周期、恢复和异步回调沿用冻结判定；Swift 保留原 `FlutterAppDelegate` 继承。
+- 宿主提供首次判定前的同步策略配置与拦截页工厂；冻结后不允许重配。页面工厂每个 Scene 返回新原生控制器，不能初始化业务。默认 `suspicious`、`indeterminate`、`unsupported` 继续启动，和保守的 `shouldRestrict` 建议分开，不构成设备安全证明。检测核心仍只负责报告，Demo 仍只展示单次判定，登录、支付、下单与逐请求门禁尚未逐项接入。
+- 启动接入说明分别位于 Swift 主工程 `启动入口/JobsDeviceLaunchGate/README.md`、OC 主工程 `入口/JobsDeviceGuardLaunch/README.md`；更新根 README、组件 README 与框架说明时须同步区分核心能力、真实启动阻断和未接入的逐业务检查。OC 老工程继续直接编译主工程源码，不新增 Pod 依赖。
+- 2026-10-27 验证基线：三端 arm64 模拟器宿主构建及正常 / 隔离测试阻断启动分支通过；Swift 启动门禁 6 项 XCTest、OC 新工程正常与阻断各 5 项均为 0 失败、0 跳过，OC 老工程真实 Scene 活动恢复与前后台保持拦截根已验。隔离注入未进入 Release 运行开关，越狱真机和反检测检出率未验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

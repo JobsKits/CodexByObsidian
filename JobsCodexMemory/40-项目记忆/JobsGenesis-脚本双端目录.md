@@ -5,7 +5,7 @@ scope: JobsGenesis-platform-scripts
 repository: /Users/jobs/Documents/Github/JobsGenesis
 source: 2026-10-23 用户明确要求五个脚本仓按 MacOS 和 WindowsOS 划分
 created: 2026-10-23
-updated: 2026-10-26
+updated: 2026-10-30
 tags:
   - codex-memory
   - project
@@ -68,6 +68,8 @@ tags:
 - 来源：用户于 2026-10-25 明确提供运行中的 Windows 虚拟机，授权用它测试本仓 Windows 脚本并纠错；同日要求测试时不要让电脑锁住；状态：confirmed（授权与保活需求）、verified（本机识别到 VMware Fusion 的 Windows 11 ARM 虚拟机），Windows 原生测试结果另据实际日志记录。后续可利用该虚拟机执行安全隔离回归，并分别记录系统、架构、PowerShell 版本与跳过项；ARM 结果不能替代 x64 或 XP 等旧系统验收。长时间测试使用任务期间的临时保活，结束后撤回，不持久关闭密码或锁屏保护；遇到系统已经锁定时由用户手动解锁，不绕过认证。
 
 - 验证记录（2026-10-26，verified）：Windows 11 ARM64 build 26300、系统 Windows PowerShell 5.1.26100.9711 / STA，先完整执行 38 套主回归，再对失败项定向修复重测；各套最新原生结果合并为 33 Passed、5 Partial、0 Failed / TimedOut，不能表述成最终快照完整重跑全部 38 套。Partial 包含符号链接权限不足及未启用的真实原生工具链分支，不计作通过；实际桌面菜单、真实 SDK / EXE 构建、x64 和旧系统仍未验。Python BAT 独立补充原生通过 202 项断言（28 个安全片段，stderr 为空）；中文 BAT 使用 UTF-8 / CRLF，Git 属性固定检出行尾，测试使用真实隐藏控制台并拒绝异常输出。源码哈希与逐套日志保存在仓库 `Tests/Reports/windows11-arm64-2026-10-26/summary.json`。
+
+- <span id="windows-native-regression-20261030">验证记录（2026-10-30，verified）</span>：用户再次提供运行中的虚拟机并授权 Windows 侧测试与纠错。Windows 11 ARM64 build 26300 / PowerShell 5.1.26100.9711，576 份脚本 Parser / BOM 通过；完整 65 套后定向修复复测，逐套最新结果为 55 Passed、10 Partial、0 Failed / TimedOut，最终快照未再次完整跑 65 套。修复覆盖 5.1 JSON 顶层数组、Path 大小写恢复、字面 %TEMP% / NBSP 路径、管理面板 Timer 闭包与副本一致性、IPv6 地址及构建 UTF-8。173 个 CMD 与 10 个 Python BAT 原生夹具通过。三款应用构建保护共 67 通过 / 18 符号链接权限跳过；EXE / MSVC DLL 真构建、真实菜单安装、PySide6 成品 GUI、x64 与旧系统仍未验。JobsAppTrafficMonitor 的管理员 ETW 本地 TCP / UDP 按 PID 和 EXE 实测通过，上下行各 2,141,952 字节、UDP 各 44,800 字节，测试后自有会话撤回已查询确认；管理员许可仅限这一次回环，不扩张为后续默认授权。报告：`Tests/Reports/windows11-arm64-2026-10-30/summary.json` 与同目录 README / 原始日志；无业务提交或推送。
 
 ## 五、<span id="others-git-history-cleanup">JobsCommand@Others 大文件历史与双远端同步</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

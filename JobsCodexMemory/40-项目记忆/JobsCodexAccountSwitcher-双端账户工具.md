@@ -2,9 +2,9 @@
 type: project-memory
 status: active
 scope: JobsCodexAccountSwitcher
-source: 用户于 2026-10-02 至 2026-10-18 明确要求
+source: 用户于 2026-10-02 至 2026-10-28 明确要求
 created: 2026-10-02
-updated: 2026-10-18
+updated: 2026-10-28
 tags:
   - python
   - codex-account-switcher
@@ -59,7 +59,7 @@ tags:
 ## 三、<span id="repository-branches">双平台主分支映射</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-16 要求修正本仓远端分支；状态：已确认并实际核验；创建 / 更新：2026-10-16；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexAccountSwitcher.py`。
-- 复用已有本地 `main`，对应 [**GitHub**](https://github.com) 的 `origin/main` 与 [**Gitee**](https://gitee.com) 的 `gitee/main`；Gitee 默认分支为 `main`。本仓原先的远端目标 `gitee` 已替代（`superseded`），逐层推送不得按通用默认映射重建它。
-- 本仓已设置仓库本地 `remote.gitee.jobsPushBranch=main`，由[[SourceTree-脚本体系#single-local-branch|逐层推送的局部覆盖能力]]读取；该例外不传给父仓、子仓或其它项目，不改变其它仓库默认的码云 `gitee` 目标与 OC 独立快照边界。
+- 复用已有本地 `main`，对应 [**GitHub**](https://github.com) 与 [**Gitee**](https://gitee.com) 的 `main`；Gitee 默认分支为 `main`。本仓原先的远端目标 `gitee` 已替代（`superseded`），逐层推送不得按通用默认映射重建它。
+- 2026-10-28 用户明确指定本仓远端别名为 `Github` / `码云`，替代旧 `origin` / `gitee`；实际跟踪引用为 `Github/main` / `码云/main`，不改变本地 `main` 或提交历史。改名后原分支覆盖配置缺失，本轮已恢复仓库本地 `remote.码云.jobsPushBranch=main`；旧键 `remote.gitee.jobsPushBranch` 的记录已替代（`superseded`）。该例外不传给父仓、子仓或其它项目，不改变其它仓库默认的码云 `gitee` 目标与 OC 独立快照边界。脚本兼容和验证见[[SourceTree-脚本体系#remote-alias-push|远端改名与逐层推送]]。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
