@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-10-29
+updated: 2026-11-02
 tags:
   - codex-memory
   - project
@@ -155,6 +155,8 @@ tags:
 - 独立动作 `【MacOS@SourceTree】⏬只拉取远程代码.command` 通过 Terminal 执行，同步当前仓库明确的远程上游并向下检出各层父仓 gitlink 固定版本，不提交、不推送。发现本地改动时必须红字列出风险，只有精确输入大写 `YES` 才允许舍弃；回车和其它输入均取消，不得以 SourceTree 无交互策略绕过。
 - 新增、修改或重命名 SourceTree 动作，必须同时关联 `【MacOS】安装SourceTree自定义菜单.command/` 内安装器的动作登记、`actions.plist` 模板和 README；随后同步运行态、备灾态和当前用户动作配置，保留用户已有标题。此规则已收口到现行 `jobs-macos-shell/SKILL.md` 的 SourceTree 部分，不仅修改当前机器菜单。
 - 实现保护边界：先成功 fetch 并固定提交，再允许危险确认；暂存 / 未暂存 / 未跟踪及本地独有提交均检查。忽略内容保留，子仓源码 / 暂存指针、嵌套仓库、未完成操作、目标不明确及路径覆盖风险停止，避免父仓授权扩大到子仓。
+- 来源：用户于 2026-11-02 明确要求先抓取远程、失败回车继续直到成功，并再次强调运行态与备份态同步；状态：需求 confirmed；适用范围：上述 macOS 只拉取动作；创建 / 更新：2026-11-02。显式分为“抓取远程 → 检查并同步”：当前仓库抓取失败显示原始错误、退出码与日志，空回车再次抓取、无次数上限，每轮由用户触发；非空输入 / EOF 取消，Ctrl+C 中断。每轮抓取前后核对分支、HEAD、上游、跟踪映射和来源，发现变化或未完成 Git 操作停止。成功后才固定目标进入预检；重试回车不代替危险 `YES`，子仓预检与同步写入失败继续停止。不能将 `cannot lock ref ... is at ... expected ...` 或界面更新数量差异未经核实归因 CDN；本次日志符合本地引用旧值校验失败，并发抓取是合理推断。双位置同步脚本及四份配套 / 总览说明，沿用现有动作路径与 `$REPO`。本地 verified：备灾 / 运行各 14 项真实 Git + PTY 隔离测试（合计 28 项）、双份语法与 5 对文件 cmp 通过，含失败重试、取消、严格 YES 和等待期状态变化；76 份文档的本地目录形态 / 转换只读验证通过。未执行真实业务仓同步、舍弃、提交、推送，也未将故障注入称为 SourceTree 后台抓取时序实测。
+- 来源：用户于 2026-11-02 同步成功后反馈 SourceTree 仍显示 5 个待拉取并要求脚本清缓存；状态：需求 confirmed / 下述验证 verified；适用范围：macOS 只拉取动作。Git 与子模块最终核验成功后，显示 HEAD 相对当前上游跟踪引用的真实 ahead / behind，并仅对运行中的官方 SourceTree 当前仓库执行“仓库 → 刷新”（Cmd+R）。按运行进程定位 App，核对窗口 AXIdentifier 精确路径、前台窗口、对话框与菜单可用性；不执行远程刷新或额外 fetch，不删除磁盘缓存、Application Support、书签、账号和动作，不重启其它仓库窗口。自动化 / 辅助功能权限不足只提示手动 Cmd+R，保留 Git 成功退出码，不重跑同步。Atlassian 官方历史版本说明确认 Cmd+R 会清仓库界面缓存；本机 UI 实测 paddleocr-local 实际 behind=0、列表旧 5 在刷新后消失，未执行该仓 Git 同步或舍弃。新增刷新替身检查和原 14 项真实 Git / PTY 回归通过；双位置脚本及四份说明 cmp、两份 zsh 语法、AppleScript 编译及 76 文档只读目录验证通过。UI 菜单实测与脚本发起的系统权限分别验收，不宣称替身已验证各终端 TCC 权限。
 
 
 - 来源：用户于 2026-10-19 明确选择补齐递归只拉取，并要求 `/Users/jobs/Documents/Github` 全部同名下载入口同步；状态：用户需求已确认、实现经隔离验证；创建 / 更新：2026-10-19。只拉取先预检整棵目标提交树，再同步父仓并逐层按 gitlink 检出，允许纯 HEAD 漂移；不使用 `--remote`，不暂存、不提交、不推送。现有单仓动作对普通子模块指针变化一律停止的旧行为已替代（`superseded`），子仓源码、暂存指针、独有游离提交和未完成现场仍保护。

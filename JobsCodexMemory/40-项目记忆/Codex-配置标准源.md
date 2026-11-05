@@ -4,7 +4,7 @@ status: active
 scope: codex-config
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs
 created: 2026-07-15
-updated: 2026-10-21
+updated: 2026-11-03
 tags:
   - codex-memory
   - project
@@ -22,7 +22,7 @@ tags:
 
 - [🔥 前言](#jobs-toc-heading-1)
 - [一、路径映射](#jobs-toc-heading-2)
-- [二、同步规则](#jobs-toc-heading-3)
+- [二、同步规则](#skills-runtime-backup-sync)
 - [三、审计入口](#jobs-toc-heading-4)
 - [四、外援 Skill 软链接溯源](#jobs-toc-heading-5)
 - [五、永久记忆与自动任务备份](#jobs-toc-heading-6)
@@ -42,20 +42,25 @@ tags:
 - 全局指导标准源：`/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs/AGENTS.md`。
 - `AGENTS.md` 运行态目标：`/Users/jobs/.codex/AGENTS.md`。
 - 用户级 Skills 标准仓库：`https://github.com/JobsKits/JobsSkills`。
-- Skills 现行运行目录、内容最大集和基准工作树：`/Users/jobs/.agents/skills`。
-- 父仓子模块挂载：`/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs/skills`。
+- Skills 运行态、内容最大集和基准工作树：`/Users/jobs/.agents/skills`。
+- Skills 备份态，同时是父仓子模块挂载：`/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs/skills`。
 
-## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、同步规则 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+## 二、<span id="skills-runtime-backup-sync">同步规则</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-10-21 明确要求；状态：已确认；适用范围：Jobs 自有 Skills；创建 / 更新：2026-10-21。绑定具体仓库或固定文件路径的专项内容，从原 `SKILL.md` 提取为同一 Skill 文件夹内、与 `SKILL.md` 同级的独立附件；主文件保留相对链接及命中范围下的必读入口，保留完整约束和验证，不另建 Skill、不机械拆通用目录或示例。长期维护规则归 `jobs-codex-config-audit`，README 的 `OS@Extension` 裸露安装 / 卸载入口规则归 `jobs-markdown-docs/README规范-OS@Extension脚本布局.md`。
 - 全局指导新增或修改先写 `JobsCodexConfigs/AGENTS.md`，再在同一任务结束前单向部署到 `/Users/jobs/.codex/AGENTS.md`，用 `cmp` 验证逐字节一致，不等待下次启动注入脚本或用户提醒。来源：用户于 2026-10-12 再次明确确认；状态：已确认；更新时间：2026-10-12。此次本地 AGENTS 同步确认不扩展为 Git 提交、推送、Skills 文件复制或 gitlink 更新授权。
-- Skills 修改默认直接写 `/Users/jobs/.agents/skills` 现行工作树；不得自动用父仓子模块、历史备份或其它副本反向覆盖它。用户于 2026-10-06 明确授权通过独立脚本手动选择双向同步，例外范围见第六节。
+- 来源：用户于 2026-11-03 在当前任务明确要求“只要写了运行态，都要立即同步备份态”并要求长久记住；状态：confirmed；适用范围：本机用户级 Skills 本地同步；创建 / 更新：2026-11-03。
+- 每次写入运行态 `/Users/jobs/.agents/skills` 后，Codex 必须立即将本次变更按相同相对路径同步至备份态 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs/skills`，包括新增 / 修改的 `SKILL.md`、附件、脚本、模板、资源和配套说明；无需再次确认，不等待任务结束、Git 提交、推送或用户提醒。
+- 同步前比较两态差异、保留已有改动；目标有有效独有内容时先合并，无法安全合并时保留双方并报告具体冲突，不静默覆盖。不复制 `.git`、内置 Skills 或插件缓存，不清理无关 / 目标独有文件；删除仅传播本任务明确授权的对应删除，不全目录镜像清理。外援软链接不写穿上游，仍保留既有所有权和 Git 排除边界。
+- 同步后用 `cmp` 或内容哈希验证本次变更对应文件一致；失败须说明具体文件和原因，不能只更新子模块指针或标记同步完成。本地同步不授权 Git 提交、推送或父仓 gitlink 更新；只有用户明确授权版本发布时，才按子仓先提交推送、父仓再更新指针的顺序执行。
+- Skills 现行基准仍为运行态，不得自动用父仓子模块、历史备份或其它副本反向覆盖它。2026-10-06 已确认的独立脚本手动双向同步继续作为人工操作入口，见第六节；其交互确认不约束上述已经授权的运行态 → 备份态即时同步。
 - 来源：用户于 2026-10-19 明确要求；状态：已确认；适用范围：`jobs-markdown-docs` 的 README 项目统计规范；创建 / 更新：2026-10-19。`README规范-项目统计条款.md` 与现行 `/Users/jobs/.agents/skills/jobs-markdown-docs/SKILL.md` 保留在同一目录，通过主文件的相对链接按需加载，不合二为一、不用旧版主文件覆盖现行规则；项目 README 编写 / 维护及项目统计任务先读取条款全文。
 - 来源：用户于 2026-10-19 明确要求将配置仓库 `.jobs-markdown-toc/` 融入运行态文档 Skill；状态：已确认；适用范围：目录过滤器的复用资源；创建 / 更新：2026-10-19。完整模板统一放在 `/Users/jobs/.agents/skills/jobs-markdown-docs/assets/markdown-toc/`，由主规范链接独立的 `MarkdownToc.mjs`、`README.md` 与 `manifest.json`；模板清单只登记随包工具 README，其它路径按目标仓库核实、增量维护，保留既有清单，不照搬配置仓库专用名单。
-- `JobsCodexConfigs/skills` 是 `JobsSkills` 的子模块挂载，父仓只跟踪 gitlink。用户于 2026-10-03 明确要求每次改完 Codex 公约或 Skills 都完成同步：Skills 以 `/Users/jobs/.agents/skills` 为现行基准，先在 JobsSkills 子仓提交并推送，再更新父仓子模块指针；外援运行态软链接不纳入仓库。
+- `JobsCodexConfigs/skills` 仍是 `JobsSkills` 的子模块挂载，父仓只跟踪 gitlink，备份文件写在子模块工作区，不转为父仓直接跟踪文件；外援运行态软链接不纳入仓库。
+- 已部分替代（`superseded`，2026-11-03）：2026-10-03“每次改完必须先提交推送 JobsSkills，再更新父仓指针才算同步”的要求，改为本节即时文件同步；本地备份不再等待版本发布，也不自动提交推送。标准仓库、运行态基准和获准发布时先子后父的顺序保留，执行本节新规则。
 - 全局 `AGENTS.md` 以 `JobsCodexConfigs/AGENTS.md` 为源。若 `/Users/jobs/.codex/AGENTS.md` 含有效独有规则，先合并回标准源，再部署并逐字节比较，避免同步时丢失现行行为。
-- 同步前后检查两个仓库状态，保护已有改动；自动版本传播通过正常 Git 提交和 gitlink 完成。手动双向文件同步属于 2026-10-06 确认的独立流程，不代表授权提交、推送或改动父仓 gitlink。
-- 已替代（`superseded`，2026-10-03）：2026-09-30“把运行态未提交内容直接复制到备份子仓，且同步本身不代表授权提交或推送”的临时流程。后续按用户最新确认和 `jobs-codex-config-audit` 中的标准仓库流程提交、推送 JobsSkills，再更新父仓 gitlink。
+- 同步前后检查两个仓库状态，保护已有改动；本地文件备份与获准的 Git 版本发布分别核验。手动双向同步是独立流程，不代表授权提交、推送或改动父仓 gitlink。
+- 历史替代记录（`superseded`）：2026-09-30“运行态未提交内容直接复制到备份子仓，同步不授权提交推送”的临时流程曾于 2026-10-03 被“先提交推送、再更新 gitlink”替代；后者又于 2026-11-03 被本节的即时本地备份规则替代，当前以本节新规则为准。
 - 已替代（`superseded`，2026-09-30）：只允许现行工作树先提交推送、备份子模块只更新已提交版本的限制；其方向仍正确，当前仍以现行工作树为基准，但同步频率改为每次配置变更后完成。
 - 备份子仓必须处于正常本地分支，不能保留游离 HEAD；本次已在保持提交内容不变的前提下恢复到 `main`。
 - 配置注入脚本只部署 `AGENTS.md` 和扫描现行 Skills 生成注册项，不复制、删除或覆盖 `/Users/jobs/.agents/skills`。
@@ -86,7 +91,8 @@ tags:
 - 来源：用户于 2026-10-06 在当前任务明确要求；状态：已确认；适用范围：`JobsCodexConfigs/skills` 与系统用户级 Skills 之间的人工选择同步；创建 / 更新：2026-10-06。
 - 单一入口为 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs/skills/同步Skills.command`。支持系统 `/Users/jobs/.agents/skills` → 当前目录，以及当前目录 → 系统两个相反方向；脚本内项目路径从自身位置计算，系统路径动态解析。
 - 使用 `fzf` 多选 Skill，第一项和默认光标必须是“全部同步”；直接回车选择全量，也可搜索并多选特定 Skill。
-- 仅在用户选择方向和范围、查看预览并确认后复制内容；先备份已有目标，保留目标独有文件，不同步根目录 Git 元数据、内置 Skills、插件缓存或同步脚本自身。外援软链接以独立实体副本同步，不能写穿上游。
+- 使用本节手动入口时，用户选择方向和范围、查看预览并确认后复制内容；先备份已有目标，保留目标独有文件，不同步根目录 Git 元数据、内置 Skills、插件缓存或同步脚本自身。外援软链接以独立实体副本同步，不能写穿上游。
+- 2026-11-03 用户确认的[[#skills-runtime-backup-sync|运行态 → 备份态即时同步]]已单独授权，不需要启动本节脚本或再次确认；本节保留为人工选择范围和反向恢复入口。
 - 已部分替代（`superseded`，2026-10-06）：此前绝对禁止从父仓子模块反向覆盖系统的规则，限上述人工选择同步例外。现行工作树基准、自动配置注入的单向边界、代码所有权及版本传播流程继续适用。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

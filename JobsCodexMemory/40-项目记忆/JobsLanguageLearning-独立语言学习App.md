@@ -6,7 +6,7 @@ repository: /Users/jobs/Documents/Github/语言学习
 source: 2026-10-03 用户明确要求三端新增法语、西班牙语、朝鲜语拼读；架构与实现由当前工程核验
 confirmation: 用户确认新增语言范围；架构事实由工程核验
 created: 2026-10-01
-updated: 2026-10-05
+updated: 2026-11-01
 tags:
   - codex-memory
   - project
@@ -72,7 +72,8 @@ tags:
 - 快照范围、语料来源和校验分别记录在 `dependency-snapshot.json` 与 `resource-provenance.json`，验证结果见根 `验证记录.md`。不得以语言迁移为由改第三方源码。
 - 用户于 2026-10-01 确认加入五端一次性构建产物工作流：主 App 末尾 `Save Build IPA` 输出 `build/真机.ipa` 或 `build/模拟器.ipa`，打包成功后先清空 build 全部内容再写入唯一新包；源 App / DerivedData 必须在 build 外。脚本、初始工程生成器和 README 同步，具体边界见 [[Jobs-iOS-仓库族#四十九、五端 iOS 一次性构建产物]]。
 
-- 来源：用户于 2026-10-05 明确要求；状态：confirmed；适用范围：`/Users/jobs/Documents/Github/语言学习/原生iOS版本`；创建 / 更新：2026-10-05。新增 `ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/` 手动安装包，工程与 `ScriptsByDevTools/generate_project.rb` 初始生成器保留展示引用；当前用户 Xcode 行为为 `🫘语言学习 iOS · Pod Install`，终端回车确认后安装，独立日志 `language-learning-pod-install.log`，不增加自动构建动作。根 README 在“运行方式”2.1 说明运行、日志和迁移；语法、工程完整性、隔离用例及菜单检查通过，未执行真实安装或构建。共用工作流与其它工程说明见 [[Jobs-iOS-仓库族#五十一、安装与构建挂载脚本的 README 归属|手动安装与 README 归属]]。
+- 来源：用户于 2026-11-01 明确要求五工程合并通用入口；状态：confirmed；适用范围：`/Users/jobs/Documents/Github/语言学习/原生iOS版本`；创建 / 更新：2026-11-01。手动安装使用共享 `🫘当前工程 · Pod Install`，真实终端精确输入 `INSTALL` 后回车才执行，空行、其它输入、Ctrl+C 或 EOF 均取消；主实现与边界见 [[Jobs-iOS-仓库族#xcode-unified-pod-install|Xcode 当前工程通用入口]]。工程与 `ScriptsByDevTools/generate_project.rb` 不再生成旧手动脚本展示组，根 README 保留当前使用说明。
+- 旧方案（`superseded`，2026-11-01，见 [[Jobs-iOS-仓库族#xcode-unified-pod-install|通用入口]]）：来源：用户于 2026-10-05 明确要求；状态：confirmed；适用范围：`/Users/jobs/Documents/Github/语言学习/原生iOS版本`；创建 / 更新：2026-10-05。新增 `ScriptsByPods/【MacOS@Xcode】🫘打开终端运行Pod Install.command/` 手动安装包，工程与 `ScriptsByDevTools/generate_project.rb` 初始生成器保留展示引用；当前用户 Xcode 行为为 `🫘语言学习 iOS · Pod Install`，终端回车确认后安装，独立日志 `language-learning-pod-install.log`，不增加自动构建动作。根 README 在“运行方式”2.1 说明运行、日志和迁移；语法、工程完整性、隔离用例及菜单检查通过，未执行真实安装或构建。共用工作流与其它工程说明见 [[Jobs-iOS-仓库族#五十一、安装与构建挂载脚本的 README 归属|手动安装与 README 归属]]。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、数据与设备边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

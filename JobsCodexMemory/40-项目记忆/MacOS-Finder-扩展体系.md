@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-10-30
+updated: 2026-11-05
 tags:
   - codex-memory
   - project
@@ -56,6 +56,9 @@ tags:
 - [三十一、双端单文件终端查看与大文件确认](#file-content-viewer)
 - [三十二、双端文件拆分与完整分卷合并](#file-volumes-context-menu)
 - [三十三、macOS 背景菜单新建文件](#macos-file-create)
+- [三十四、macOS 安装位置双路线](#macos-install-location-choice)
+- [三十五、双端独立清理、停止安装与 App 管理授权](#dual-route-cleanup-cooperative-stop)
+- [三十六、Flutter 私库优先的一键跨机迁移](#flutter-one-click-migration)
 
 </details>
 <!-- jobs-toc:end -->
@@ -189,6 +192,14 @@ tags:
 
 ## 十二、<span id="flutter-project-runner">双端 Flutter 项目右键运行</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- <span id="simulator-orphan-clean">iOS 模拟器实体与登记分开清理</span>（2026-11-05；用户要求 confirmed／限定验证 scoped-verified）：用户报告 Cleaner for mac 清理后运行器仍列出设备，要求接入 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs/scripts/clean.command/clean.command`。现场六台历史测试设备均缺 `device.plist`、其中五台目录已不存在；CoreSimulator 仍列出记录。Device Hub 同时处于仅真机过滤且分组折叠，不能用界面空白判断登记清空，尚无证据归因为系统升级。此前已按精确 UUID 关闭／注销六台，保留 Runtime。`clean` 现只处理默认设备集中的 iOS 残留：目录或定义确证缺失才进入；先保存清单和残留数据、复检并逐 UUID 注销，再确认登记消失。正常设备、仅 data 缺失但定义仍在、仅 Runtime 失配的设备均保留；不用 `delete all`／`delete unavailable`，不杀 CoreSimulator 服务。27 项假工具隔离验证、真实只读保留核验通过，源码与本机 `~/.JobsMacEnv/Scripts/clean.command/` 已备份同步；未执行真实完整 `clean` 或清空用户缓存／历史。
+
+- <span id="all-sdk-acquisition-retry">双端右键所有 SDK 持续自动获取</span>（来源：用户于 2026-11-04 明确要求；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建／更新：2026-11-04）：覆盖直接 SDK 下载、FVM、Flutter 首次调用补齐 Dart、平台组件及模拟器镜像等实际拉取路径；失败后无须干预持续重试，直到成功或用户强制结束，不以旧的 45 秒健康检查超时终止准备流程。环境验证成功前不得进入业务，许可证、权限和确定的本地错误单独处理。通用语义见[[30-工作流决策/工作流决策#sdk-acquisition-retry|SDK 获取规则]]，真实进度沿用下条要求；只使用已装 Runtime 的菜单不据此强制新增下载能力。源码更新不代表签名 App 资源已部署，管理面板安装／更新和实际菜单另验。 实现状态（2026-11-04，限定范围 scoped-verified）：双端已接入SDK获取、版本清单、首次补齐及目标平台预缓存；恢复、超时、主动中断、续传／摘要和关键文件就绪已做隔离验证。官方异步安装器保留许可／权限并自动复检；该前一阶段未重装已安装菜单或执行真实 SDK 安装，Windows 原生环境另验。同日后续全库选路及授权 SDK 恢复见下条记录。
+- <span id="flutter-sdk-network-routing-coverage">GitHub 全库 Flutter SDK 网络选路与恢复</span>（2026-11-04；用户需求 confirmed，源码及限定验证 scoped-verified）：已按 `/Users/jobs/Documents/Github` 核对 64 个 Git 工作根、317 项候选（242 项自维护、75 项测试／生成／第三方排除），139 项实际 SDK 路由／委派目标已分类并给出调用证据。覆盖 OS@Extension 双端、SourceTree 双位置、JobsCommand@Flutter、JobsMacEnvVarConfigs、FlutterDemo 的 SG／Lym、Flutter 自维护 setup、Flutter／Swift 基座脚本、自有 macOS CI 及工程生成启动器。只做菜单、计划、导入改写或已验证原生 Dart 本地 IO 的路径不新增 SDK 下载。
+  - 统一按[[30-工作流决策/工作流决策#flutter-sdk-network-routing|当前网络检测规则]]执行；不把本次较快 CFUG 固化为全局最优。28 份 Mac core 与 README、22 份共享命令适配及受控运行副本已核对；SDK 失败重试不新增业务重放，原项目恢复流程保留。首个 FVM 查询前的管理器 Dart、当前 SDK 与目标 SDK 分阶段准备；追加日志不继承外层“日志被替换”标志，取消先冻结完整自有子树防下载者重生，已有其它写者只等待。
+  - 新增 SDK／入口／生成器／CI 隔离回归、语法和副本校验通过；核心 34 组 172 断言，自有 CI 本地 9 组 51 断言，原生 Dart 本地提取边界 14 断言。旧 Mac 全主体文本 parity 与旧 Windows 菜单计数断言的遗留差异另列，不能称全仓所有旧检查都绿。未执行真实 Windows 桌面或远程 CI；已安装 Finder App 本轮未重建／部署，需管理面板安装／更新，SourceTree 运行双副本已同步。未提交／推送。
+  - 慢下载排查发现遗留写者与 SDK ZIP 损坏；经用户明确批准，已停止核验过的下载树、保留坏包，再在子进程临时 CFUG 环境恢复 `/Users/jobs/fvm/versions/3.38.4`。Flutter 3.38.4／Dart 3.10.3 及 engine stamp 已核验，原生日志约 198M／31 秒；这是该次网络观测，不是永久镜像偏好，未改系统代理或全局下载源。
+- <span id="flutter-sdk-visible-progress">Flutter SDK 下载必须可见</span>（2026-11-04，用户明确 confirmed）：适用于 `OS@Extension` 的 MacOS / WindowsOS 全部 Flutter 项目自定义右键菜单，包括独立入口、聚合菜单及一键配置中间接调用。凡涉及 Flutter / 鸿蒙 Flutter SDK 下载、FVM 安装和首次调用补齐 Dart / SDK 组件，都须在终端或既有 GUI 实时显示工具提供的下载详情 / 进度，同时保留日志；不得只把输出写入日志后让界面长期空白。保留真实退出码、超时、取消和机器输出解析；工具未提供百分比时不伪造。已打开的启动脚本快照与已安装资源不等同于源码已更新，源码验证与真实菜单部署分别说明。 用户于同日明确补充：下载前显示 Flutter 声明／实际版本、目标 Dart 的可信身份、engine 与系统架构，不能只显示 engine 哈希；共享 SDK ZIP 已有写者时等待并可取消，退出／超时清完整自有子树。网络选路统一遵循[[30-工作流决策/工作流决策#flutter-sdk-network-routing|当前网络检测规则]]。
 - 来源：用户于 2026-10-20 明确要求；状态：需求已确认、源码已实现；创建 / 更新：2026-10-20。适用目录：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension/JobsFlutterRunner` 与 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension/JobsFlutterRunner`。两端都是独立安装单元并接入各自总面板；菜单为“运行 Flutter 项目”，只在精确 Flutter 根目录显示。
 - 用户确认的交互：macOS 在 Terminal、Windows 在 CMD 选择运行设备并显示日志；关闭终端不影响后台 Flutter。macOS 选择 iOS 模拟器而没有可用设备时，直接内置原 `【MacOS】📱双击初始化iOS模拟器.command` 的型号 / Runtime 选择、创建及启动逻辑，不依赖原脚本的绝对路径。无 Runtime 时提示先在 Xcode 安装；不删除或关闭其它模拟器。
 - 实现约束：按真实 `dependencies.flutter.sdk: flutter` 识别根目录，拒绝链接与普通 Dart / flutter_test-only；按项目已有平台目录过滤设备。复用项目已配置的 FVM SDK，否则使用 PATH Flutter，不静默切换已声明的 FVM 项目到全局 SDK。旧“已有 Android AVD 可启动、不自动创建”约束已由下条 2026-10-29 用户需求替代（`superseded`）。
@@ -294,7 +305,15 @@ tags:
 - 依赖全链与配对迁移（2026-10-29，用户需求 confirmed）：范围为 `OS@Extension/MacOS@Extension/JobsFlutterTools` 与 `WindowsOS@Extension/JobsFlutterTools`。Pub 之外须补 Gradle / Maven、Apple Pods / SPM、OpenHarmony OHPM / Hvigor、目标原生库 / 构建依赖、Flutter 平台 artifacts 与有声明的 Web JS 工程依赖；每类拉取为独立右键 item，同时接入一键配置，从代码准备到实际运行继续沿用最终 `app.started` 门禁。各层还须有提取 / 导入配对入口，不能只有 Pub 源码归档；Apple 仅在 macOS 宿主实现，其它两端按实际能力覆盖。保留现有功能与选择，使用同内核，工具 / 缓存不伪装成源码包；快照核对宿主、架构、精确工具版本、工程配置 / 锁指纹及文件 hash，冲突不覆盖，准备 / 导入成功不冒充任意跨机离线可构建。此要求替代此前“本轮仅 macOS Pub 依赖准备”和“平台缓存不纳入任何归档”的范围限制；原 Pub 源码快照内容与兼容性继续保留。
   - 实现与验证（2026-10-29，源码 / 隔离验证 / Mac部署 verified）：Mac 43 叶、Windows 34 叶，平台快照与 Pub 两项集中在“依赖提取/导入”；工具版本 `1.1.0` / `2026.10.29.2`。共享 `NativeDependencyArchive.dart` 双端字节一致；功能锁保留、受控已解析 Pub 包根的 Pods 头文件链接可物化。内核 20 组 / 185 断言、真实 Dart Shell 13 组 / 262 断言通过；Mac 分层准备 26 组 / 270 断言，原环境 26 组 / 140 断言，菜单 / 安装 / GUI 相关回归通过；Windows 七套 383 断言，另 FVM 69 断言通过，真实发布副本 + Dart 提取 / 导入链路和只读 CLI 已验证。Mac 已在当前登记的 `work/JobsFlutterToolsDerivedData` 构建更新，源资源字节对账、签名深验与 PlugInKit 启用通过；保留原 22 项选择并新增 21 项，未清空旧配置。没有在用户工程联网拉取、构建或运行真实 App；真实 Finder 新菜单画面与 Explorer / Windows 原生工具链仍需目标机验收，未提交推送。
 
+- <span id="flutter-dependency-closure">一键配置依赖链闭环</span>（2026-11-04，用户要求修复 confirmed／源码与隔离回归 scoped-verified）：范围 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 双端 JobsFlutterTools。Apple 依赖准备先选择真实入口、flavor、模式和 defines，配置生成与构建共用参数；SPM 快照仍归 `.jobs/dependencies/spm`，按所选 Flutter / Xcode 实际缓存位置建立相对链接，已有缓存查冲突、融合并保留备份。纯 Web／桌面目标不强制无关 JDK；Mac 鸿蒙检查选定 Java，Windows 鸿蒙复用并复检 DevEco Java。
+  - 后续 macOS 独立 Pub 拉取优先复用当前项目一键配置记录的 SDK；有效记录失效／跨系统／损坏时明确停止，不静默改用 FVM。无记录时保留原项目 FVM 准备流程，此条细化旧“Pub 仅 FVM”的边界。
+  - 额外 Web JS 工程按 Node 版本文件、engines 与固定包管理器检查；精确 Node 归档校验 SHA256 并按用户版本／架构缓存，包管理器在用户独立目录准备、刷新及复检。鸿蒙发现 DevEco／CLT 并检查 SDK、Node、OHPM、Hvigor、HDC、Java，缺少专有组件保留官方安装／许可与同流程复检，不用平台 precache 成功冒充工具链完成。Windows VC、Windows SDK headers／libs／rc 和 CMake 联合复检后才标完成。
+  - 平台资源快照 v2 白名单包括 artifacts、flutter_web_sdk、缓存引擎包及有载荷的配对 stamp，标记最后恢复；不带 Dart runtime／Flutter tools，旧 v1 只映射回 artifacts，不伪造缺失资源。双端 Dart 内核字节一致，隔离导入／导出、缓存消费、版本约束、取消、失败停止和脚本语法验证通过；未安装真实 SDK、运行用户工程构建、部署扩展或验收 Windows 原生桌面，未提交推送。保留同日并发 SDK 持续获取规则与既有改动。
+
 - GUI展示补充（2026-10-29，用户截图纠正，confirmed）：窗口须显示工具版本号；SDK等里程碑直接显示实际检测版本，不能只显示“精确版本/成功”而无具体数字。任务线连接符采用清楚的 ASCII `>>>>>`，替代短小的向右箭头。上方里程碑与下方终端之间必须提供可上下拖动的真实分隔条，动态调整两区高度并同步终端行列/控制台尺寸，日志自身仍可滚动；MacOS与WindowsOS同步。
+
+- <span id="flutter-setup-compact-progress">一键配置窗口紧凑布局与动态圆点</span>（2026-11-04，用户截图要求 confirmed）：适用 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 的 MacOS / WindowsOS 一键配置 GUI。标题独立展示，任务流程只有一行时不能在下方预留大块空白；进行中显示 0～5 个小圆点循环出现 / 消失。工程实现按阶段名称 / 状态分行、流程区按内容紧凑起步并随子节点适度增长，终端保留主要空间；继续保留上条真实可拖动分隔条、终端尺寸同步、ASCII `>>>>>`、实际版本和分类子节点。圆点不改变状态含义，预留宽度避免布局抖动，退出进行中或任务结束时清除并停止。源码、隔离验证、已安装资源和目标系统 GUI 验收分别记录，不由本需求确认推断已经部署或实机通过。
+  - 本轮限定验证（2026-11-04，scoped-verified）：MacOS 真实 WKWebView + PTY + fzf 的 1 例 / 16 断言通过，覆盖方向键、字面输入、拖动尺寸、完整私有日志、取消兜底、0～5 点完整周期与状态清除、默认紧凑及宽窄窗；手动调高流程区后再缩矮窗口仍为终端保留至少 180 px。启动与随包 universal 构建 3 例 / 19 断言通过；当前实际窗口源码另经 `BuildSetupWindow.zsh` 在临时产物中完成 arm64 + x86_64、最低 MacOS 12 编译及签名校验。临时 AppKit 演示已核对默认 / 子节点布局；使用标准 `NSApplication.run` 的浅色大窗、黑夜窄窗真实屏幕截图正常，终端可见，窄窗终端另经 WK 快照与 JavaScript 核对。Windows Dashboard 58、Version 31、LogTail 36 条断言及 Parser / BOM / CRLF 检查通过，均为 MacOS 上 PowerShell 隔离验证，不代表 Windows 原生 GUI / CMD / Explorer 通过。未重建或部署真实已安装扩展，已打开旧窗口不随源码更新。
 
 - 实现与验收边界（2026-10-29，源码及隔离验证 verified）：双端已接入环境选择、项目固定 Wrapper 真缓存、平台工具链、依赖、设备及实际 `app.started` 验收；工具版本统一 `1.0.0`、构建 `2026.10.29.1`。Mac 使用 AppKit 分隔条与真实 PTY，原生预览实际拖动和终端尺寸同步通过；Windows 使用 WinForms SplitContainer 与真实 CMD 嵌入，无法嵌入时明确回退独立交互控制台。Mac 已沿原 DerivedData 路径更新，源资源比对、含 sandbox 的签名及 PlugInKit 启用通过；此前自动化右键未看到自有菜单、Flutter 扩展诊断仅记录初始化，其“真实 Finder 菜单显示待核实”状态已由下条用户手动确认替代（superseded），不能仅按自动化读取结果判断菜单缺失。Windows 相关隔离回归 1373 条断言通过，原生 Windows GUI / PowerShell 5.1 / Explorer 尚未验收；本轮未在用户项目安装 SDK、拉取依赖或运行 App，未提交推送。
 
@@ -419,6 +438,8 @@ tags:
 
 ## 三十、<span id="unified-feature-manager">双端安装与卸载合为管理入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- <span id="manager-theme-and-language">双端安装面板主题与语言</span>（来源：用户于 2026-11-04 明确要求；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 的 MacOS / WindowsOS 安装面板；创建 / 更新：2026-11-04）：主题必须包含“黑夜 / 白天 / 跟随系统”，语言必须包含“简体中文 / 繁体中文 / 英文 / 跟随系统”。用户同日通过截图进一步确认：主题与语言控件统一放在面板右上角空白处，注意整体美观与对齐。沿用总面板、单功能随包面板与各自独立安装单元，不把本次界面选项扩张成系统全局主题或语言变更；双端实现、模板副本与说明一并核对，源码 / 隔离验证和目标系统桌面验收分别记录。 工程验证口径（2026-11-04，限定范围 verified）：源码及隔离 AppKit 控件验证已完成；Windows 原生 WinForms 与完整桌面视觉验收仍待目标机确认。
+
 - 日志高度与全选（2026-10-29；用户截图需求 confirmed，实现及本机隔离回归 verified）：总面板和随包面板的底部日志区域须可上下拖动调整高度，右键提供“全选”，macOS 支持 `⌘A`、Windows 支持 `Ctrl+A`；保留操作按钮及功能列表、日志各自滚动。Mac 使用原生 NSSplitView，窗口可缩放；缩窗时也夹紧上下区最小高度，不能只限制拖动而把操作栏压到零。Windows 使用原生水平 SplitContainer；选中文字时追加输出保留选区。Mac 主面板与10份随包副本、Windows35份同源面板及就近说明已同步；Mac 多屏明暗原生控件、后台日志、Windows布局计算/后台/语法及文档往返通过，Windows原生交互仍待实机。不得把隔离控件验证写成 Windows 桌面验收。
 
 - 来源：用户于 2026-10-27 明确要求，总体和每个独立功能的安装 / 卸载两个公开脚本合为一个，通过面板选择只卸载一个或几个功能；状态：需求 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-10-27。
@@ -463,5 +484,32 @@ tags:
 - 工程实现与验证（2026-10-29，verified）：独立宿主及 FinderSync 的 Debug 构建、深度签名通过；桌面及普通目录背景提供“📃 新建文件…”，原生输入默认 `未命名.txt`，取消不写入、失败可改名重试，排他创建零字节文件后 Finder 定位。特殊路径编解码、同名文件 / 目录 / 链接与并发保护、生产宿主委托入口及管理面板隔离回归通过；本轮未登记到真实 Finder，实际菜单、对话框与受保护目录授权仍待安装验收。WindowsOS 未增设本项。
 
 - 安装失败修复（2026-10-29，用户截图 / 本机部署 verified）：总面板79项成功、仅新建文件失败；原日志实际是构建及签名成功，但 PlugInKit 连续两轮未登记，不能表述成编译错误。单独重新登记后，原样重跑总管理器仅 `file-create` 已安装成功，当前精确 App 内嵌扩展为 `+` 启用且进程已运行。总管理器恢复分支与独立管理器补最多一次重新登记，再严格核对启用及精确路径；独立路径匹配不接受相同前缀旧副本，失败返回原码并不假绿。总集成10组75断言、独立11组110断言、预检7组82断言、原创建行为4组22断言及68份文档往返通过。预检夹具改用当前GUI叶清单，避免旧59成功数和兼容退役ID混入全选。原失败日志及App备份在系统临时目录 `JobsFileCreator-repair-20261029.lys4oy`；真实Finder创建对话框未操作，UI工具返回 `cgWindowNotFound`，不把启用状态等同创建流程实测。此前“未登记真实Finder”的阶段状态由本条已部署状态替代，创建界面与受保护目录授权验收仍保留。未提交推送。
+
+## 三十四、<span id="macos-install-location-choice">macOS 安装位置双路线</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-02 先提出 App 安装到应用程序目录，随后明确两种路线各有应用场景、都需保留；状态：需求 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`；创建 / 更新：2026-11-02。此要求仅针对 macOS，不改变 Windows 部署。
+- 总面板与单功能面板增加“使用「应用程序」文件夹安装 / 卸载”复选框，默认不勾选。未勾选沿用本地构建目录；勾选则将完整功能模块统一安装到 `/Applications/Jobs自定义右键菜单.app` 内，并从该位置登记和运行。安装与卸载都按本次同一选择执行；不可把这次要求解释为所有安装强制迁移到应用程序目录。
+- 切换位置安装只切换启用登记、保留另一位置文件；卸载只处理所选位置，共享宿主剩余叶功能仍保留该模块，最后一叶移除后注销并删除模块；联合 App 的最后一个模块卸载后才删除整个联合 App。不存在的副本不得影响另一位置的功能配置；复制、签名或登记失败不得假报成功，保留可恢复的旧 App / 配置。业务 SDK 与源码不随卸载删除。
+- 清理边界：本机 2026-11-02 只读检查发现当前十个启用扩展仍直接运行于仓库 `work` 内的 App。父目录清理脚本默认会匹配 `*DerivedData` 整目录；构建目录模式仍需 `--cache-only`。只有实际勾选并成功安装到应用程序目录后，清理仓库构建输出才不影响该已安装副本。本轮开发不等于已迁移这些真实扩展。
+- 联合 App 与清理补充（2026-11-02，用户明确 confirmed）：用户随后要求应用程序目录中只出现一个联合 App，并明确命名为 `Jobs自定义右键菜单`，面板必须显示名字及完整路径。外层固定 `Jobs自定义右键菜单.app`，内部保留各功能完整宿主、扩展身份与独立开关；所选旧顶层自有宿主在新安装成功提交后收拢，未知 App 与未选单元不强删。此条替代此前每个宿主分别出现在应用程序根目录的输出形态。
+- 可选清理（2026-11-02，用户明确 confirmed）：仅应用程序路线的安装 / 更新模式显示“安装成功后清除此轮构建产物”，默认关闭；构建目录模式及卸载模式隐藏并清空。必须同模块部署、登记和提交成功后，才清理本轮明确 DerivedData；失败安装不删来源，清理失败报告但保留成功安装。不能清理全部 work、其它单元、源码或运行中的来源。App 内管理资源按自身位置定位，面板编译缓存写用户缓存目录。
+- 实现与验证：公共部署库、总 / 单功能后端和面板按 `--install-location build|applications` 接入；包内资源完整复制、另一位置保护和失败恢复用临时夹具验证，亮暗主题面板与参数传输用隔离 worker 检查。真实 `/Applications` 安装、真实 Finder 菜单与清理后的业务实测须单独记录，不以隔离测试替代。
+
+## 三十五、<span id="dual-route-cleanup-cooperative-stop">双端独立清理、停止安装与 App 管理授权</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-02 连续截图反馈和明确补充；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-11-02。通用管理能力必须平衡 / 平移至 macOS 与 Windows，不把 macOS 的应用程序目录照搬到 Windows。此条将上一阶段仅修改 macOS 的范围扩展为双端共同能力，联合 `.app` 形态仍为 macOS 专有。
+- 两条路线：macOS 默认沿用构建目录，可选择系统应用程序中的联合 App；Windows 默认沿用当前用户默认程序位置，可选择包内本地构建目录。运行时要绑定实际部署位置，Windows 的 exe / cmd / ps1 / DLL 不得依赖管理面板进程的临时环境变量。
+- 自动与独立清理：仅安装位置路线显示默认关闭的自动清理复选框，以及旁边红底白字、含 🧹 的“清除构建产物”按钮；用户于 2026-11-04 通过截图进一步确认安装位置选择、自动清理复选框与红色按钮排在同一水平行，垂直居中、间隔统一；独立按钮不要求重新安装，按当前所选功能 / 包清理。临时运行目录路线隐藏两者。安装提交后自动清本轮产物；清理失败明确提示但不把已提交安装改成失败，独立清理失败正常报错。所有已安装运行文件、配置、注册与其它功能保留；Windows 原生构建临时目录与发布运行目录分离，必须同时保留 Flutter 的 DLL 和后台 EXE。
+- 合作式停止：安装 / 更新执行中按钮变为“停止安装”；点击只写请求，当前共享 App / 包事务完整结束后不再开始下一安装单元。不强杀编译、签名、登记或回滚；未执行项单独标记，不计失败与完成百分比。不能把一次共享 App 构建伪装成可在各叶菜单之间随意中断。
+- macOS 故障已核实：实际日志中旧路径 `pluginkit -r` 无记录被错误当硬失败；另有 TCC `SystemPolicyAppBundles` 拒绝负责 GUI 修改联合 App 的 `_CodeSignature`，并非普通 `/Applications` 目录模式不可写。修复精确注销的幂等复核及登记前签名时序。新版 GUI 包装为可明确授权的 `Jobs右键菜单管理面板.app`（`com.jobs.finderextensions.managementpanel`）；授权阻断发退出码 77 和机器状态，停止后续构建、显示系统设置入口。用户须亲自在“隐私与安全性 → App 管理”授权；不使用 root 跑整个安装器，不修改 TCC 数据库或系统目录权限。
+- 验证边界：本轮仅源码、临时隔离事务和原生 AppKit 控件 / 身份签名验证；未替用户授权或真实重装，未中断旧面板。Windows 脚本及隔离事务通过不能代替真实 WinForms / MSVC / Explorer 验收。各端源码、模板副本、内置管理资源快照及文档同时同步。
+
+## 三十六、<span id="flutter-one-click-migration">Flutter 私库优先的一键跨机迁移</span>
+
+- 来源：用户于 2026-11-04 明确需求；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-11-04。目标是最低操作代价迁移 Flutter 工程，重点保全私有 Pub、Pods、SPM、Maven、OHPM 与 Web 包；不把工程加 `.gradle` / `.pub-cache` 当作完整工具链底稿。
+- 双端统一 Flutter 菜单的提取 / 导入分组首项提供一键提取和一键导入；沿用独立叶功能开关与聚合包，不新增外层菜单。提取终端必须突出私库：回车仅私库候选，任意非空输入（含空格）才全提取。成功后回车默认 ZIP、非空不打包；ZIP 校验成功后回车保留原提取目录、非空才删除本次原目录。
+- 导入允许选原始 Pub / Gradle 缓存或同时包含它们的父目录，目录可改名，按内部布局识别；先预检再融合本账户有效缓存，保留现有冲突与机器配置。Git/path/自建源是私库候选，权限未知不能伪称已判定；来源缺失和未支持布局必须列出，认证、SDK/JDK 与平台工具链另行准备。
+- 底稿源 `/Users/jobs/Documents/GitLab/flutter@aito_ie`、外拷依赖 `/Users/jobs/Documents/GitLab/flutter@aito_ie的依赖` 在本任务仅用于只读检查；开发验证使用隔离夹具，未执行真实工程 / 账户缓存导入、扩展安装、提交或推送。已安装菜单与跨机离线构建必须单独验收。
+- 当前实现已具备统一迁移清单、私库候选筛选、原始缓存内容识别、原生配置指纹、确认计划 SHA-256 与冲突整批拒绝。隔离真实 Git 原仓移走后 `pub get --offline` 通过；SPM 只保全源码 / 制品，不保证重建全部解析状态。两份真实底稿缓存只读预检均通过；已安装 Finder / Explorer 和完整跨机离线构建尚未验收（2026-11-04，源码及限定范围 verified）。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

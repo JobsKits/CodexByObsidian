@@ -5,7 +5,7 @@ scope: JobsGenesis-platform-scripts
 repository: /Users/jobs/Documents/Github/JobsGenesis
 source: 2026-10-23 用户明确要求五个脚本仓按 MacOS 和 WindowsOS 划分
 created: 2026-10-23
-updated: 2026-10-30
+updated: 2026-11-05
 tags:
   - codex-memory
   - project
@@ -28,6 +28,7 @@ tags:
 - [三、SourceTree 与记录器边界](#jobs-toc-heading-4)
 - [四、Windows 本机与虚拟机测试计划](#windows-compatibility-testing)
 - [五、JobsCommand@Others 大文件历史与双远端同步](#others-git-history-cleanup)
+- [六、SSH 终端与 Python GUI 分工](#ssh-cli-python-gui)
 
 </details>
 <!-- jobs-toc:end -->
@@ -77,5 +78,29 @@ tags:
 - 仅从待同步历史移除两个旧分卷对象 `04c300ba51f76594dcdc63c6ec9578a48591b0d4` 与 `04a737bac425847400640d22e61670f9316fd890`；当前源码、资源及四个较小测试分卷保持原样，完整文件树仍为 `1bcb782de1dd1ad38e7c481ed3d73a4118726417`。本地与两个远端的 `main` 已统一到 `6ee1a5b734f6eb3d3c9be5965143bfb41709ae19`；Gitee 普通快进成功，GitHub 按原提交 `1e90cc08a6ec6f0572a8e53045f6dfbf804cc115` 的明确租约强推成功。不要再次合并清理前的旧历史，以免重新引入超限对象。
 - 当前仓库 local 配置 `pack.useSparse=false`：目录迁移后，默认稀疏打包会额外带上远端已有的大样本；精确枚举后，Gitee 实际上传为 232,328 字节。此配置仅作用于本仓库，Sourcetree 普通推送同样使用，不修改全局 Git 或代理设置。
 - 完整旧历史备份与验证记录位于 `/Users/jobs/Library/Application Support/JobsGitHistoryCleanup/JobsCommand-Others-2026-10-26.JyOW8n/`，其中 `before-cleanup.bundle` 已验证可恢复。父仓 `JobsGenesis` 当前 gitlink 仍为旧 `1e90cc08`，需要在父仓后续正常提交流程中更新到清理后的提交；本次未改动父仓暂存区、提交或远端。
+
+## 六、<span id="ssh-cli-python-gui">SSH 终端与 Python GUI 分工</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-04 连续明确调整；状态：confirmed；创建 / 更新：2026-11-04；适用范围：`/Users/jobs/Documents/Github/JobsGenesis/JobsCommand@Gits` 和 `/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py` 的个人 SSH 工具。
+- `JobsCommand@Gits` 维护 MacOS / WindowsOS 平行黑窗终端脚本，算法用 fzf，邮箱为唯一必需文字输入；旧“默认读取 Git / 不内置邮箱”约定为 superseded，用户随后明确指定默认 `295060456@qq.com`，仍允许编辑。名称统一去掉算法括号段，只保留“⚙️双击为私人账户生成 SSH 密钥”。
+- 图形版单独进入 `JobsPythonTools.py/JobsSSHKeyMgr.py/`，沿用兄弟 Python 工具的外层入口与内层工程格式，自包含实现双端同等业务，不依赖另一个仓库的本机位置。生成、配置、agent、登记及验证自动衔接，既有密钥不覆盖，授权不足如实显示待完成。
+- GUI 按钮两列布局；旧主窗口红底白字退出按钮已 superseded，用户改为 GitHub Token 网页（固定 `https://github.com/settings/tokens`，不使用 `settings/apps`），系统窗口关闭仍可退出，后续公钥显示方式改为主界面内嵌面板，不再提供独立弹窗关闭。默认邮箱可编辑，提供算法、GitHub 公钥网页与本机密钥文件夹入口。十语言和白天 / 黑夜 / 跟随系统主题遵循 [[10-用户画像/长期偏好#gui-i18n-theme-baseline|GUI 全局基础能力]]，语言另保留跟随系统。
+- 用户确认图形版新名称为 `JobsSSHKeyMgr`，目录 / 模块 / 构建名对应统一；旧 QSettings 域仅作为已保存偏好兼容项保留。原“独立公钥窗口”已于 2026-11-05 被用户新要求替代（superseded）：公钥面板常驻一级页面“执行结果”下方，显示完整内容、路径及可反复使用的复制按钮；不再弹出独立窗口，只展示 `.pub`，不展示私钥正文。ED25519 标为推荐并给出算法区别说明，RSA 4096 用于不支持 ED25519 的旧系统兼容。
+
+- 来源：用户于 2026-11-05 根据实机截图明确要求；状态：confirmed。主标题须明确为“🔑Jobs Github SSH 配置辅助工具”；语言与主题是次要功能，缩为标题同排右上角的图文按钮（左图标、右文字，无下拉箭头）。算法说明紧跟下拉框，按实际字段宽度与字体高度换行，不预留无意义的多行空白。黑夜模式的执行结果和公钥文本区采用黑底绿字，内容均支持上下滚动；继续保持十语言与系统主题联动。
+
+- 来源：用户于 2026-11-05 进一步指定；状态：confirmed。原“生成并配置融入四按钮”已被最新要求替代（superseded）：蓝色“生成并配置”独占一行，其下四个辅助图文按钮两行两列依次为“复制公钥 / 打开当前系统密钥文件夹”“打开 GitHub 公钥网页 / 打开 GitHub Token 配置网页”。复制按钮从公钥面板移至该组左上角，仅存在有效公钥时可用；不再提供查看或定位公钥按钮。默认邮箱仍是实际可编辑值，使用较淡文字色呈现，输入其它邮箱恢复正常文字色。
+
+- 来源：用户于 2026-11-05 明确补充；状态：confirmed。配置后须有清晰连接测试阶段，并提供单独“测试 SSH 连接”重测入口；使用已有密钥进行严格 GitHub SSH 验证，显示实际账号或失败原因，不重新生成、不重写 SSH 连接配置、不登记公钥或改写主机记录。原“按钮仅只读、不补齐别名”约定已由用户下述从零运行要求替代（superseded）：按钮认证成功后须自动补齐 Sourcetree 识别入口；底层纯验证函数继续保持只读。设置、辅助及测试按钮采用本地随包图标，均左图右文；公钥路径栏与测试按钮按字体 / 样式自然高度布局，避免固定高度造成文字裁切，覆盖多语言、主题及高像素比例。
+
+- 来源：用户于 2026-11-05 针对误导日志明确要求修改程序；状态：confirmed。GUI 与 MacOS / WindowsOS SSH 终端脚本须分别提示 gh 未检测到、已安装但未登录、凭据被拒绝（HTTP 401）、请求被拒绝（HTTP 403）、网络错误、超时及无法确定状态，不能合并为“未安装、未登录或授权失效”。读取当前活跃账户的结构化状态，失败保留本地密钥并给出重新授权或网页登记的下一步；不把未知 / 网络错误推断为凭据失效，不将原始授权响应写入日志。
+
+- 来源：用户于 2026-11-05 明确追加并限定；状态：confirmed。“生成并配置”时在当前用户 `.ssh` 目录生成 `README.md`，介绍 `config`、`id_ed25519_personal`、`id_ed25519_personal.pub`、`known_hosts` 的用途；GUI 和 MacOS / WindowsOS 终端同步。README 已存在就跳过，不覆盖、不追加、不更新，保留已有文件及同名链接或目录；缺失时才独占创建。说明只含用途和文件名，不保存私钥正文；独立测试连接不生成说明。
+
+- 来源：用户于 2026-11-05 进一步补充；状态：confirmed。GUI 关闭重开后必须自动显示当前已有个人公钥并恢复复制入口，不要求再次生成。优先本工具托管 SSH 配置，再读取已保存的相对文件名与受支持的个人密钥候选；只读配置与 `.pub`，私钥仅校验文件属性。启动恢复不生成密钥、不写 SSH 配置或 README，不沿用上次认证成功状态；支持再次点击测试验证。
+
+- 来源：用户于 2026-11-05 聚焦 Sourcetree 识别故障；状态：scoped-verified（本机 4.2.20 / 324 二进制只读核验及严格 SSH 认证）。该 MacOS 版本账户页按 `<GitHub用户名>-GitHub` / `.pub` 探测文件，后备名为 `id_rsa`、`id_dsa`、`Identity`，不根据 `config` 的 `IdentityFile` 识别自定义个人文件名；账户页未找到不等于 SSH 认证失败。严格认证确认实际账号后，可复用工具的别名函数创建同目录相对链接，保留密钥、配置与 known_hosts；需重新打开账户编辑弹窗刷新显示。用户名是 GitHub login，不能拿邮箱或密钥注释代替；不读取、使用或记录用户贴出的 Token。
+
+- 来源：用户于 2026-11-05 明确要求“改程序、从零开始运行”；状态：confirmed。Sourcetree 识别修复必须进入 GUI 与双端终端源码，不以单次手工补本机链接作为完成。首次配置认证成功即创建兼容名；首次未登记公钥时，网页添加后点击 GUI 测试按钮，程序按实际 SSH 认证账号自动补齐 `<用户名>-GitHub` 与 `.pub`。MacOS 相对符号链接、Windows 普通硬链接，原个人密钥名与已存在 README 不变；冲突保留并明确提示，别名失败不抹掉 SSH 认证成功。隔离空目录验证整个首次生成→未登记→登记后重测→识别补齐流程，不依赖开发机已有文件。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
