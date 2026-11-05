@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-11-02
+updated: 2026-11-05
 tags:
   - codex-memory
   - project
@@ -39,6 +39,7 @@ tags:
 - [十五、双端远程地址复制与打开](#remote-copy-open)
 - [十六、远端改名与逐层推送](#remote-alias-push)
 - [十七、自定义菜单分类与打包命名](#action-menu-groups)
+- [十八、当前仓库的通用 Push 修复入口](#universal-push-repair)
 
 </details>
 <!-- jobs-toc:end -->
@@ -81,6 +82,7 @@ tags:
 ## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、Commit / Fetch 场景化解锁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - Commit 修复固定拆成 `C01`–`C07`：工作树与 gitdir 绑定、`index.lock`、`.gitmodules` 暂存顺序、嵌套工作树与路径迁移、子模块与 gitlink、一轮完整索引刷新、索引/dry-run 解锁复验；每个场景必须有独立函数、出现原因和通过日志。
+  - <span id="commit-obsolete-paths">旧路径精确修复</span>（2026-11-05，用户要求修复 confirmed／实现 scoped-verified）：Sourcetree 先添加文件变同名目录的新子项，再对旧文件调用 `git rm -f`，会触发 `without -r`；旧条目已消失时可能报 `pathspec did not match`，不能直接补 `-r` 删除新目录。现脚本在 HEAD 普通文件已变真实目录时自动选择精确模式，第二参数 `--repair-paths` 可显式选择，`--stage-all` 保留原完整流程。精确模式跳过 C03–C05，只暂存未有暂存变化且确已缺失/变目录的普通旧文件删除；保护新目录、部分暂存、ITA、flags、gitlink、符号链接和祖先路径，冲突或索引锁停止。独占锁、索引备份与临时索引验证后写回，不创建提交或推送。18 项完整入口隔离回归、双位置语法与内容核对通过；SwiftUI 真实仓仅暂存 6 个旧 CodeGraph 文件删除，其余 125 条索引内容保持，并已在 Sourcetree 刷新显示重命名。实际 Commit、Hook 和签名未执行；本条补充并限定前述 C06 全量刷新默认适用范围。
 - Fetch 修复固定拆成 `F01`–`F05`：原生 `fetch --prune`、`remote prune`、MacOS 大小写路径碰撞、前缀文件挡目录、同名目录挡文件；每产生一项实际修复就立即重新 Fetch，成功后停止后续元数据处理。
 - Fetch 大小写碰撞不能只搬移 loose ref；应先用 Git 原生 `pack-refs` 保留有效引用并释放大小写前缀文件路径，再备份冲突 reflog 后复试。
 - 两份同名 README 必须专门维护“故障现象、出现原因、独立处理、解锁判据、不处理边界”，并与脚本场景编号一一对应；JobsDocs Git 故障手册继续保留跨主题知识地图，但与单个脚本直接相关的原理、错误分流、诊断命令、手工边界和执行后核对必须完整下沉到同名 README，不能只在 JobsDocs 保留或只放链接。
@@ -187,8 +189,10 @@ tags:
 
 - 来源：用户于 2026-10-28 明确要求；状态：需求 confirmed；创建 / 更新：2026-10-28。适用范围：`/Users/jobs/SourceTree.command` 与 `/Users/jobs/Documents/Github/JobsGenesis/SourceTree.command` 中的 macOS / Windows Sourcetree 动作。
 - `🌐获取远程仓库地址` 与 `🌍打开远程仓库地址` 使用同一套候选逻辑：枚举全部 remote 的所有生效 fetch / push URL，按完整 URL 去重，不再默认取 origin 首地址；唯一地址直接执行，多地址交给独立终端使用 fzf 单选。取消、无匹配和失败不复制 / 打开；Sourcetree 后台不能交互。
-- 获取动作复制原始 Git 地址；打开动作转成 HTTP(S) 网页地址，SSH / Git 非默认端口不能猜网页映射，要求明确 HTTP(S) 地址。菜单和日志脱敏，依赖按需沿上游检查、确认安装 / 修复、刷新会话并复检，失败停止。
+- 获取动作复制原始 Git 地址；打开动作转成 HTTP(S) 网页地址，SSH / Git 非默认端口不能猜网页映射，要求明确 HTTP(S) 地址。依赖按需沿上游检查、确认安装 / 修复、刷新会话并复检，失败停止。原 MacOS 菜单和日志脱敏策略已由下述完整显示决策替代（`superseded`，2026-11-05）。
 - 继续执行双位置、安装模板与当前用户菜单同步，保留用户标题；Windows 对应实现及动作安装清单必须同时覆盖。macOS 当前用户菜单已安全重载并看到两个入口；Windows 原生菜单与 WinGet 实际安装另验，不把 macOS PowerShell 隔离测试写成 Windows 实机通过。
+- 来源：用户于 2026-11-05 提供打开动作的真实失败日志；状态：根因复现及修复 scoped-verified。zsh 默认 `FUNCTION_ARGZERO` 会把函数内 `$0` 改为函数名，文本启动时 `%x` 又可能只剩 `zsh`；两个 MacOS 入口在文件作用域同时记录源文件和调用路径，用原始入口名查找真实副本。无法定位直接失败，转交 Terminal 前再校验文件，避免虚构 `仓库/resolve_script_path`，同时保证打开 / 复制模式正确。两入口、README 和原有测试按运行态 → 备灾态同步，35 组隔离回归、双位置语法与内容核对通过；当前菜单与两份模板一致，参数 `$REPO`、目标存在且可执行。此次未改菜单或重启正在使用的 Sourcetree，真实点击及浏览器后续仍由原入口执行；没有修改业务仓、提交或推送。
+- 来源：用户于 2026-11-05 在实际成功打开后明确要求“不需要脱敏，完全显示”；状态：confirmed；适用范围：MacOS 的获取 / 打开远程地址两个动作。fzf 候选、终端与本地日志完整显示原始远程 URL，不再遮盖 SSH 用户名、用户信息、查询参数或片段；该项目决策替代这两个入口原有的显示脱敏规则。网页目标仍按现有克隆地址转换规则生成，剪贴板保留原值；不把此要求推广成其它脚本或系统日志的全局规则。
 
 ## 十六、<span id="remote-alias-push">远端改名与逐层推送</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
@@ -206,5 +210,15 @@ tags:
 - 用户同日明确排除 `⏬双击下载SourceTree效率脚本` 与 `⚙️运行授权` 的菜单挂载：两者只保留独立脚本，禁止删除或更改脚本业务。安装器按两个精确脚本名同时过滤旧模板与当前动作，即使用户改过显示标题，也不能作为额外动作重新保留；其它自定义动作继续保留。现行模板与真实菜单为 32 项，35 个独立主入口仍保留。
 - 真实用户配置与运行 / 备灾模板均已备份后写入，34 项目标、参数和其它字段保持；双位置一致、两份 `zsh -n` 与 plist 校验通过。归类合并 22 项及 emoji 补齐 80 项隔离断言覆盖标题、其它设置和重装幂等。首次 GUI 超时的验收限制已于同日后续核验解除：正常退出并重开 Sourcetree 后，在真实仓库右键菜单核对全部 34 项、6 个新图标、两项地址相邻及连续打包组，未点击业务动作；用户提供的后续截图也确认前轮分类与双包标题已实际显示。
 - 后续按上述排除规则将真实菜单与双份模板从 34 项缩减为 32 项，仅删除两个挂载、去掉体检标题末尾点并移动 Flutter 修复项；剩余动作其它字段值保持。独立下载 / 授权脚本在双位置的哈希与执行权限未变，7 个改动文件双份一致；正常重启后已在真实仓库右键菜单核对 32 项、修复归组与体检标题。
+
+## 十八、<span id="universal-push-repair">当前仓库的通用 Push 修复入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-05 要求将无法 Push 的情况归纳到 SourceTree 脚本，覆盖可能情况并提供通解，明确授权用新脚本解决当前 OC 老工程 GitHub main 非快进并实战验收；状态：需求 confirmed／下列范围 scoped-verified；创建／更新：2026-11-05。
+- 双端新增独立“📥修复Git无法Push”动作，MacOS 入口为 `MacOS/【MacOS@SourceTree】📥修复Git无法Push.command/`，WindowsOS 为同名 `.cmd` 包及 `JobsGitPushRepair` 模块。只处理当前仓库、已有工作分支和选定线路，不调用会暂存并递归父子仓的逐层 Push 全流程。Sourcetree 转独立终端形成计划并确认，明确参数可自动化；只诊断不 fetch／merge／push。
+- 通用处理是预检、精确获取真实推送端、快进或保留双方历史合并、普通推送与服务端 OID 核验。保护脏工作区、隐藏索引标志、未完成操作、锁、ignored 文件与路径祖先；新增路径按共同祖先计算，避免本地文件迁入同名目录时误报。并发更新有限重试，推送应答丢失先核验。成功后仅明确同端点 fetch 映射下 CAS 刷新跟踪引用，不改上游。OC main／byPods 与 Gitee 快照例外继续遵守原职责。
+- 覆盖鉴权、网络、权限、保护规则、敏感内容、大文件／LFS／配额、hook、对象／存储、签名、冲突与未知故障分流；服务端限制和冲突语义不承诺自动解除。不强推、不重写历史、不自动暂存／stash／删锁、不关闭信任验证或绕过 hook、不改全局代理。未知项保留脱敏错误与非零结果，按证据扩展。
+- MacOS 32 项真入口隔离回归及 fzf／PTY 返回、无匹配返回、默认取消和 Tab 选择通过；WindowsOS 70 项模块隔离回归及 HTTP 上下文检查通过，Windows 原生菜单未实机验收。菜单安装器 9 项／120 断言通过，真实 MacOS 菜单已重启核对，动作总数现为 33、主入口 36，替代第十七节此前 32／35 的数量基线；原分类与保留用户标题规则不变。
+- 实战还观察到 `github-actions[bot]` 在成功推送后追加协议关系图提交；这是新的远端提交，已验证用同一入口再次快进接收、再做普通推送／核验，不擅自关闭机器人或修改 workflow。该观察只解释本轮具体远端领先，不承诺后台后续永不更新。
+- 真实 OC 老工程由本脚本合并原本各一个独有提交并普通推送，GitHub main 与本地 HEAD 核验一致；日志保留于本轮临时审计目录。实际首次预检暴露路径误判，另发现 zsh 函数内 EXIT trap 会过早触发，均已修正并补回归；使用全局命名退出 trap，验证正常／失败退出释放本进程互斥锁。未发布 SourceTree 脚本仓自身的提交，也未推送码云或 byPods。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

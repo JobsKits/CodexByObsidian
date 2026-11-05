@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-11-04
+updated: 2026-11-05
 tags:
   - codex-memory
   - project
@@ -517,7 +517,7 @@ tags:
 
 - 来源：用户于 2026-10-07 明确要求同一工程文件夹中 GitHub 全跟踪，Gitee 以当前状态为零点；远端旧记录清理由用户处理，真实提交与推送由用户执行。状态：confirmed；创建 / 更新：2026-10-07；适用范围仅为 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`。
 - 2026-10-16 用户要求只读提炼原因并写入 Git Skill，不改当前代码；状态：confirmed。现有快照 README 记载旧历史与容量问题、Gitee 服务端 `Repo size ... exceeds quota` 拒绝，因此保留 GitHub 完整历史、Gitee 使用独立零点。未确认旧对象精确体积或当前平台配额，不作量化归因。
-- GitHub `origin` 继续使用 `byPods` 并保留全部原历史；Gitee `gitee` 使用本地 `Gitee@snapshot` 推到远端 `byPods`。首次快照无父提交，后续只延续快照父链，不合并 GitHub 与 Gitee 的提交历史；保留现有跟踪文件和忽略范围，包括当前依赖报告与 PNG。
+- 当前远端别名为 GitHub `Github`、Gitee `码云`（2026-11-05 用户说明并经本机只读核对，confirmed / scoped-verified），本节历史记录中的 `origin` / `gitee` 为已被替代的旧别名；仅适用于上述 OC 新工程，不推广到旧工程或其它仓库。职责保持 `byPods → Github/byPods`、`Gitee@snapshot → 码云/byPods`：GitHub 保留全部原历史；Gitee 首次快照无父提交，后续只延续快照父链，不合并两端的提交历史；保留现有跟踪文件和忽略范围，包括当前依赖报告与 PNG。
 - 同日分支显示与命名调整（2026-10-07，confirmed）：用户要求去掉 Sourcetree 中的 `codex` 文件夹层，随后自行改名为 `Gitee@snapshot` 并明确要求维持该名，大小写和 `@` 必须保留，与 `byPods` 同级显示。旧名称 `codex/gitee-snapshot`、`gitee-snapshot` 均已取代（`superseded`）；改名保留已有快照提交，安装配置、推送映射与文档同步使用用户当前名称，远端目标仍为 `gitee/byPods`。
 - 快照分支名称属于可调整配置：通过随 `git branch -m` 移动的本地分支标记识别现有名称，旧版本用唯一快照根标记识别；自动同步不得因旧配置而重建已改名分支。改名后重新安装会沿用用户当前名、保留快照链并更新默认推送映射。Sourcetree 显式推送须选择 `Gitee@snapshot → byPods` 并关闭标签推送，不能用窗口自动填入的同名远端目标。
 - 工程入口为 `ScriptsByDevTools/gitee_snapshot.command/`，tracked hook 源位于 `.githooks/`；安装将入口复制到 Git 元数据目录并备份本地配置。源分支提交、合并、改写后自动同步已提交文件树，推送前拦截原历史、标签和过期快照；不切换工作区、不改暂存区、不自动推送。新克隆或迁移电脑须重新安装本地配置。
