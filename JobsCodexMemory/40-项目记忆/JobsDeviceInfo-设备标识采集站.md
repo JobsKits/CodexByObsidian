@@ -5,7 +5,7 @@ scope: JobsDeviceInfo
 repository: /Users/jobs/Documents/Github/JobsDeviceInfo
 source: 2026-10-28 至 2026-10-29 用户确认、本机验证与线上发布核验
 created: 2026-10-28
-updated: 2026-10-29
+updated: 2026-11-06
 tags:
   - codex-memory
   - project
@@ -62,5 +62,11 @@ tags:
 - 能力边界已核实：目前仅有ProfileService请求UDID/IMEI/ICCID/MEID/PRODUCT/VERSION/SERIAL的可靠官方依据；IMEI2等的MDM ServiceSubscriptions权限不能当作现有扫码流程权限。Apple官方Configurator可通过USB及用户正常信任报告双SIM IMEI/ICCID，但SEID、完整型号号码仍无必定取得的保证，EID绝不能冒充SEID。当前正向用户询问是否接受安装官方Configurator并USB补采；未得到同意前不得安装、配对、读取设备或改为MDM。
 - 硬件标识、Cookie、配对码、回调 Token、原始 CMS、私钥与账户认证凭据均不得写入永久记忆。
 - 三端新版验证与发布（2026-10-29，verified）：35 项自动测试、109 项真实本地 workerd / D1 / CMS 联调、Worker 与 Pages 构建通过；本地浏览器采集、用户选择来源、复制对话框、390px 无横向溢出及无控制台错误已核验。已仅更新现有 Worker，沿用 Pages 内部绑定与原 D1，无新迁移、DNS 变更、Git 提交或推送；Pages 线上首页、app.js、device-capabilities.js、styles.css 与源码逐字节一致，健康接口成功，新增接口拒绝无会话写入。未向生产提交硬件测试夹具；Android / 鸿蒙及新版苹果流程的真机扫码仍待用户复验。
+
+## 四、<span id="native-ios-integration">原生 iOS 信息页接入</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-06 明确要求；状态：confirmed（接入范围）；创建／更新：2026-11-06。OC 新工程 `/Users/jobs/Documents/Github/JobsOCBaseConfigDemo@ByPods`、OC 老工程 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsOCBaseConfigDemo` 与 Swift UIKit `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo` 首页左上菜单的设备信息页接入当前 Pages 采集服务；本轮未点名 SwiftUI。
+- 协议核查（2026-11-06，scoped-verified）：无需新增服务端路由，原生端以独立内存 Cookie 创建 `POST /api/pair`，外部浏览器访问 `/#pair=<token>` 并认领；用户在本台苹果设备的 Safari 完成系统确认后，App 持原 Cookie 查询 `GET /api/session`。会话从创建起固定 15 分钟，浏览器基础信息的 `received` 不代表已经取得 UDID；型号名与设备名称、构建号与系统版本、系统与手工来源分别处理。配对结果不能证明本机身份，编号、Cookie 和配对秘密不写入永久记忆。
+- 实现与验证基线（2026-11-06，scoped-verified）：三工程保留本地设备信息，增加采集、刷新、清除、来源和十语言切换，继承宿主主题；硬件结果与 Cookie 仅在内存保留。Swift 的 `JobsNetworking` 增加默认关闭的 `usesEphemeralSession`，专用 agent 关闭缓存和日志，OC 使用独立临时传输；两侧根 README、模块说明与 Swift 框架文档已同步。线上仅做只读健康检查，35 项服务端测试、真实本机 HTTP Cookie 续用／隔离／删除、生命周期与模型解码、十语言完整性检查通过；最终 OC 新工程双架构与 Swift arm64 完整模拟器构建均成功。OC 新旧功能模块逐字一致，旧工程新增源码 target membership 已核验，未另跑旧工程完整构建。本次 App 的真机系统确认、返显和主题视觉仍未验收，不沿用网站历史真机结果冒充 App 验收；没有提交、推送或重新部署服务端。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

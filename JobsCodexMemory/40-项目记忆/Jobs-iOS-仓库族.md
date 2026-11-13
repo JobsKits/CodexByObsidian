@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-11-05
+updated: 2026-11-13
 tags:
   - codex-memory
   - project
@@ -96,6 +96,8 @@ tags:
   - [64.1、当前启动接入与预留接口](#device-guard-launch-gate)
 - [六十五、四工程测试文件的展示与用途说明](#ios-test-visibility-and-purpose)
 - [六十六、四工程各自独立的真机与模拟器自动巡检](#ios-crash-crawler)
+- [六十七、三工程 ARKit 空间实验室](#arkit-demo)
+- [六十八、四工程全局语言与原生 Demo 逐页整理](#native-global-language-ui-review)
 
 </details>
 <!-- jobs-toc:end -->
@@ -370,6 +372,8 @@ tags:
 
 ## <span id="jobs-toc-heading-42" data-jobs-toc="v2">四十一、OC 公共主题刷新边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- 设备信息联网状态更新（2026-11-06，用户要求 confirmed）：下文 2026-10-27“尚未接采集后端”属于历史状态，由 [[40-项目记忆/JobsDeviceInfo-设备标识采集站#native-ios-integration|OC 新旧与 Swift UIKit 接入采集站]] 替代；原有分组、主题、复制及公开 API 限制继续保留，网页历史真机结果不替代本次 App 验收。
+
 - 来源：用户于 2026-10-27 对比三端交互及 OC 信息页截图提出；状态：confirmed（交互与界面要求）；适用范围：本笔记第一节三工程。OC 新旧左侧菜单选项沿用 Swift 的连贯跳转，抽屉收起与目标页面推入同步启动，不先等首页复位；用户与设备信息页三端统一内缩主题卡片、清晰文字层级和条目数，两组 section 整体可点击并独立展开 / 收起，保留全部用户属性、复制及系统隐私限制说明。
 - 来源：用户于 2026-10-27 在本机信息模块任务中连续确认；状态：confirmed（布局与说明约束）；创建 / 更新：2026-10-27；适用范围：本笔记第一节三工程的用户与设备信息页。展开时，标题区与首行 cell 的交界须直角贴合，只保留整组外缘圆角；收起后独立标题恢复四角圆。状态、标题 / 计数 / 箭头、圆角、列表重载与同步布局须在同一局部禁动画事务内完成，不能出现先直角再变圆角的中间帧。根 README 用通俗说明区分普通 App 无直接读取 UDID / IMEI 接口、UDID 的设备确认描述文件与后端回传流程，以及 IMEI 无法保证同途径返回；当前尚未接采集后端，受限行只复制说明，不以 IDFV 冒充 UDID。重要限制保留红色加粗，纯排版整理不得改正文、代码、链接和锚点。
 - 来源：2026-10-27 本地并行验收实测及用户授权分工；状态：verified（缓存行为）、confirmed（本次分工边界）；创建 / 更新：2026-10-27。同一信息页同时由多个聊天维护时，先按消息工具权限取得授权并明确单一写入方；各自使用独占工作副本、DerivedData、App 产物和明确 UUID 的模拟器，不能一边构建一边被另一任务恢复 / 替换产物。迁移旧 Xcode 缓存时，PCM / PCH 可能在压缩 AST 中绑定旧 ModuleCache 绝对路径，简单字节搜索不能证明可迁移；须在新目录重新生成这类预编译产物，对象文件是否复用由正常增量构建判断。保留依赖扫描元数据和失败日志，不为缓存问题改第三方源码、降低校验或继续写旧共享目录。
@@ -571,6 +575,8 @@ tags:
 - 2026-10-18 Swift 换机验收：来源为用户回传的 `report.txt`、`report 2.txt` 及随后明确确认；状态：verified（报告中的完整下载）、confirmed（用户确认完整安装）；适用目录：另一台 Mac 的 `/Users/wx996768/Documents/Gitee/JobsSwiftBaseConfigDemo`；创建 / 更新时间：2026-10-18。原终端没有代理环境变量，Git 未连接系统已启用的 `127.0.0.1:7990` 显式代理；原链路 Raw 握手被重置，两种 HTTP 协议的 Git 克隆均触及脚本 60 秒限时，其后的断包错误不能当作远端重置证据。显式使用 `http://127.0.0.1:7990` 后，Raw podspec 的 JSON / 身份校验通过，官方 codeload 归档 `8,701,761` 字节在约 `2.72` 秒完成且 tar 校验通过，同一 [**ESPullToRefresh**](https://github.com/eggswift/pull-to-refresh) `2.9.3` 浅克隆完整接收 `8.28 MiB` 并成功。用户随后确认，以一次性 `env` 代理环境执行完整 `pod install` 成功；该次原终端链路未使用 7990 显式代理的问题已验收。结论仅适用于这台电脑此次环境，不代表所有下载失败同因，也不代表全工程、全环境或后续构建均已验收；未变更全局 Git、未删除 Pods / 锁文件。
 
 - <span id="env-update-unattended">环境 update 的无人值守语义</span>：来源为用户于 2026-11-04 明确纠正“`-t` 的目的就是无人值守，全员升级”；状态：confirmed；适用标准源 `/Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs/scripts/update.command/update.command`，运行副本为用户 `.JobsMacEnv/Scripts/update.command/`。`-t` 自动执行全部已安装工具的维护和必要依赖修复，不能在 Python 分支悄悄退成只读或把打开网页算作升级；可恢复问题应有界自愈后复检。同日用户明确移除 JobsKits 仓库更新：普通与 `-t` 模式均不再检测、拉取或调整桌面 `JobsKits/` 中的 `JobsSoftware.MacOS`、`JobsMacEnvVarConfig`，菜单、自述及结果汇总不保留该更新项；旧的安装项全覆盖口径中仓库维护部分由此替代（superseded）。管理员授权集中在终端启动阶段并仅在本轮保活，后续非交互执行；后台必须已有系统授权，权限或网络仍不满足时如实报告未完成，不绕过系统授权。健康检查告警与升级失败分别汇总，Gem 检查与更新必须绑定同一 Ruby，不能混入系统旧 gem。该规则不授权提交、推送、删除证书或全局改代理，也不将隔离回归等同于完整真实升级验收。
+  - 2026-11-06 本机排障补充（用户要求修复并真实完成升级 confirmed／限定实测 scoped-verified）：Homebrew 7 的工具选择可忽略 `HOMEBREW_GIT_PATH` 建议而优先系统 Git；`brew update` Shell 路径须同时按显式变量优先原则注入 `GIT_EXECUTABLE` 才能实际复用随包 Jobs Git 入口，不能把 curl 的 IPv4／IPv6 切换当成 Git 换路。更新锁冲突独立有界等待并补试，不删除锁或杀其它任务；本机实跑已覆盖释放后恢复。运行副本曾漏掉新版 Flutter 网络入口及依赖，部署更新时须同时核对 `_lib/` 下 `【MacOS】FlutterSDK网络入口.zsh/`、`【MacOS】FlutterSDK命令适配.sh/`、`【MacOS】FlutterSDK网络选路.zsh/`、`【MacOS】SDK获取重试.zsh/` 四目录，不能只复制主脚本。上述实现不代表所有 Homebrew Git 下载都强制经过 wrapper，也不授权持久代理变更。
+  - 同日 CocoaPods 默认入口补验（用户回传再次失败日志 confirmed／限定实跑 scoped-verified）：本体与扩展健康，原日志将 `trunk` 刷新报为超过 120 秒；后续隔离回归确证两处看门狗回收时可提前误写超时标记，不能仅凭该文案断言实际耗时。已在被回收的 sleep 返回非零后立即停止计时器，正常回收与真实超时均有确定性回归及移除保护的负控制。仅 Git 包装器能联网不能证明 pod CDN 已继承代理，人工注入代理后的补跑也不能替代日常入口验证。update 专用交接策略改验真实 CDN JSON／Specs Git，自动选择已有系统代理并实际导出给后续子进程，保留显式代理、Git URL 代理与空值；共用工程网络模块原文不扩散修改。pod CDN 默认并发降至 8，显式值保留，刷新显示真实进度；自动模式在实际刷新超时或本次明确连接／传输错误时，才对另一已登记且重测可用的官方源再试一次；包含 GitHub API 连接失败返回 1，不再只识别超时 124。Git 候选另验证真实 GitHub API 的 HTTP 200 与 SHA，网络恢复只读取该次私有输出和退出状态，不能扫描全局旧日志触发。运行副本在无手工代理注入下，默认完整 CocoaPods 项和强制 CDN 的原 `trunk` 路径均已成功；原日志仍保留，健康告警不冒充升级失败。
 
 ## <span id="jobs-toc-heading-62" data-jobs-toc="v2">六十一、GitHub Actions 模拟器验收边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -663,5 +669,23 @@ tags:
 - 已确认的业务诊断边界（2026-11-04，verified）：OC 新 Style2 原导航 `UINavigationItem.byTitle` 与原 Input3 `textField.byRequestParams` 路径有 SIGABRT／方法转发异常；OC 老 Input7 原 `block:value:` 的 `byRequestParams` 返回值 nil Block 调用触发 SIGSEGV／0x10，不能混写成新侧的 unrecognized selector。相关方法与任务前基线逐字相同，二进制 UUID／对象反汇编与 IPS 对应；旧侧 nil receiver 来源仅列原因候选。原业务代码保留失败，不为绿改生产处理。调试浮球的触摸前置使用明确 Debug 巡检条件调用原显示入口，不伪造摇动事件；运动传感器证据不能由触摸通过替代。
 - Swift 最终业务观测（2026-11-04，scoped-verified）：注册输入已完整、密码相同、当前验证码有效、无提交中状态，但原最近校验读取验证码长度 3、当前长度 4、按钮禁用，符合原 `onInput` 先于 UIKit 改文本的时序；未额外触发 refresh 求绿。跑马灯原模板真实长按为 `gr:ended;handler:present` 且完成原后置，clone 为 `gr:ended;handler:missing`，原 block 未复制得到实触证据。两种富文本真实 glyph 点击后原弹窗未出现已确认，移除系统 GR 后依赖原系统 delegate 的链路为与初始基线一致的静态原因候选，未追踪 runtime delegate 故不声称唯一因果。根目录原 UITableView 拖放换序、两样式实际音量调节、调试浮球三触摸、国家回写等修正后的独立场景已通过；不能把这些通过事件并入旧冻结计划伪造全量通过。
 - 已替代（superseded，2026-11-03）：最初“父仓统一脚本包、`Targets.plist` 三工程选择且排除 OC 新工程”的方案；实际父仓工具目录已移出交付，后续维护只更新四个工程内的独立包。
+
+## 六十七、<span id="arkit-demo">三工程 ARKit 空间实验室</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-12 明确要求在 OC 新旧与 Swift 工程增加兄弟 Demo，通过实际操作和页面文字介绍苹果官方 [**ARKit**](https://developer.apple.com/documentation/arkit)。状态：需求 confirmed，模拟器范围 scoped-verified；适用仓库沿用第一节三工程绝对路径，未扩展 SwiftUI。
+- OC 新旧落点为主工程 `业务逻辑/功能模块/Demo@ARKit/`，控制器 `JobsARKitDemoVC`，旧工程直接编译，不增 Pod；Swift UIKit 落点为 `主业务流程/VC/SubVC/Demo@ARKit/`，同名控制器。三端根列表可搜索 ARKit，模块 README 记录入口和边界，OC 新旧对应源码及十语资源保持一致。
+- 教学管线为世界追踪、水平平面、射线查询与锚点放置，使用 SceneKit 方便 OC / Swift 对照；页面明确说明 SceneKit 维护状态与 RealityKit 的现代方向。默认本地机器人三维预览，不自动申请相机；预览不代表真实空间追踪。提供模型切换、缩放、旋转、清空、重置，沿用全局主题并提供十语。禁用离线相机 orbit，避免与外层滚动竞争。
+- 三工程 arm64 模拟器构建及实际模型操作、英文／藏文／德文切换已验证；修正了 SceneKit 默认 1 米近裁面导致近处模型不可见、Swift 按钮配置覆盖标题、OC Masonry 安全区整体目标导致冷启动崩溃。实体相机权限、真实平面检测与世界追踪未验，不能由模拟器结果替代。
+- 已替代（superseded，2026-11-13）：初版 ARKit 页内独立语言按钮与 Demo 私有语言偏好。当前语言入口及应用范围以[全局语言和逐页整理](#native-global-language-ui-review)为准；上述初版切换验证不代表当前全局词库已经完整验收。
+
+## 六十八、<span id="native-global-language-ui-review">四工程全局语言与原生 Demo 逐页整理</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-12～13 明确纠正语言范围，并选择“所有原生 Demo 逐页检查并整理”；状态：confirmed（要求）／scoped-verified（下述实现与有限验收）；创建／更新：2026-11-13。适用仓库为第一节 OC 新旧、Swift UIKit、SwiftUI 四个绝对路径，排除 Flutter。
+- 应用语言由整个 App 统一管理，语言切换只在全局设置中提供。ARKit、设备信息及其它 Demo 不再保留独立语言按钮或私有语言偏好；已打开页面、再次进入页面、登录注册组件与开屏资源都应消费当前全局语言。完整覆盖简体中文、繁体中文、藏文、英文、日文、法文、西班牙文、德文、俄文、韩文，保留项目原有 Tagalog；主题继续支持白天／黑夜／跟随系统。
+- 用户指定使用本机已安装的 UI 美观 Skills 整理全部原生 Demo；遵循既有原生组件和每个 Demo 的演示用途，逐页检查排版、文字层级、明暗对比、触摸目标、长文案、动态字号和空态重载，不把只整理设置页或共用基类当作完整处理。第三方、生成代码及所有权不明源码继续排除，OC 老项目保持主工程集成，不新增 Pod 依赖。
+- 翻译资源需要检查真实静态键、参数占位符、API 名称、数字和长段落完整性；机器生成的资源数量或格式校验通过不等同语义审校完成。页面登记表不等同实际执行记录，文档条目共用的阅读器与独立原生页面分别记账，模拟器验证不替代真实 AR 硬件。
+- 2026-11-13 限定实现验收：四工程构建通过；Swift UIKit 255 个可达场景实跑看图，另 2 个当前未接入／未编译入口排除；OC 新独立 244 场景中 243 通过、1 个外源崩溃排除，OC 旧独立 244 场景中 242 通过、2 个外源崩溃排除；SwiftUI 32 场景在 iPhone／iPad、明暗下共 128 张基础截图另验。范围内自有待修功能失败为 0，最终增量只重测受影响页，不宣称最后一包重新全跑全部场景。
+- 全局十语真实设置点击与冷启动已在 Swift UIKit、OC 新旧分别通过；主界面文案每语种分别为 2226／1659／1704 键，SwiftUI 为 221 键。自有教学 HTML 与原生壳接入全局语言并验证草稿／计数保留，API、代码、用户输入和原始文档保留原文。已有权限用途说明已补语种入包，不新增权限请求；系统弹窗不保证 App 内改语即时刷新。
+- 完整证据在 `/Users/jobs/.codex/visualizations/2026/11/13/native-ios-review/review.json`，逐页截图和运行记录分别链接四工程归档。历史 JobsExcel／ZMJ 外源崩溃、空网格及标签重叠按原作者边界保留；真实 ARKit、BLE／传感器、Unity、桌面 Widget 与远端服务可用性未被模拟器到页验证替代，也未宣称所有语种、字号、设备组合穷举通过。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

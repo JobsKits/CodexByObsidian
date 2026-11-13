@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-11-05
+updated: 2026-11-06
 tags:
   - codex-memory
   - project
@@ -195,6 +195,8 @@ tags:
 - 来源：用户于 2026-11-05 在实际成功打开后明确要求“不需要脱敏，完全显示”；状态：confirmed；适用范围：MacOS 的获取 / 打开远程地址两个动作。fzf 候选、终端与本地日志完整显示原始远程 URL，不再遮盖 SSH 用户名、用户信息、查询参数或片段；该项目决策替代这两个入口原有的显示脱敏规则。网页目标仍按现有克隆地址转换规则生成，剪贴板保留原值；不把此要求推广成其它脚本或系统日志的全局规则。
 
 ## 十六、<span id="remote-alias-push">远端改名与逐层推送</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- <span id="commit-reset-remote-alias">MacOS 提交回退的远端别名</span>（2026-11-06，用户故障修复要求 confirmed／限定验证 scoped-verified）：`skills` 子仓 `main` 未配置 upstream，只有 `GitHub/main` 与 `码云/main` 且快照一致，旧版回退入口硬编码 `origin/main` 导致失败。回退入口现优先真实 upstream；未配置时只接受唯一或全部 OID 相同的同名分支候选，不写跟踪配置；快照不同仍转独立终端选择，已有失效／部分 upstream 配置不自动切线路，显式 `--upstream` 可指定其它有效引用。22 项隔离回归通过，含真实 soft、已有改动及子模块父仓保护，Terminal 分流与选择时快照漂移使用替身；真实终端点击及 hard 未验。运行态与备灾态脚本／文档／测试及新 README 精确目录登记同步，双份 `zsh -n`、9 文件 `cmp` 与差异格式检查通过。当前菜单和两份安装模板均仍指向相同可执行入口、参数 `$REPO`；无需改标题或菜单路径。真实子仓仅核对引用、祖先关系及待撤回数量，未执行 reset，不提交推送或改父仓 gitlink。
 
 - 来源：用户于 2026-10-28 实测改名规避原生网页入口问题，随后明确指定账户工具远端名称并要求修复逐层推送兼容；状态：用户命名 confirmed，Mac 实现与隔离回归 verified；创建 / 更新：2026-10-28。
 - 用户在 CodeSnippets 实测将 `gitee` 改为 `pitee` 后，原生“显示远程服务器”打开 GitHub；随后指定 `/Users/jobs/Documents/Github/JobsGenesis/JobsPythonTools.py/JobsCodexAccountSwitcher.py` 使用 `Github` / `码云`。这不授权批量重命名其它仓库，不把单次名称排序现象当作跨版本保证，也不沿用“只能新增自定义操作”的旧排除结论。

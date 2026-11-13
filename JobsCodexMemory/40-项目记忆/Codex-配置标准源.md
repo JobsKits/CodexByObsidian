@@ -4,7 +4,7 @@ status: active
 scope: codex-config
 repository: /Users/jobs/Documents/Github/JobsGenesis/JobsConfigOS/💻JobsCodexConfigs
 created: 2026-07-15
-updated: 2026-11-03
+updated: 2026-11-12
 tags:
   - codex-memory
   - project
@@ -27,6 +27,7 @@ tags:
 - [四、外援 Skill 软链接溯源](#jobs-toc-heading-5)
 - [五、永久记忆与自动任务备份](#jobs-toc-heading-6)
 - [六、用户级 Skills 手动双向同步](#jobs-toc-heading-7)
+- [七、前端设计 Skills 安装与范围](#frontend-design-skills-install)
 
 </details>
 <!-- jobs-toc:end -->
@@ -94,5 +95,14 @@ tags:
 - 使用本节手动入口时，用户选择方向和范围、查看预览并确认后复制内容；先备份已有目标，保留目标独有文件，不同步根目录 Git 元数据、内置 Skills、插件缓存或同步脚本自身。外援软链接以独立实体副本同步，不能写穿上游。
 - 2026-11-03 用户确认的[[#skills-runtime-backup-sync|运行态 → 备份态即时同步]]已单独授权，不需要启动本节脚本或再次确认；本节保留为人工选择范围和反向恢复入口。
 - 已部分替代（`superseded`，2026-10-06）：此前绝对禁止从父仓子模块反向覆盖系统的规则，限上述人工选择同步例外。现行工作树基准、自动配置注入的单向边界、代码所有权及版本传播流程继续适用。
+
+## 七、<span id="frontend-design-skills-install">前端设计 Skills 安装与范围</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-12 明确补充“前端”同时包含 Web 和移动端，并要求将本轮推荐的四项全部安装；需求状态 `confirmed`，安装与限定功能验证状态 `verified`；创建／更新：2026-11-12。沿用既有 App／移动 Web／桌面 Web 分开推导的约束，不将响应式网页等同原生 App。
+- 已安装 [**UI UX Pro Max**](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)、[**Impeccable**](https://github.com/pbakaus/impeccable)、[**Anthropic frontend-design**](https://github.com/anthropics/skills/tree/main/skills/frontend-design)、[**Vercel web-design-guidelines**](https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines)，目录名分别为 `ui-ux-pro-max`、`impeccable`、`frontend-design`、`web-design-guidelines`，均位于 `/Users/jobs/.agents/skills`。固定提交、来源、内容摘要与恢复说明见该目录 `frontend-skills.lock.json` 和 `README.md` 第七节；完整实体目录按相同相对路径即时备份到配置父仓的 `skills` 挂载，144 个文件的内容及模式核对一致。
+- 四项是上游所有的外部实体安装，根 `.gitignore` 按四个精确目录排除源码，来源说明和锁定清单保留；未改上游规则内容，UI UX Pro Max 入口由同提交的官方 Codex 全局模板生成，避免依赖 Claude 环境变量。没有安装其额外六个兄弟 Skill，既有 Jobs Skills 与原有改动保留。
+- UI UX Pro Max 的四个移动技术栈检索与设计系统生成已运行；UIKit／Objective-C 未列为专项技术栈，通用视觉指导与既有 Jobs 语言 Skill 配合。Impeccable 当前安装版 `4.8.2` 包含原生 iOS／Android 评审和适配资料，随包提供 arm64 引擎 `0.1.22`，从官方 npm 平台包取得并同时核对 npm integrity 与上游引擎 SHA256，启动器握手通过；未启用 hooks 或 live。
+- 本机 Codex app-server 的 `skills/list` 强制重扫已识别四项且均 `enabled=true`、无本轮 Skill 错误；51 份 Markdown 的 104 条相对链接核对通过。`quick_validate.py` 因现有 Python 缺 PyYAML 未能运行，已改用现有 Ruby 解析校验 YAML，并以实际 Codex 发现结果验证元数据；未为校验额外安装 Python 依赖。这些是安装和运行验证，尚未进行同题页面美观效果对比。
+- 现有配置全量审计脚本固定查询 `origin`，当前 Skills 工作树实际远端名为 `GitHub` 且地址确为 `JobsKits/JobsSkills`，因此原脚本在源检查阶段停止；本轮未改远端或审计脚本。运行态 HEAD `615b49c8a56ba6ec7a54818916de7ea68cef6f0d`、备份 HEAD `bcc38b69c2ec91571992d1a22ed231878452da33` 保持原值，本轮文件已同步，不以提交号相同代替内容检查；未提交、推送或更新父仓 gitlink。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
