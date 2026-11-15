@@ -5,7 +5,7 @@ scope: JobsGenesis-platform-scripts
 repository: /Users/jobs/Documents/Github/JobsGenesis
 source: 2026-10-23 用户明确要求五个脚本仓按 MacOS 和 WindowsOS 划分
 created: 2026-10-23
-updated: 2026-11-05
+updated: 2026-11-15
 tags:
   - codex-memory
   - project
@@ -29,6 +29,8 @@ tags:
 - [四、Windows 本机与虚拟机测试计划](#windows-compatibility-testing)
 - [五、JobsCommand@Others 大文件历史与双远端同步](#others-git-history-cleanup)
 - [六、SSH 终端与 Python GUI 分工](#ssh-cli-python-gui)
+- [七、终端配色广域修复](#terminal-style-genesis-fix)
+- [八、环境同步生效提示](#zshrc-activation-message)
 
 </details>
 <!-- jobs-toc:end -->
@@ -104,5 +106,32 @@ tags:
 - 来源：用户于 2026-11-05 明确要求“改程序、从零开始运行”；状态：confirmed。Sourcetree 识别修复必须进入 GUI 与双端终端源码，不以单次手工补本机链接作为完成。首次配置认证成功即创建兼容名；首次未登记公钥时，网页添加后点击 GUI 测试按钮，程序按实际 SSH 认证账号自动补齐 `<用户名>-GitHub` 与 `.pub`。MacOS 相对符号链接、Windows 普通硬链接，原个人密钥名与已存在 README 不变；冲突保留并明确提示，别名失败不抹掉 SSH 认证成功。隔离空目录验证整个首次生成→未登记→登记后重测→识别补齐流程，不依赖开发机已有文件。
 
 - 来源：用户于 2026-11-05 根据已有公钥的界面截图明确要求；状态：confirmed。GUI 恢复或生成已有密钥后，主按钮改为红底白字的“重新生成配置”（首次生成仍为蓝底白字）；确认弹窗中的同名执行按钮也采用红底白字，明暗及跟随系统主题保持一致。点击须先弹窗二次确认，默认取消，取消 / Esc / 关闭弹窗不启动任务、不清空公钥、不修改偏好。弹窗跟随当前十语言与主题，显示当前邮箱、算法及匹配密钥复用、不覆盖已有密钥、已有 README 保留的说明；此交互不改变既有密钥保护规则。
+
+## 七、<span id="terminal-style-genesis-fix">终端配色广域修复</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户明确将“终端配色未自动恢复”修复范围扩大到 `/Users/jobs/Documents/GitHub/JobsGenesis` 下全体 `*.command`，包含实际子仓；状态：需求 confirmed／三轮重发及退出控制键兼容 scoped-verified／用户原会话重跑 pending；创建 / 更新：2026-11-15。本轮跨午夜，按 11 月 15 日记录；这是用户明确指定的项目范围，不据此推断其它目录的默认维护授权。
+- 用户实机反证保留（2026-11-15，failure confirmed）：重跑原 `install（快捷入口）.command`，日志证明当时新版 guard 已运行，正常退出仍报颜色项 10“回复不完整或超过约 2 秒等待”，先前“功能已修复完成”的认定因此撤回。随后原生隔离完整链取得另一处失答实证并再次修订实现，限定验证及源码／固定副本同步已通过；用户颜色项 10 现场没有直接采样，不能认定唯一根因，原会话重跑仍待用户确认。
+- 实施边界：按既有所有权规则排除第三方、供应商、构建产物及 `JobsConfigOS/💻JobsCodexConfigs/skills` 备份整树；只修已有同源终端保护及其附属 helper／生成模板，没有该保护的源入口不机械加一套。各树先留备份，保护块外原业务和已有改动保留，HEAD、Git 配置及动作配置不动。
+- 全体盘点为 326 份 `.command`：其中 282 份已有同源 guard 已全部更新到本轮新模式，分布为 `🌍JobsMacEnvVarConfigs` 48、根目录 3、`JobsConfigOS` 其余 17、六个脚本／工具树 165、`OS@Extension` 12、`SourceTree.command` 37；其余 44 份不含该保护的入口保留，并核对转发调用。旧单请求短等候、旧三信号退出模式及破损 guard 残留均为 0；这是源码覆盖检查结果。
+- 前阶段累计修改 483 份源码，为 282 份 `.command` 加 201 份相关 Shell helper／JS 模板，包含环境仓 66 份源码；各同源变体同步保留“延迟答复可完整读取、精确比对本次临时值再还原、外部改色冲突保留、诊断具体颜色项／失败原因、信号清理完成后退出”的修复语义。
+- 前阶段 17 场景 PTY 矩阵按变体验证：环境仓 17、根目录 17、`JobsConfigOS` 两组 34、六个脚本／工具树三组 51，`OS@Extension` 和 `SourceTree.command` 各 17（两组合计 34），共 153 次场景全部通过，包含多变体重复覆盖；另用真实独立 Terminal 窗口验证精确恢复。未执行各脚本的真实安装／部署／删除业务，也未操作用户原 TTY。
+- 该阶段统一静态及副本检查 scoped-verified：326 份 `.command` 逐个 `zsh -n` 全部通过，累计 483 份改动源码语法全部通过，3 份 JS 模板产生的 POSIX Shell 语法通过；旧查询／旧三信号退出模式／破损 guard 均为 0，上述限定检查 0 失败。159 个既有运行副本（环境仓 118＋SourceTree 41）逐字节比对 0 异常；环境安装入口二次确认的两份晚改副本已额外备份后原子补同步，结果已计入该阶段报告。语法、隔离 PTY、独立 Terminal 及副本同步通过的事实保留，不能将它们扩展为用户实际入口恢复已通过。
+- 前阶段 `SourceTree.command` 按固定双位置对 41 个对应文件先备份再同步，`cmp` 一致且两侧语法通过；33 个当前 actions 的只读核对确认目标可执行、`REPO` 参数正确，未改动作配置。`OS@Extension` 已安装 Finder App 本轮不重打包，源码修复不冒充已安装 App 更新。
+- 备份根为 `/Users/jobs/.codex/backups/terminal-style-genesis-20261114.gXAZ95`，聚合报告为其中已生成的 `final-report.json`，各树子报告及精确备份由总报告引用；报告列明 326／282／44 入口、483 份源码、3 份生成 Shell、159 运行副本及 153 次 PTY 场景的该阶段限定结果，实际用户入口失败按本节后续反证记录。未修改 Skills／AGENTS，未提交或推送，不执行用户旧恢复脚本或修改系统／终端全局设置。
+- 失答实证与验证边界（2026-11-15，scoped-verified）：原生 Terminal 完整“快捷入口→bootstrap／reexec→实际同步／生成／注册→退出”隔离夹具，在 startup 颜色项 `4;9` 连续 20 次读取均为 0 字节而降级，证明仅等待同一请求会持续失答；这不是用户 cleanup 颜色项 10 的直接采样。真实 Brew／JDK 只读健康，所有业务写入均在临时目录；未执行真实 HOME 安装。
+- 三轮重发查询实现（后续 cleanup 帧外控制键兼容见下文）：每项最多 3 轮实际发送查询，每轮有界等待约 2 秒；严格按 BEL／ST 单颜色帧处理，合法旧／重复答复消歧，非法 RGB、多记录、冲突及帧内键盘输入停止；startup／applied 阶段继续严格拒绝所有键盘输入。`dd` 哨兵保留换行，目标 `normalized` 必须非空；startup 三轮全丢时保留原配色，applied／cleanup 全丢时保留恢复路径，不盲目覆盖颜色。源全体及环境／SourceTree 固定副本已同步，用户原快捷路径已是本轮代码。
+- 三轮重发阶段限定验证通过：当时永久回归为原 17＋新增 21，共 38 场景完整 PASS，实际执行 bootstrap，覆盖 cleanup 丢 1／2 次后的真实重发、三阶段丢包、迟到旧／重复帧、分片和无效输入。新原生 Terminal 实际全链隔离夹具记录 `applied=true`、57 条有效目标回复、退出 0、无警告；此前 6 次简单 guard 原生压力也无警告，但没有触发重发，不作为真实丢包恢复证据。
+- 三轮重发阶段发布及检查：67 份文档 verify、484 份源码语法及 3 份生成 Shell 语法通过；326 份 `.command` 中 282 个既有 guard 均使用新查询函数，旧单请求 guard 为 0。160 个运行映射检查无业务差异，其中 158 个更新 guard、2 个无 guard 保留；159 份字节一致，另 1 份只有原有末尾换行差异。整轮备份／总报告为 `/Users/jobs/.codex/backups/terminal-style-query-retry-20261115.WwpSjz/final-report.json`；报告明确 `originalUserSessionRetest=pending`，保留用户原会话重跑待确认。未跑旧 `restore.sh`、改全局终端设置／Skills／AGENTS、提交或推送。
+
+- 用户补充与复现（2026-11-15，输入事实 confirmed／机制 scoped-verified）：用户确认安装中“按过方向键或连续回车”。以当时已部署代码保留完整 bootstrap／reexec 的独立 PTY 复现，cleanup 颜色项 10 的有效答复前混入真实 CSI 左键或连续回车均会失败；随后原生 Terminal 独立窗口在退出查询前注入 `←＋连续回车`，实采首包包含 `ESC[D＋LF＋LF＋完整 OSC 10 答复`，旧版临时配色已完整生效，仍退出 1 并出现原警告。这证明了已确认操作可以触发同类故障，但未直接采样用户原颜色项 10 现场，不据此宣称唯一根因或原会话复测成功。
+- 当前退出按键兼容：只有 cleanup 查询显式传入阶段参数时，才在颜色帧边界消费已识别 CR／LF、CSI／SS3 四向键，以及 CSI `1;2..8` 修饰方向键；支持分片。一次 cleanup 在全部 19 个颜色项及重发之间共享最多 64 个控制单元，CR／LF 各算 1 个、完整方向键算 1 个，第 65 个立即停止自动恢复。普通文本、未知／残缺 ESC、帧内按键、无效 RGB、多记录及冲突答复仍严格失败；startup／applied 不接受上述按键。颜色仍须读取并比对为本次临时值后才恢复，保留外部改色，不盲目覆盖；3 轮真实重发及其有界等待继续保留。
+- 退出按键兼容的原生 A/B 限定验证通过：完整 bootstrap＋假业务的新原型在独立 Terminal 窗口收到同一实际 29 字节首包，识别 3 个控制单元，临时配色完整生效、退出 0 且无恢复警告；还原后额外重新查询 19 项并逐项比对原始 normalized 快照，全部一致。76 条有效目标回复由保存 19＋临时核验 19＋cleanup 19＋还原后验证 19 组成，额外复核并非生产新增查询。仅关闭按唯一测试历史与空闲状态核对过的自建窗口，未操作用户原窗口；此夹具没有真实安装业务，不能替代用户原安装会话复测。
+- 本轮发布与最终检查 scoped-verified：原 17 生命周期场景及完整 47 查询场景在代码相同的原型 guard 上全部 PASS，共 64 个独立正式场景；生产 guard 另跑新增 26＋原有 LF 两例共 28 项复核全部 PASS，属于重复验证，不虚增独立场景数。67 份文档 verify、diff check、484 份源码语法、3 份生成 Shell 语法通过；326 个入口中 282 个既有 guard 已更新，158 个运行 guard 已备份同步，160 个运行映射无业务差异（159 份字节一致，另 1 份仅原有末尾换行差异）。备份／最终报告为 `/Users/jobs/.codex/backups/terminal-style-cleanup-keys-20261115.b71cksnt/final-report.json`，原生 A/B 证据已复制到同根 `native-ab/`；继续明确 `originalUserSessionRetest=pending`。未执行真实 HOME 安装或旧 `restore.sh`，未改用户原终端／全局设置、Skills／AGENTS、Git 配置，未提交或推送；既有排除范围及 Finder App 不重打包边界保留。
+
+- 用户后续原入口日志（2026-11-15 09:34，log-observed）：用户再次提供 `install（快捷入口）.command ; exit;` 的完整输出，本次已替换 `~/.zshrc`、打印同步完成及日志路径，随后正常保存会话，未出现配色恢复警告。该日志支持本次原入口正常完成；没有直接展示 19 项原色复核，也未说明是否再次制造方向键／连续回车余留，因此不外推所有按键场景均已完成用户实测。之前原会话失败反证保留。
+
+## 八、<span id="zshrc-activation-message">环境同步生效提示</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-15 核对 `source ~/.zshrc` 提示后，明确要求区分已打开与新打开的终端；状态：confirmed；创建 / 更新：2026-11-15；适用范围：`🌍JobsMacEnvVarConfigs/install.command/install.command` 环境同步安装器及其 `~/.JobsMacEnv/install.command` 已安装副本。完成提示应说明：当前已打开的终端需在各自窗口执行 `source ~/.zshrc` 重新加载配置；新打开的交互终端会自动加载 `~/.zshrc` 中的最新配置，无需手动执行。这里的“最新”指该文件当前内容，不承诺跳过替换时也会加载本次生成的配置。本轮只调整这两份安装器的提示文案，不新增自动 `source`、不改变安装流程，也不扩展为其它脚本或 Skills 的全局约束。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

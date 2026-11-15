@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-11-06
+updated: 2026-11-13
 tags:
   - codex-memory
   - project
@@ -40,6 +40,7 @@ tags:
 - [十六、远端改名与逐层推送](#remote-alias-push)
 - [十七、自定义菜单分类与打包命名](#action-menu-groups)
 - [十八、当前仓库的通用 Push 修复入口](#universal-push-repair)
+- [十九、Commit 目录过滤器与 Node 路径修复](#commit-markdown-filter-repair)
 
 </details>
 <!-- jobs-toc:end -->
@@ -222,5 +223,14 @@ tags:
 - MacOS 32 项真入口隔离回归及 fzf／PTY 返回、无匹配返回、默认取消和 Tab 选择通过；WindowsOS 70 项模块隔离回归及 HTTP 上下文检查通过，Windows 原生菜单未实机验收。菜单安装器 9 项／120 断言通过，真实 MacOS 菜单已重启核对，动作总数现为 33、主入口 36，替代第十七节此前 32／35 的数量基线；原分类与保留用户标题规则不变。
 - 实战还观察到 `github-actions[bot]` 在成功推送后追加协议关系图提交；这是新的远端提交，已验证用同一入口再次快进接收、再做普通推送／核验，不擅自关闭机器人或修改 workflow。该观察只解释本轮具体远端领先，不承诺后台后续永不更新。
 - 真实 OC 老工程由本脚本合并原本各一个独有提交并普通推送，GitHub main 与本地 HEAD 核验一致；日志保留于本轮临时审计目录。实际首次预检暴露路径误判，另发现 zsh 函数内 EXIT trap 会过早触发，均已修正并补回归；使用全局命名退出 trap，验证正常／失败退出释放本进程互斥锁。未发布 SourceTree 脚本仓自身的提交，也未推送码云或 byPods。
+
+## 十九、<span id="commit-markdown-filter-repair">Commit 目录过滤器与 Node 路径修复</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-13 提供 WindowsOS_10 的 Commit 与修复失败日志，并要求先查根因、改 MacOS 修复脚本、通过脚本修好后再同步 WindowsOS；需求 confirmed，实现及下述范围 scoped-verified。仓库为 `/Users/jobs/Documents/GitHub/WindowsOS`；脚本两态仍使用本页固定路径。
+- 已确认六个版本子仓的本仓 `jobs-markdown-toc` 驱动均引用已不存在的 Node Cellar 版本路径，父仓稳定入口健康。仓内转换器的 `install` 使用 `process.execPath`，直接重装仍可能固化版本路径；本轮修复限定 Sourcetree 入口，没有改写所有仓库的工具模板。
+- MacOS Commit 修复新增 C08，在 C02 之后、读取状态或暂存之前检查；凭一致的本仓安装记录，只备份并更新自有 clean / smudge 与记录，保留 `required=true` 和全局配置。重新发现健康 Node 并保留稳定入口。`process`、记录不符、未知命令、跨仓或符号链接拒绝接管；失败回滚本轮字段，并发外改保留。
+- `--repair-filters` 仅执行工作树定位、锁检查与 C08，不改业务索引、正文、绑定或子模块；显式 `--repair-paths` 继续仅修旧索引路径并跳过 C08，默认与 `--stage-all` 仍保留各自原暂存策略。WindowsOS 公共模块在锁处理后、status 前接入同一内嵌逻辑，继续只做暂存 dry-run，不真实 add。
+- 真实 Git clean / smudge 探针使用独立临时对象目录，以同一 Git 属性与换行管线对账转换器，兼容 autocrlf、显式 eol、UTF-8/BOM、中文与 ident；UTF-16 被现有 UTF-8 工具拒绝并保留现场，不声称支持。精确恢复依据位于各仓真实 Git 元数据中的 `jobs-filter-backup-*/before.json`。
+- 六子仓均已通过修改后的脚本修复；父仓与六子仓的真实双向过滤、独立临时索引 add、原始目录 check 与 `commit -a --dry-run` 通过，原始业务 index、HEAD 和受控正文逐字节保持。Mac 新定向 17 项、原路径 18 项和 Windows 模块 13 项真实 Git 隔离回归通过。双位置 9 个修改文件同步核验，现有菜单目标与 `$REPO` 保持有效；未创建提交或推送，Windows 原生控制台与 WinPS 5.1 实机另验。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

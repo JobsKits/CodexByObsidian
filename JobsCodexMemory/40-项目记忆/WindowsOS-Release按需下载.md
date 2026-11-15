@@ -3,9 +3,9 @@ type: project-memory
 status: active
 scope: WindowsOS Release 下载入口
 repository: /Users/jobs/Documents/Github/WindowsOS
-source: 2026-11-06 用户按键要求与分卷误报反馈
+source: 2026-11-06 用户按键要求与分卷误报反馈；2026-11-13 合并目录重询及随后平台外层相对路径快捷入口整理要求
 created: 2026-11-06
-updated: 2026-11-10
+updated: 2026-11-13
 tags:
   - codex-memory
   - project
@@ -60,13 +60,17 @@ tags:
 - 来源：用户于 2026-11-08 明确要求下载时看进度，并在下载结束后运行 Releases 内的 `merge.command`；需求 confirmed，仅适用于当前 Release 下载入口。此前“下载后不自动执行合并工具”的行为在本范围内被此要求替代（superseded）。
 - 逐附件显示队列序号，传输期间显示 curl 的真实百分比、速度和预计剩余时间，进度同步写入纯文本日志；断点大小单独显示，百分比对应本次传输，不伪造整个镜像的实时字节百分比。
 - 用户同日明确要求“下载完成用绿色”：仅当前入口的“✔ 下载并校验完成”提示在彩色终端显示绿色，日志保持纯文本；非 TTY、NO_COLOR（含空值）、TERM=dumb 和既有纯文本模式降级。需求 confirmed，实现 scoped-verified；真实 PTY 展示、降级与日志检查及语法检查通过，未执行实际下载。
-- 用户同日进一步收口：所选附件全部下载或既有文件校验通过后，仅在本次 `Releases/<标签>/` 目录已有 `merge.command` 时执行；目录或脚本不存在时明确跳过并返回成功，避免因缺失脚本报错。不自动补选合并脚本附件，也不从 Git 源码复制工具。来源：2026-11-08 用户明确要求“有就执行，没有就不执行”；需求 confirmed，适用范围仅此入口，实现 scoped-verified。没有 ISO 分卷、下载失败或取消时不启动合并。
+- 已替代（superseded，2026-11-13）：2026-11-08 用户确认的“仅执行本次 `Releases/<标签>/` 内已有 `merge.command`，缺失成功跳过”被下述[仓库根合并入口与目录重询](#repository-merge-and-path-retry)要求取代；旧实现 scoped-verified 的历史检查保留。下载失败或取消不合并、不自动补选远端脚本附件仍有效。
 - 已替代（superseded，2026-11-08）：先前“自动补选同版 `merge.command` 附件；缺失则从同子仓 `MacOS/merge.command/merge.command` 复制”的方案被上述缺失即跳过要求取代；旧方案的限定验证记录保留于[验证范围](#validation)，不作为现行行为。
-- 合并在版本目录内无参数启动 `/bin/zsh merge.command`，保留真实交互输入、自述、目录／分卷组选择与原有 YES 删除门禁。新版工具显式传目录参数会影响输出位置，不能为了省去目录提示而改变本版目录内的输出归属；默认保留分卷，不通过管道自动喂确认。
+- 已替代（superseded，2026-11-13）：旧版在下载目录内无参数启动该目录 `merge.command` 的定位方式，改为仓库根工具加 `--release-dir <本次下载目录>`，保证扫描与输出归属清楚。真实交互、自述、分卷组选择、默认保留分卷及精确 `YES` 删除门禁继续有效，不通过管道自动喂确认。
+- <span id="repository-merge-and-path-retry">仓库根合并入口与目录重询</span>：根副本与调用定位已被同日后续[平台外层快捷入口与单份实现](#platform-shortcut-layout)要求部分替代（superseded）；下述为此前限定实现历史，目录重询、多卷触发、输出归属、校验与删除保护继续有效。来源：用户于 2026-11-13 明确要求；需求 confirmed，实现 scoped-verified；适用范围为聚合 MacOS Release 入口及六个系统子仓的 MacOS 下载入口。所选附件全部下载或既有文件校验通过后，存在总卷数大于 1 的 ISO 分卷时，调用对应子仓根目录自带的 `merge.command --release-dir <本次Release目录>`，合并产物留在该目录；单个文件、多个独立 ISO 或 `@1of1` 不合并，不按附件总数盲目拼接。六个子仓根目录均提供相同的自包含 `merge.command`，并与各自 `MacOS/merge.command/merge.command` 同步；不运行下载附件中的脚本。缺少有效的仓库合并入口时报错并保留下载文件，不再成功跳过。手动合并输入无效路径或扫描不到分卷时持续询问，直到输入有效目录；不想合并可关闭终端或按 Ctrl+C，EOF 也停止，不能忙循环。真实镜像下载与合并未验。
+- <span id="platform-shortcut-layout">平台外层相对路径快捷入口与单份实现</span>：来源：用户于 2026-11-13 在合并接入后进一步要求整理六系统子仓；需求 confirmed，实现 scoped-verified，Windows 快捷原生执行未验，适用范围仅六系统仓的脚本布局。删除各子仓根 `merge.command`、`split.command` 重复副本，MacOS 实施分别只保留 `MacOS/merge.command/merge.command`、`MacOS/split.command/split.command`。`MacOS/` 外层提供 `【MacOS】子卷合并.command`、`【MacOS】源文件压缩分卷.command`、`【MacOS】⏬下载Release.command`；`WindowsOS/` 外层提供对应 `【WindowsOS】子卷合并.cmd`、`【WindowsOS】源文件压缩分卷.cmd`、`【WindowsOS】⏬下载Release.cmd`，只按自身位置及相对路径转交功能包，不复制实施逻辑，保留参数、退出码和原确认。版本根原有双端下载快捷入口继续保留，整仓可迁移。根／六子仓 MacOS 下载器直接定位对应子仓 `MacOS/merge.command/merge.command` 并传 `--release-dir <本次Release目录>`；多卷 ISO 才触发、单文件／独立 ISO／`@1of1` 跳过，无效目录或无分卷持续重询等行为继续保持。真实 Releases 附件及独立下载产物不因源码去重被删除。
 - 同版系统锁持续持有到合并入口结束，准备或执行失败向上传递；正常退出也可能为用户取消选择，只报告“合并脚本正常结束”，不宣称已经生成 ISO。`--list` 继续只读；实际下载目录按需生成，不在维护代码时提前创建 Releases。
 
 ## 五、<span id="validation">验证范围</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- 2026-11-13 后续平台外层快捷与单份实现：需求 confirmed，实现 scoped-verified。六仓各三个 MacOS 外层快捷及更新后的根下载快捷，共 24 入口、192 项隔离断言通过，覆盖迁移改名、中文空格路径、无关工作目录、复杂参数原样、退出 37、缺失目标及符号链接拒绝；12 次真实下载帮助及聚合帮助无网络请求、无 Releases 写入。七份下载器改定位功能包后 329 项断言通过；根／单仓两项真实 PTY 下载器到真实 merge／fzf 衔接，以及迁移目录中从外部工作目录运行新 MacOS 合并快捷的额外一项真实 PTY 通过，Release 目录产物内容 cmp／SHA-256 一致，两片保留。MacOS 24 快捷语法、执行位、无硬编码及六仓根无 merge／split 重复脚本通过。WindowsOS 18 外层快捷的 `%~dp0` 目标、`%*` 尾调用、UTF-8 无 BOM／CRLF、同功能六仓字节一致及含中文／空格／特殊字符路径的静态解析通过；Windows cmd.exe 原生执行未验。31 份 README 的 305 个本地链接、围栏与 id、36 个外层快捷目标、六仓根无重复脚本及记忆索引目标均通过；七仓 Markdown 差异检查通过。未联网下载或合并真实镜像，未提交推送。
+- 2026-11-13 较早的仓库根合并与目录重询：需求 confirmed，实现 scoped-verified；根副本／调用路径随后被[平台外层布局](#platform-shortcut-layout)要求替代（superseded），本记录为历史限定范围，不证明新布局的快捷转发已验收。七份 MacOS 下载器各 47 项断言、共 329 项通过，覆盖单文件／`@1of1`／多个独立 ISO 跳过、补零多卷的工具与参数、缺失／符号链接入口拒绝、下载失败／取消／最终确认不执行时不合并、合并结束前持锁及失败释放锁和退出 129。根与 WindowsOS_11 两项真实 PTY 桥接真实 merge／fzf 通过：中文空格临时仓库、无关工作目录、两片合并内容与 SHA-256 一致，输出留在 `Releases/v1.0.0/`，分卷保留。12 份 merge 脚本语法及内容一致；真实 PTY 覆盖连续无效路径／空目录重询、空回车默认、中文空格引号与拖入转义、`--release-dir` 原目录输出／旧位置参数父目录输出、EOF 退出 1 及 Ctrl+C 退出 130。25 份 README 的 197 个本地链接、围栏与 id 检查通过，六仓 12 段 Windows 下载／合并说明与写前快照逐字相同。未联网、未修改真实 Releases 或合并真实镜像，未提交推送；历史同版目录缺失跳过检查不代表现行调用规则。
 - 2026-11-10 用户补充确认：下载器最终确认的空行／纯空白后回车开始需求 confirmed，实现 scoped-verified。根／子仓 21／21 项真实 PTY 通过，覆盖空行、Space／Tab 混合空白确认、非空白 x 不执行、169 片计划 Space＋Enter 不误计未启动，以及 EOF／Ctrl+C 和终端还原。WindowsOS 六份实施脚本 AST 零错误，324 项 PowerShell 隔离断言（216 项新策略＋108 项旧保护）及 12 个取消子进程通过：空行／Space／Tab 混合空白放行，null／EOF 不放行，非空白文本增加 NotStarted／Pending；首屏语义逐字保持，FreshInput 的文本／终端保护保留。19 份 README 已同步，根克隆最终确认与首屏自述保持原规则；Windows 原生按键未验，未真实下载或合并镜像。下列同日较早输入交接记录保留为历史，其中“提示后空格不执行”的用例仅对应当时旧规则，不能作为新增纯空白确认已通过的依据；隔离、未启动统计、EOF／Ctrl+C 与终端恢复边界继续保留。
 - 2026-11-10 输入交接：用户否认主动跳过的反馈 confirmed、日志事实 observed，修复实现 scoped-verified；现场空格来源仍无法追溯。旧根／子仓 26 项 PTY 检查复现排队按键触发旧误判；新隔离 26 项根／子仓检查通过，含 169 片计划、排队 Space／Tab／旧 Enter 被隔离后等待新 Enter，以及最终提示后的真实非空输入仍不执行并计入未检查／尝试 169。另 12 项过渡 EOF／Ctrl+C 保护通过；最新 8 项 termios 检查覆盖正常、过渡 Ctrl+C／Ctrl+D、最终 Ctrl+C，根／子仓均恢复 ECHO／ICANON，退出码分别为 0／130／1／130，主进程恢复一次。子 Shell 恢复归属的最新 2／2 项补充探针通过，受测源码与最新实现一致；日志管道和命令替换子 Shell 均不执行 stty 恢复，也不清除父进程快照。
 - WindowsOS 同轮六份实施脚本 AST 零错误，204 项 PowerShell 隔离断言及 12 个独立取消子进程通过；FreshInput 仅用于最终下载确认，Ctrl+C 退出 130、Ctrl+Z 表示 EOF。未启动结果不显示绿色成功，已存在文件校验跳过与未启动计数分开；Windows 原生终端／按键仍未实测。根及六仓双端共 13 份 README 已同步，未改变提示后刻意非空（含空格）不执行的既有规则，不沿用旧选择器检查代替本轮输入交接证据。
@@ -90,7 +94,7 @@ tags:
 - 来源：用户于 2026-11-09 明确要求；需求 confirmed。六个版本仓库各自提供仅下载本仓 Release 的 MacOS 与 WindowsOS 脚本，分别置于本仓 `MacOS/`、`WindowsOS/` 的同名功能包；版本仓库根目录分别放 `.command`、`.cmd` 快捷入口。单独克隆版本仓库后也应可用，不依赖聚合父仓。
 - 用户要求整目录移动到其它电脑后仍可运行，并口述快捷方式使用绝对路径。实现按此可迁移目标，在快捷入口运行时从自身位置解析实施脚本的绝对路径，不把本机用户目录固化为运行依赖；保留平台目录相对布局。
 - 每份实施脚本固定 `JobsKits/<对应版本>`，请求清单前核验真实 Git 根与匹配的 GitHub remote（名称不限），拒绝跨仓参数；下载到当前版本仓库 `Releases/<编码标签>/`，执行确认后仅追加本仓 `info/exclude`。
-- MacOS 实现复用现有入口的分卷、断点、重试、互斥与同版已有 `merge.command` 调用规则；WindowsOS 采用原生 PowerShell / CMD，下载后手工使用本仓 WindowsOS 子卷合并工具。WindowsOS 运行目标为 Windows 10+ / PowerShell 5.1+，镜像仓库名不表示工具可在旧系统运行。原聚合入口继续保留。
+- MacOS 实现复用现有入口的分卷、断点、重试与互斥；合并按[平台功能包与明确目录规则](#platform-shortcut-layout)调用。WindowsOS 采用原生 PowerShell / CMD，下载后手工使用本仓 WindowsOS 子卷合并工具。WindowsOS 运行目标为 Windows 10+ / PowerShell 5.1+，镜像仓库名不表示工具可在旧系统运行。原聚合入口继续保留。
 - 验证范围：MacOS 新入口 47 项隔离检查通过，含真实 fzf / PTY 导航、搬移改名与中文空格路径、错仓拒绝、模拟小文件下载落点和校验跳过；WindowsOS 在本机 PowerShell 的 31 项隔离检查及 18 项独立定向检查通过，含本地 HTTPS / Range 续传、连续 100 次错误后恢复、跨端身份、分页与文件锁；原生 Windows CMD / fzf / WinPS 5.1 与真实镜像下载尚未验收。此记录不授权提交或推送。
 
 - 六版本子仓附件列表（2026-11-09，需求 confirmed／实现 scoped-verified）：12 份 MacOS／WindowsOS 实施下载器及 12 份就近 README 已同步[附件首行全选规则](#download-asset-list-all)。仅附件调用显式启用下载作用域；单项 Enter 勾选／取消、Space 确认，多项首行全选 Enter／Space 映射完整真实附件计划，继续原最终确认。MacOS 13 场景 25 项真实 fzf／PTY 断言、WindowsOS 19 项隔离＋5 项单项对齐＋12 项独立确认保护检查，以及六仓／作用域 21 项检查通过；12 份 README 的链接及目录检查通过。没有真实 API、镜像下载或实际忽略配置写入；Windows 原生 CMD／fzf／WinPS 5.1 仍未验收。

@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-11-13
+updated: 2026-11-14
 tags:
   - codex-memory
   - project
@@ -61,6 +61,7 @@ tags:
 - [三十六、Flutter 私库优先的一键跨机迁移](#flutter-one-click-migration)
 - [三十七、单文件指纹与精确执行位菜单](#file-fingerprint-and-execute-bits)
 - [三十八、Finder 侧边栏真实文件夹菜单](#finder-sidebar-folder-menu)
+- [三十九、双端同名脚本包的相对快捷入口](#script-package-launcher)
 
 </details>
 <!-- jobs-toc:end -->
@@ -91,6 +92,12 @@ tags:
 - `JobsTerminalOpener` 主窗口必须允许拖动缩放并设置合理最小尺寸；内容从顶部开始排布，高度不足时使用垂直滚动承接，标题、功能项和底部说明均不得被标题栏或窗口边界裁切。
 - 仓库根 README 与多功能工程 README 的前言区域必须醒目、简洁地列出所含右键功能，并明确哪些功能可以独立勾选。
 - 安装器收到未知功能标识时立即停止；功能选择、工程去重、构建参数、扩展菜单过滤和安装结果汇总必须保持同一映射。
+
+- <span id="manager-app-icons">管理 App 的本地图标</span>（来源：用户于 2026-11-14 提供根管理 App 桌面替身的默认图标截图，明确要求 App 有图像；需求 confirmed／限定验证 scoped-verified；适用范围：本仓 macOS 管理入口、原生面板及联合 App；创建／更新：2026-11-14）：复用仓库既有 `MacOS@Extension/icon.png`，通过系统 `sips`／`iconutil` 生成 16–1024 多倍率 `JobsFinderManager.icns`，随 `Scripts/【MacOS】AppDeployment.zsh/Resources/` 打包并设置 `CFBundleIconFile`，不引入外部素材或运行时网络图片依赖。原生面板用独立 `IconSource.sha256` 处理图标更新，保留二进制哈希语义与签名失败恢复；实际 GUI 启动拒绝缺失、无效或链接图标。34 份部署库／图标及 13 份 GUI 支持库、34 份快照已同步；部署／GUI 身份／管理后端／随包资源回归合计 84 项 1202 断言通过，含资源搬移与源码移走后的启动。根静态 App、仓库 work 原生面板及已安装联合 App 图标已更新，严格深度验签通过；桌面替身按原目标设置图标并由 NSWorkspace 导出核对，替身箭头保留。已安装 224 份业务文件哈希未变，未重装扩展或执行真实构建清理。备份分别在 `~/.codex/backups/finder-app-icons-20261114-20261114-80105-wplq0g/` 与 `~/.codex/backups/finder-installed-icons-20261114-20261114-81063-1pnmxqm/`；未提交或推送。
+
+  - 中文路径与语言环境（2026-11-14，用户安装失败反馈与修复要求 confirmed／根因复现及实现 scoped-verified）：本轮实际日志显示各安装单元构建成功后，统一报“管理器图标资源缺失或含链接”，图标文件实际存在。已精确复现 `LC_ALL=C` 或未设置 UTF-8 环境时，zsh 提示符展开 `${(%):-%x}` 将 `【MacOS】` 文件名转义为 `\M-...`，导致后续相对资源路径失效。部署库、联合管理库及私有会话入口改从原始 `funcsourcetrace` 来源栈取得文件路径，保持中文路径原字节，不修改进程或系统 locale；资源错误列出准确源与目标。`AppDeploymentTests` 61 项 122 断言、`CombinedManagerResourcesTests` 7 项 83 断言均通过，覆盖 C locale、NO_UNSET、中文／空格／百分号路径搬迁、真实联合资源准备、实际私有会话入口，以及 C locale 下以相对路径 source 后切换工作目录仍可装配资源；68 份两库 zsh 语法与同源核验通过。上述自动回归均为临时夹具限定验证；此前真实安装待重试状态已由下述本机日志验收替代，仍未逐一手点全部 Finder 业务菜单。
+
+  - 本机真实管理流程（2026-11-14，用户自行重试的实际会话日志 scoped-verified）：北京时间 17:26～17:30 的安装会话 `EEFE6456-6672-4511-A090-EB53DDCAA302` 记录 86 项成功、0 失败、退出码 0，用时 `00:04:17`；日志有 12 次自动清理请求且无 `✖`，该次图标资源寻址阻断已通过完整安装管理流程复测。随后用户自行卸载，会话 `296ADE50-FF0F-471A-A908-3B37482F3E2E` 记录 86 项成功、0 失败，用时 12 秒；再执行独立清理，会话 `3FD0DAF9-4B83-497D-B925-63CF231DC4B8` 记录 86 项成功、0 失败，用时 3 秒。以上仅证明日志中的实际管理流程；用户后续已卸载，不能把先前安装成功写成最终仍安装。所有业务菜单尚未逐一手点验收。完整会话日志位于系统临时目录中对应的 `JobsFinderManager-<会话ID>/manager.log`。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -134,6 +141,8 @@ tags:
 - 当前状态：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension` 使用 `.jobs-markdown-toc/` 的自包含工具和精确清单，共管理 22 份含标签说明（2026-10-21 按实际清单复验）；`Scripts/MarkdownToc.mjs` 保留同源码兼容入口，CI 继续用此入口核对清单全部原始索引内容。根 README 和 `Scripts/README.md` 说明动态目录、首次接入、日常暂存和安装 / 卸载边界；用户要求的 `Scripts` 目录用途说明已补齐。最初接入时转换器 38 项、部署器 8 项隔离回归通过，真实索引未改、未创建提交或推送；后续 CI 修复与发布见下条，远端折叠与 Windows 真实桌面仍按各自环境单独验收。
 
 - <span id="windows-ci">Windows CI 验证基线</span>：来源为用户于 2026-10-21 明确授权修复并提交推送至 GitHub，持续到 CI 通过；状态：已实现并验证；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension`。目录过滤器及兼容入口以 `bigint dev/ino` 比较目录身份，解决 Windows 路径大小写误判，保留父仓 / 嵌套仓保护；PowerShell 参数探针显式 UTF-8 输出，5.1 JSON 数组先赋值再展开；FVM 测试用字面路径 API 创建真实文件 / 目录及悬空链接，保留特殊字符覆盖。工作流未取消时继续执行全部独立检查，任一步失败仍整体失败。`main` 最终提交 `f11ce70` 已推送 GitHub，[运行 39457788523](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/39457788523) 在 Windows PowerShell 5.1 下全部 16 组检查成功，用时 3 分 9 秒；22 份目录索引与工作区往返通过，本地 40 项 TOC 回归通过。Windows 桌面菜单及 FlutterRunner `-Native` 验收仍独立执行，不由此 CI 结果替代。创建 / 更新：2026-10-21。
+
+  - Actions 运行 43390408228 的本地排查（2026-11-13；需求 confirmed／日志 observed／本机 scoped-verified）：用户报告[运行 43390408228](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/43390408228) 失败；对应 `934e146` 有 12 个失败步骤。已修 19 份原生 `Build.ps1` 的响应文件物理行边界（`/link` 只接收同一行后续参数），修复面板动态闭包访问模块私有函数并同步同源副本；测试补齐 SDK 依赖、机器版本字段／菜单数量及 .NET Framework stdin 无 BOM 编码，父编码恢复。工作流 checkout／setup-node 升至使用 Node 24 的 v6，接入 `Tests/NativeBuild.Tests.ps1/NativeBuild.Tests.ps1`。本机 PowerShell 7.6.9 下 workflow 对应 43 份 PowerShell 测试、43 项 Markdown 回归、94 份文档往返、483 份脚本 Parser／BOM 及 24 包基础设施一致性通过。虚拟设备启动测试另加强真实临时文件身份替换与场景诊断；原 Windows PowerShell 5.1 失败具体根因尚不能在本机复现，不能将此项或 MSVC／WinForms 表述为 Windows 已通过。未提交、推送或在 GitHub 重跑，历史远端通过基线继续独立保留。
 
   - 当前回退与本地修复（2026-10-30，日志 / Git 历史及本机回归 verified）：用户报告工作流失败；`ce3494b` 的[运行 40994050697](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/40994050697) 首项目录测试失败 4 项，后续检查跳过。历史 `08e4178` 将目录身份判断及其测试回退为路径字符串比较。当前已在 `Scripts/MarkdownToc.mjs`、`.jobs-markdown-toc/MarkdownToc.mjs` 恢复身份判断，测试覆盖两入口和父仓保护；工作流 43 个独立步骤仅在 checkout / Node 成功且未取消时继续收集结果，失败仍整体报错。本机 Node 26 的 43 项测试、73 份文档索引 / 往返、YAML 与条件检查通过，368 份 PowerShell Parser / BOM 和 23 包基础设施一致；不等同 Windows 5.1 / MSVC 全量验收。本轮未获提交推送授权，修复尚未提交、推送或在 GitHub 重跑，旧 `f11ce70` 仅为历史通过基线。
 
@@ -399,6 +408,8 @@ tags:
 
 ## 二十四、<span id="ios-tools-and-installer-groups">iOS 工程辅助菜单与安装面板分组</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- <span id="git-remote-open-selection">Git 远程地址按数量选择</span>：来源：用户于 2026-11-13 根据 Finder 截图明确要求 WindowsOS 同步；状态：需求 confirmed；创建 / 更新：2026-11-13。适用 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 双端“打开 Git 远程地址”：唯一 remote 直接打开，多个 remote 必须通过 fzf 明确选择，不因当前分支 upstream、origin 或排序而跳过；列表显示远程名称和脱敏网页地址，取消、空选、选择器失败不打开默认项。Mac 聚合 JobsProjectTools 与保留独立入口共用打开实现，Windows 仅多 remote 时转交可见 PowerShell；复制远程地址保留既有优先规则。源码与终端隔离验证不代表已安装菜单或 Windows 原生 Explorer 已验收，更新安装须另行执行。
+
 - 来源：用户于 2026-10-24 要求核对两项 iOS 清理并在重叠时保留构建产物入口；状态：已核实并实现；适用仓库同本笔记。两项均涉及 DerivedData，现仅保留“清理 iOS/Xcode 构建产物”；旧 `ios-clean-cache` URL、配置及安装 / 卸载参数统一迁移到 `ios-clean-build-artifacts`。移除随包旧缓存脚本，不将其删除 Pods、锁文件和所有工程 DerivedData 的更大范围行为合入保留入口；当前工程白名单、预览和 `CLEAN` 确认不变。活动 iOS 动作由十二项变十一项，面板 iOS 分组含 IPA 为十二项，本清理合并使原五十项减少一项；工作区另有并行新增两项，结束时按当前选择器与安装映射核对为五十一项 / 十四安装单元。本条替代下文旧缓存入口与旧数量（`superseded`）。菜单、传输、配置迁移、资源同字节及四种屏幕尺寸布局已通过隔离验证；真实扩展重装和用户工程清理未执行。
 
 - 来源：用户于 2026-10-24 通过两张菜单截图明确要求归并层级；状态：需求已确认；适用仓库同本笔记；创建 / 更新：2026-10-24。`Pod Install` 和 iOS/Xcode 构建产物清理进入 `JobsIOSTools` 的“iOS / CocoaPods 辅助工具”二级菜单，新增动作 `ios-pod-install`、`ios-clean-build-artifacts`，辅助工具共十二项。Pod 保留 `Podfile` + 同层 `*.xcodeproj` 门禁及原生单行命令，清理保留原完整脚本、`CLEAN` 确认和 Flutter 根目录排除；原 Terminal 外层仅保留通用终端、Android / 鸿蒙清理、代码地图。安装选择 `pod_install` 保持兼容，iOS 清理独立勾选，原通用清理选择只管理 Android / 鸿蒙。
@@ -474,7 +485,7 @@ tags:
 
   - 实施与限定验收（同日，scoped-verified）：Mac 使用分组稳定 ID 保存双列布局，标题抓手启动原生拖动并显示插入线／边缘滚动；等宽卡片保证跨列后状态对齐，空列重开仍可拖回。原生拖放目标回调夹具、活动 worker 状态、持久偏好、十语与800×600碰撞检查、选择与清理／停止回归通过；简中／德文黑夜及藏文白天实际绘图预览已核对，45份源码一致，镜像／共享词库7448断言通过。Windows 标准源及35镜像一致，10703项偏好／布局、131项选择与116项执行断言及PS语法通过；布局按可见分组范围隔离保存，真实JSON保存重读已验。额外架构检查仍被此前Flutter包内13份Action与旧10份断言不符阻断，本轮未改包结构。两端完整鼠标拖动、Windows原生绘制未验。Mac联合App及缓存完整备份在 `~/.codex/backups/finder-draggable-layout-20261111-20261111-57110-1ds76xf/`，安装资源、管理缓存与源码工作缓存已更新，原生App严格深度验签通过；未执行真实扩展安装／卸载。
 
-- <span id="manager-alignment-selection-ten-languages">面板对齐、保留勾选与十语言</span>（2026-11-10～11，用户明确 confirmed）：状态图标／spinner 使用统一图标列，状态文字同起点，同一视觉列内跨分组也对齐。安装／更新与卸载切换保留本会话勾选，语言切换同样保留；首次打开默认空选和原执行权限边界不变。Mac 主标题为“自定义Finder右键菜单”，Windows 为“自定义Explorer右键菜单”。按当前 Skills 完整支持简体中文、繁体中文、藏文、英文、日文、法文、西班牙文、德文、俄罗斯文、韩文及跟随系统，替代旧三语限定；按钮、说明、动态计数、状态和辅助名称一起翻译，品牌／真实文件名／路径及原始后台日志保留。两端 Scripts/ManagerPanelTranslations.json 共用七种新增语言各352项 English-key catalog，运行时内嵌，不依赖源码仓或在线翻译；原英文／繁体路线保留，字段与占位严格核验。藏文字体及长文案按屏宽换行，小屏保留可滚动列表与操作／日志区，不通过清空选择重建界面。
+- <span id="manager-alignment-selection-ten-languages">面板对齐、保留勾选与十语言</span>（2026-11-10～11，用户明确 confirmed）：状态图标／spinner 使用统一图标列，状态文字同起点，同一视觉列内跨分组也对齐。安装／更新与卸载切换保留本会话功能勾选，语言切换同样保留；首次打开默认空选和原执行权限边界不变。MacOS 自动清理选择于 2026-11-14 明确保留同一会话切换卸载／安装前的勾选及手动取消状态；构建目录清空规则保留，完整默认与相关 AppKit 限定验收见[[#manager-default-deployment-checks|默认勾选策略]]。Mac 主标题为“自定义Finder右键菜单”，Windows 为“自定义Explorer右键菜单”。按当前 Skills 完整支持简体中文、繁体中文、藏文、英文、日文、法文、西班牙文、德文、俄罗斯文、韩文及跟随系统，替代旧三语限定；按钮、说明、动态计数、状态和辅助名称一起翻译，品牌／真实文件名／路径及原始后台日志保留。两端 Scripts/ManagerPanelTranslations.json 共用七种新增语言各352项 English-key catalog，运行时内嵌，不依赖源码仓或在线翻译；原英文／繁体路线保留，字段与占位严格核验。藏文字体及长文案按屏宽换行，小屏保留可滚动列表与操作／日志区，不通过清空选择重建界面。
 
   - 实施与限定验收（2026-11-11，scoped-verified）：Mac标准源及44份快照一致，7×352译文与canonical语义一致；十语切换、原生完整字形、状态列跨组、800×600屏框及小屏布局通过，偏好／词库／镜像3组7452断言和相关选择／部署隔离回归通过。Windows标准源及35副本一致，10694项语言／词库／迁移断言、131项面板回归及24包parity通过；WinForms原生字体与交互未验。Mac已完整备份至 `~/.codex/backups/finder-ten-languages-20261111-c0dnvY/` 后更新联合App内管理源码、canonical和两处缓存面板可执行，内外App严格深度验签与资源cmp通过；重开生效，没有执行安装／卸载业务。
 
@@ -531,23 +542,31 @@ tags:
 
 ## 三十四、<span id="macos-install-location-choice">macOS 安装位置双路线</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
+- <span id="manager-default-deployment-checks">管理面板默认勾选联合 App 与安装后清理</span>（来源：2026-11-13 初始截图要求，2026-11-14 本轮截图反馈补充；需求 confirmed／相关 AppKit 回归 scoped-verified；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension` 的总面板、单功能面板及随包管理入口；创建：2026-11-13；更新：2026-11-14）：首次打开安装 / 更新面板时，默认勾选“使用「应用程序」中的联合 App 安装 / 卸载”和“安装成功后清除此轮构建产物”，两项均可手动取消。该默认不等于自动执行：功能仍默认空选，关闭、取消或空选不执行业务；自动清理仍只在当前模块部署、登记和提交成功后处理本轮明确产物，失败保留来源。应用程序路线中切换至卸载只隐藏自动清理选项，保留本会话的勾选或手动取消状态，返回安装时恢复；卸载不传自动清理参数。切换至构建目录仍隐藏并清空，切回应用程序路线不恢复旧勾选。此前“卸载清空且返回安装不恢复”策略于 2026-11-14 仅本范围 `superseded`，构建目录规则继续保留。非交互 worker 的构建目录与不清理默认值保持原样，显式参数或环境选择优先。本条替代下文旧 GUI“安装位置默认不勾选 / 构建目录”和“自动清理默认关闭”策略，不改变 Windows 默认。
+
+  - 限定验收（2026-11-14，scoped-verified）：相关真实 AppKit 控件与临时假 worker 回归已通过，覆盖两项默认勾选、卸载后返回安装恢复勾选及手动取消、构建目录清空，以及卸载不传自动清理参数；验证不执行真实扩展安装、卸载或构建产物清理，不能据此声明这些真实业务已通过。
+
 - 来源：用户于 2026-11-02 先提出 App 安装到应用程序目录，随后明确两种路线各有应用场景、都需保留；状态：需求 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension`；创建 / 更新：2026-11-02。此要求仅针对 macOS，不改变 Windows 部署。
-- 总面板与单功能面板增加“使用「应用程序」文件夹安装 / 卸载”复选框，默认不勾选。未勾选沿用本地构建目录；勾选则将完整功能模块统一安装到 `/Applications/Jobs自定义右键菜单.app` 内，并从该位置登记和运行。安装与卸载都按本次同一选择执行；不可把这次要求解释为所有安装强制迁移到应用程序目录。
+- 总面板与单功能面板提供“使用「应用程序」中的联合 App 安装 / 卸载”复选框，默认勾选且可手动取消；旧“默认不勾选”于 2026-11-13 `superseded`，现行默认见[[#manager-default-deployment-checks|默认勾选策略]]。未勾选沿用本地构建目录；勾选则将完整功能模块统一安装到 `/Applications/Jobs自定义右键菜单.app` 内，并从该位置登记和运行。安装与卸载都按本次同一选择执行；不可把这次要求解释为所有安装强制迁移到应用程序目录。
 - 切换位置安装只切换启用登记、保留另一位置文件；卸载只处理所选位置，共享宿主剩余叶功能仍保留该模块，最后一叶移除后注销并删除模块；联合 App 的最后一个模块卸载后才删除整个联合 App。不存在的副本不得影响另一位置的功能配置；复制、签名或登记失败不得假报成功，保留可恢复的旧 App / 配置。业务 SDK 与源码不随卸载删除。
 - 清理边界：本机 2026-11-02 只读检查发现当前十个启用扩展仍直接运行于仓库 `work` 内的 App。父目录清理脚本默认会匹配 `*DerivedData` 整目录；构建目录模式仍需 `--cache-only`。只有实际勾选并成功安装到应用程序目录后，清理仓库构建输出才不影响该已安装副本。本轮开发不等于已迁移这些真实扩展。
 - 联合 App 与清理补充（2026-11-02，用户明确 confirmed）：用户随后要求应用程序目录中只出现一个联合 App，并明确命名为 `Jobs自定义右键菜单`，面板必须显示名字及完整路径。外层固定 `Jobs自定义右键菜单.app`，内部保留各功能完整宿主、扩展身份与独立开关；所选旧顶层自有宿主在新安装成功提交后收拢，未知 App 与未选单元不强删。此条替代此前每个宿主分别出现在应用程序根目录的输出形态。
-- 可选清理（2026-11-02，用户明确 confirmed）：仅应用程序路线的安装 / 更新模式显示“安装成功后清除此轮构建产物”，默认关闭；构建目录模式及卸载模式隐藏并清空。必须同模块部署、登记和提交成功后，才清理本轮明确 DerivedData；失败安装不删来源，清理失败报告但保留成功安装。不能清理全部 work、其它单元、源码或运行中的来源。App 内管理资源按自身位置定位，面板编译缓存写用户缓存目录。
+- 可选清理（2026-11-02，用户明确 confirmed）：仅应用程序路线的安装 / 更新模式显示“安装成功后清除此轮构建产物”，首次打开默认勾选且可手动取消；旧“默认关闭”于 2026-11-13 `superseded`，现行默认见[[#manager-default-deployment-checks|默认勾选策略]]。卸载模式仅隐藏并保留当前选择，返回安装时恢复；构建目录模式仍隐藏并清空，切回应用程序路线不恢复，见[[#manager-default-deployment-checks|默认勾选策略]]。必须同模块部署、登记和提交成功后，才清理本轮明确 DerivedData；失败安装不删来源，清理失败报告但保留成功安装。不能清理全部 work、其它单元、源码或运行中的来源。App 内管理资源按自身位置定位，面板编译缓存写用户缓存目录。
 - 实现与验证：公共部署库、总 / 单功能后端和面板按 `--install-location build|applications` 接入；包内资源完整复制、另一位置保护和失败恢复用临时夹具验证，亮暗主题面板与参数传输用隔离 worker 检查。真实 `/Applications` 安装、真实 Finder 菜单与清理后的业务实测须单独记录，不以隔离测试替代。
 
 ## 三十五、<span id="dual-route-cleanup-cooperative-stop">双端独立清理、停止安装与 App 管理授权</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- <span id="post-uninstall-build-cleanup">卸载后独立清理构建残留</span>（来源：用户于 2026-11-14 根据日志排障结论明确要求修复；需求 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建／更新：2026-11-14）：独立清理必须支持模块已卸载但构建产物仍存在的情况，不能一律要求安装副本仍存在。须验证来源身份／归属、准确工作区范围及无登记、无运行引用；查询失败、链接、版本元数据、身份不匹配或状态变化保留产物，暂存后复查，失败恢复且不覆盖并发新建目录。已安装分支及安装提交后自动清理的原前提保留，不为清理重装模块、自动注销登记或结束进程。MacOS 新分支核对 PlugInKit、LaunchServices、进程路径及 `lsof` 打开文件／工作目录，并校验目录设备号与 inode；34 份源码库及文档同源，部署／总管理器／随包资源合计 91 项 359 断言通过。已备份更新本机联合 App 内 12 份管理库及文档，外层重签与严格深验通过，224 份业务文件哈希未变；旧面板须重新打开，未执行真实构建清理。备份：`~/.codex/backups/finder-orphan-cleanup-20261114-20261114-69615-3850zi/`。Windows 等价限制同步修复，原生验证与源码交付分别记录；未提交或推送。
+
+  - Windows 限定验证（2026-11-14，scoped-verified）：35 份 `PackageInstaller.psm1` 仅同步清理区段，保留各包注册计划差异和原 BOM／行尾；专用工作区校验归属、双路线状态、登记／进程引用、原生 FileId、链接与版本元数据，暂存后复检，自动清理仍须正常安装。`DeploymentRoutes.Tests.ps1` 96 条断言、35 份语法及区段一致性通过。Registry／CIM／FileId 实际系统调用、加载 DLL 与相对 CWD 场景尚未 Windows 原生验收；另 `NativeRuntimeDeployment.Tests.ps1:350` 的既有 Build 脚本尾段截取把终端保护 `finally` 拼入 ScriptBlock，完整回归在该处失败，本轮未扩范围修改。
 
 - <span id="uninstall-registration-and-status-bugs">应用程序路线卸载注销与状态误报</span>（2026-11-06；用户截图与修复授权 confirmed／源码及限定验证 scoped-verified）：总面板全选85项，显示成功16／失败69。实际9个卸载单元均在 `lsregister -u` 返回 `failed to scan ... : -10814` 后停止；Apple将此码定义为登记库无匹配App。`AppDeployment.zsh` 的 `jobs_deployment_unregister_host_path` 直接传出非零，`jobs_deployment_uninstall` 因而跳过删除；扩展 `pluginkit -r` 无登记已有复核，宿主这层尚未做等价处理。69个红项按叶展开为Flutter47／iOS11／Terminal6／独立5。另 `Scripts/ManageFinderExtensions.zsh` 的 `uninstall_feature` 在 `fi` 后才读 `pipestatus[1]`，管道失败被覆盖为0；隔离zsh probe已验证，导致ProjectTools9叶及DesktopTools6叶误报成功，余1项Hash本就未安装。联合App里的旧模块仍在，当前Flutter精确启用路径为仓库 `work/JobsFlutterToolsDerivedData/...`；本轮所选应用程序路线只针对其旧副本，不代表同时卸载另一位置。首次排障时用户只问原因，未改业务代码、未重试真实卸载或安装；修复须分别核验精确宿主登记缺失的处理与真实失败码传播，不能一概忽略系统错误。
 
   - 后续修复与本机更新（同日，用户明确要求解决并优化流程）：宿主注销只有精确-10814且完整登记查询确无所选路径才幂等继续，其它失败保留；删除后复核路径消失。根聚合分支立即回传管道退出码；所选位置未安装单独发not-installed并统计“无需卸载”，真实返回3不混同；日志按App单元及关联菜单汇总。精确路径权限拒绝发77，当前单元失败、后续未执行，保留此前结果，面板提示检查App管理授权及目录权限。33份部署库／RootWorker、44份Mac面板和Windows对应基础设施已核对同步。Mac部署48项79断言、根25项163断言、安装位置集成14项122断言、AppKit状态／布局／偏好定向回归及管理资源6项77断言通过；Windows专项364条断言及108份PS语法通过，Windows原生仍未验。已备份 `/Applications/Jobs自定义右键菜单.app` 至 `~/.codex/backups/finder-uninstall-fix-20261106-zw0dn0/`，补齐此前仅部分模块的ManagerRoot至11包管理后端，更新两处原生面板缓存并严格验签；业务App文件逐一SHA-256与备份一致。未重跑真实卸载、未创建提交或推送。
 
 - 来源：用户于 2026-11-02 连续截图反馈和明确补充；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension`；创建 / 更新：2026-11-02。通用管理能力必须平衡 / 平移至 macOS 与 Windows，不把 macOS 的应用程序目录照搬到 Windows。此条将上一阶段仅修改 macOS 的范围扩展为双端共同能力，联合 `.app` 形态仍为 macOS 专有。
-- 两条路线：macOS 默认沿用构建目录，可选择系统应用程序中的联合 App；Windows 默认沿用当前用户默认程序位置，可选择包内本地构建目录。运行时要绑定实际部署位置，Windows 的 exe / cmd / ps1 / DLL 不得依赖管理面板进程的临时环境变量。
-- 自动与独立清理：仅安装位置路线显示默认关闭的自动清理复选框，以及旁边红底白字、含 🧹 的“清除构建产物”按钮；用户于 2026-11-04 通过截图进一步确认安装位置选择、自动清理复选框与红色按钮排在同一水平行，垂直居中、间隔统一；独立按钮不要求重新安装，按当前所选功能 / 包清理。临时运行目录路线隐藏两者。安装提交后自动清本轮产物；清理失败明确提示但不把已提交安装改成失败，独立清理失败正常报错。所有已安装运行文件、配置、注册与其它功能保留；Windows 原生构建临时目录与发布运行目录分离，必须同时保留 Flutter 的 DLL 和后台 EXE。
+- 两条路线：macOS GUI 默认选择系统应用程序中的联合 App，并在安装模式默认勾选成功后清理，两项均可手动取消；非交互 worker 仍默认构建目录且不清理，旧 GUI“默认沿用构建目录”于 2026-11-13 `superseded`，见[[#manager-default-deployment-checks|默认勾选策略]]。Windows 默认沿用当前用户默认程序位置，可选择包内本地构建目录。运行时要绑定实际部署位置，Windows 的 exe / cmd / ps1 / DLL 不得依赖管理面板进程的临时环境变量。
+- 自动与独立清理：MacOS 自动清理的现行默认见[[#manager-default-deployment-checks|默认勾选策略]]，旧“默认关闭”于 2026-11-13 `superseded`；Windows 的自动清理默认保持原样。两端提供自动清理复选框，以及红底白字、含 🧹 的“清除构建产物”按钮；用户于 2026-11-04 通过截图进一步确认安装位置选择、自动清理复选框与红色按钮排在同一水平行，垂直居中、间隔统一；独立按钮不要求重新安装，按当前所选功能 / 包清理。临时运行目录路线隐藏两者。安装提交后自动清本轮产物；清理失败明确提示但不把已提交安装改成失败，独立清理失败正常报错。所有已安装运行文件、配置、注册与其它功能保留；Windows 原生构建临时目录与发布运行目录分离，必须同时保留 Flutter 的 DLL 和后台 EXE。
 - 合作式停止：安装 / 更新执行中按钮变为“停止安装”；点击只写请求，当前共享 App / 包事务完整结束后不再开始下一安装单元。不强杀编译、签名、登记或回滚；未执行项单独标记，不计失败与完成百分比。不能把一次共享 App 构建伪装成可在各叶菜单之间随意中断。
 - macOS 故障已核实：实际日志中旧路径 `pluginkit -r` 无记录被错误当硬失败；另有 TCC `SystemPolicyAppBundles` 拒绝负责 GUI 修改联合 App 的 `_CodeSignature`，并非普通 `/Applications` 目录模式不可写。修复精确注销的幂等复核及登记前签名时序。新版 GUI 包装为可明确授权的 `Jobs右键菜单管理面板.app`（`com.jobs.finderextensions.managementpanel`）；授权阻断发退出码 77 和机器状态，停止后续构建、显示系统设置入口。用户须亲自在“隐私与安全性 → App 管理”授权；不使用 root 跑整个安装器，不修改 TCC 数据库或系统目录权限。
 - 验证边界：本轮仅源码、临时隔离事务和原生 AppKit 控件 / 身份签名验证；未替用户授权或真实重装，未中断旧面板。Windows 脚本及隔离事务通过不能代替真实 WinForms / MSVC / Explorer 验收。各端源码、模板副本、内置管理资源快照及文档同时同步。
@@ -581,5 +600,12 @@ tags:
 - 使用 Apple 公开 `contextualMenuForSidebar`，19份自有 FinderSync 接入：3聚合工具组、Terminal、PathCopier、2旧远端地址扩展及12旧独立工程扩展。侧边栏只使用 `targetedURL`，验证本地 file URL、host和真实目录；缺目标不回退主区域 `selectedItemURLs`。菜单及点击都复核，侧边栏“桌面”按所选文件夹处理，不套用桌面背景排除；各原工程类型、功能开关继续生效。新建文件／文件显示开关／模拟器维持背景边界，普通文件专用功能不扩为文件夹菜单；虚拟位置不承诺路径动作。
 - 验证：5个当前启用模块的隔离原生双架构构建通过；侧边栏基础192、独立扩展264、Project356菜单＋108策略、Flutter1011菜单／传输＋47叶配置、iOS96菜单行为，以及根桌面回归8项78外层断言（含241条桌面菜单检查与Terminal侧边栏回归）通过。覆盖主区冲突多选、菜单复制／交错、Desktop收藏、失效／虚拟／远程host、点击时类型复核。iOS全套另有两项既有失败：`.zsh`目录被当作脚本扫描，以及Terminal／iOS验证器逐字节一致的旧断言；未扩范围修改。
 - 本机已备份联合App至 `~/.codex/backups/finder-sidebar-20261107-20261107-64417-gv0ipt/`，仅更新当前启用的Terminal、PathCopier、FlutterTools、ProjectTools、IOSTools的可执行／签名文件，共17份；其余包内文件与备份一致。暂存与安装文件SHA-256一致、联合App深度严格签名及5个精确PlugInKit启用路径核验通过；仅终止这5个已核实路径下的旧扩展进程供下次菜单重新加载，未重启Finder。真实侧边栏UI未验，CUA返回`cgWindowNotFound`；不能把隔离菜单或登记成功当作实机点击验收。未提交、推送。
+
+## 三十九、<span id="script-package-launcher">双端同名脚本包的相对快捷入口</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-13 以 WindowsOS_11 的 `MacOS/【MacOS】源文件压缩分卷.command` → `split.command/split.command` 为蓝本，明确要求在 `/Users/jobs/Documents/GitHub/JobsGenesis/OS@Extension` 中为脚本同名文件夹提供右键生成入口，随后明确两端都写，并确认 Windows 处理 `.cmd`、`.bat`、`.ps1` 原生脚本包。状态：需求 confirmed；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension` 与 `WindowsOS@Extension`；创建：2026-11-13；更新：2026-11-14。
+- 入口是通过相对路径转交包内同名脚本的普通文本文件，位于右键文件夹的同级；不是系统制作替身、符号链接或业务副本。包内 README 和原脚本保留；创建时不运行源脚本、不修改源内容与权限。MacOS 只处理 `.command` 包，Windows 只处理已确认的三种原生格式，不额外依赖 WSL / zsh。
+- 两端独立包名 `JobsCommandShortcutCreator`、功能 ID `command-shortcut-create`，分别接入本端管理面板并独立安装 / 卸载。菜单“🔗 创建脚本快捷入口…”仅对包含同名普通脚本的单个真实目录显示；默认 `原名（快捷入口）.后缀` 并允许改名，避免与同级原文件夹同名。取消不写入；已有文件、目录和链接均保留。生成入口传递参数与真实退出码，整组搬移后相对路径仍有效；十语、白天 / 黑夜 / 跟随系统沿用本端偏好。
+- 验证边界：MacOS 宿主与 Finder 扩展 Intel / Apple Silicon 双架构构建、404 项隔离行为断言及管理映射测试已通过；Windows 的 185 项核心、33 项原生菜单资格及 36 项 PowerShell 命名 / 开关 / 空值 / 余参数与退出码断言已隔离通过；普通脚本显式自定义参数若与高级代理保留参数类型冲突，运行时明确拒绝并提示，不静默改参。Windows 原生菜单 DLL、Explorer / WinForms、批处理原生参数与代码页仍待 Windows 验收。源码交付不代表本机已安装新菜单；本任务未执行真实扩展安装、提交或推送。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>
