@@ -4,7 +4,7 @@ status: active
 scope: macos-finder-extensions
 repository: /Users/jobs/Documents/Github/JobsGenesis/OS@Extension/MacOS@Extension
 created: 2026-09-13
-updated: 2026-11-14
+updated: 2026-11-16
 tags:
   - codex-memory
   - project
@@ -62,6 +62,7 @@ tags:
 - [三十七、单文件指纹与精确执行位菜单](#file-fingerprint-and-execute-bits)
 - [三十八、Finder 侧边栏真实文件夹菜单](#finder-sidebar-folder-menu)
 - [三十九、双端同名脚本包的相对快捷入口](#script-package-launcher)
+- [四十、Windows 11 ARM64 初轮固定快照回归](#windows11-native-20261115)
 
 </details>
 <!-- jobs-toc:end -->
@@ -75,6 +76,16 @@ tags:
 **现行 Git 归属（2026-10-20）：** 十个工程统一由本仓直接跟踪，详见[单仓管理](#single-repository)。第四、七、八节关于独立子仓、远端、gitlink 和缺失下载补齐的历史状态已被该决策替代（`superseded`）；工程独立安装单元及产品行为继续有效。
 
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、功能与工程边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+
+- <span id="disk-space-system-available-20261116">磁盘菜单与系统可用空间口径对齐</span>（来源：用户2026-11-16再次提供“关于本机”37.11GB、菜单36.19GB截图并要求一致；需求 confirmed，限定验证 scoped-verified；适用 `OS@Extension/MacOS@Extension/JobsDiskSpaceInfo`；创建／更新：2026-11-16）：前轮只计原始 `f_bavail` 的口径已 superseded。现在同次 Foundation 查询取 `volumeTotalCapacity` 与 `volumeAvailableCapacityForImportantUsage`，包含系统预计可清除的缓存；每轮新建URL，缺值／异常／负数显示不可用，不回退原始空闲或旧值。镜像先排除、APFS去重、Data完整样本优先继续有效；不写死截图差额，不要求不同刷新时点逐字相同。源码回归、双架构构建与同Finder原样entitlements的真实签名沙盒3轮通过；本机定向更新与最终菜单验收按本轮资产表记录。清理业务及Windows接口未改，不将本次Mac接口核验外推为Windows或同屏UI验收。
+
+- <span id="clean-failure-retry">clean 失败后回车继续重试</span>（来源：用户2026-11-16在 clean 命令任务中明确要求；状态 confirmed；适用原终端及双端右键清理；创建／更新：2026-11-16）：常规清理未完成时，终端与日志文件都须给出具体失败原因及路径，不能只给日志位置；列出失败步骤／项目并询问；回车继续，非空输入停止，EOF／取消不当继续。重试保留本轮日志，成功步骤出队；保留既有路径、身份、备份与权限保护，不把重试理解为自动提权。用户同日补充：Xcode 最终准确范围不再手输 YES，回车确认执行，任意非空字符加回车仅取消本次 Xcode 清理并进入常规阶段；Xcode 普通失败也不能阻断常规清理，最终保留未完成状态，EOF／Ctrl+C 仍中止整体。此前 Xcode 最终 YES／非空结束整体语义仅在此阶段 superseded，常规阶段既有独立门禁保留；Windows 对应开发组行为联动，平台差异仍明确。不把前置开发失败加入常规重试，具体源码、已安装入口差异及当前验证查磁盘空间信息资产盘点，不把需求确认写成真实清理验收。
+
+- <span id="disk-space-clean-symmetry">磁盘描述点击清理与 clean 对称维护</span>（来源：用户于 2026-11-15 在同一聊天后续明确要求；状态 confirmed；适用仓库 `JobsGenesis/OS@Extension` 及 `JobsConfigOS/🌍JobsMacEnvVarConfigs`；创建／更新：2026-11-15）：容量汇总及百分比两位小数保留，点击进入独立终端清理。原终端 `scripts/clean.command/clean.command`、macOS 菜单的 `JobsDiskSpaceInfo/Scripts/【MacOS】清理磁盘空间.command/【MacOS】清理磁盘空间.command` 与 Windows 菜单 `JobsDiskSpaceInfo/Scripts/Clean.ps1/Clean.ps1` 各自携带完整实现，运行不相互引用。以后 clean 增删功能或调整范围、默认、保护与失败处理，同任务核对三处并同步双端右键代码、说明、资产对照表和受影响回归，不能再割裂。Cleaner for Xcode 六组开发清理先于旧 clean；先问回车继续／任意输入加回车跳过，继续后才扫描，每组 fzf 第一行及默认焦点为清理本组全部，其下支持单选／多选真实子项，最终范围确认才执行。Windows 无对应 Apple 能力时明确差异，取消或未选不被后续通用清理绕过。主规则已收口现行 `jobs-macos-shell/系统右键菜单双端与独立安装规范.md#clean-menu-symmetry`；功能及限定验证记录在 `OS@Extension/项目相关报告/磁盘空间信息资产盘点.md`，不把源码验证等同于真实清理或已安装菜单验收。
+
+- <span id="disk-space-live-20261116">磁盘空间逐次实时取值与镜像排除</span>（来源：用户2026-11-16截图反馈；需求 confirmed，源码与沙盒限定验证 scoped-verified；适用 `OS@Extension` 双端容量描述）：每次右键必须重新读取系统，不沿用首次或上次成功值，失败显示不可用。Mac实际误差为NAS上的可写ASIF被MNT_LOCAL纳入；按公开DA／IOKit Virtual Interface+File/RAM排除，保留真实磁盘APFS合成卷，不硬编码卷名、路径或容量。先识别镜像再statfs，防NAS镜像阻塞；同池采用完整样本，等容量Data优先，不能取其它卷较大的旧free。最终同Finder原样entitlements的真实签名沙盒三轮读取和通用构建通过。Windows现生产已每次QueryContextMenu重读，同COM对象变化／失败／恢复82条隔离断言通过；VHD仍按现有可写本地卷计入，未凭未经普通用户原生证明的权限／API猜测更改。原始空闲量与系统可清除空间口径区分，不能因窗口刷新时点不同写死截图数字。清理业务未改变。本机已整App备份并定向更新已安装磁盘模块，双架构与内外严格验签通过，另外12模块共371项及公用管理资源保全；候选清理资源属组差异曾触发完整回滚，保留原内容和完整元数据后重试成功，新扩展已载入、未重启Finder。CUA无法连接Finder窗口，人工菜单显示未验；运行态证据与边界见项目资产表。
+
+- <span id="disk-space-readonly-summary">双端只读磁盘空间汇总（superseded）</span>：用户最初要求不可点击，已由[[#disk-space-clean-symmetry|点击清理与对称维护]]替代；保留汇总本地可用存储余量／总量、两位小数、不分盘展开及独立 `JobsDiskSpaceInfo`／`disk-space-info` 边界。旧版 Mac 核心与本机查询曾通过，只读菜单断言不适用于点击版。Mac 管理名“磁盘空间总览”、Windows“磁盘剩余空间”，Windows 11 使用传统“显示更多选项”；容量口径不等同于整块裸设备或未挂载分区标称总量。
 
 - 来源：用户于 2026-10-29 明确要求记入系统右键菜单规则；状态 confirmed；适用范围：系统右键菜单功能及 `OS@Extension` 双端工程；创建 / 更新：2026-10-29。默认同时支持 macOS / WindowsOS，只有用户特别说明的例外才只介入一端。每项功能解耦为可独立安装的子工程；面板只是便利的集合入口，macOS 与 WindowsOS 均有安装 / 卸载面板，每侧只能管理本侧的功能集合。不能把一个大包内的勾选开关等同于独立安装单元。本次“新建文件”明确仅加入 macOS，WindowsOS 使用系统已有能力。主规则归 `jobs-macos-shell/系统右键菜单双端与独立安装规范.md`，文档布局附件只作引用。
 - 来源：用户于 2026-09-13 明确确认。一个 Finder 右键菜单功能应视为一个独立安装单元；新增能力优先采用“一项右键功能对应一个工程”的结构。
@@ -140,7 +151,15 @@ tags:
 - 已替代（superseded，2026-10-18）：原“仅处理根 README、19 项回归、不推广其它仓库”的实验范围，在用户实测确认后被授权推广方案替代；现行跨仓工作流见 [[30-工作流决策/工作流决策#十五、Markdown 动态目录过滤器|Markdown 动态目录过滤器]]。
 - 当前状态：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension` 使用 `.jobs-markdown-toc/` 的自包含工具和精确清单，共管理 22 份含标签说明（2026-10-21 按实际清单复验）；`Scripts/MarkdownToc.mjs` 保留同源码兼容入口，CI 继续用此入口核对清单全部原始索引内容。根 README 和 `Scripts/README.md` 说明动态目录、首次接入、日常暂存和安装 / 卸载边界；用户要求的 `Scripts` 目录用途说明已补齐。最初接入时转换器 38 项、部署器 8 项隔离回归通过，真实索引未改、未创建提交或推送；后续 CI 修复与发布见下条，远端折叠与 Windows 真实桌面仍按各自环境单独验收。
 
-- <span id="windows-ci">Windows CI 验证基线</span>：来源为用户于 2026-10-21 明确授权修复并提交推送至 GitHub，持续到 CI 通过；状态：已实现并验证；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension`。目录过滤器及兼容入口以 `bigint dev/ino` 比较目录身份，解决 Windows 路径大小写误判，保留父仓 / 嵌套仓保护；PowerShell 参数探针显式 UTF-8 输出，5.1 JSON 数组先赋值再展开；FVM 测试用字面路径 API 创建真实文件 / 目录及悬空链接，保留特殊字符覆盖。工作流未取消时继续执行全部独立检查，任一步失败仍整体失败。`main` 最终提交 `f11ce70` 已推送 GitHub，[运行 39457788523](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/39457788523) 在 Windows PowerShell 5.1 下全部 16 组检查成功，用时 3 分 9 秒；22 份目录索引与工作区往返通过，本地 40 项 TOC 回归通过。Windows 桌面菜单及 FlutterRunner `-Native` 验收仍独立执行，不由此 CI 结果替代。创建 / 更新：2026-10-21。
+- <span id="windows-ci">Windows CI 验证基线</span>：来源为用户于 2026-10-21 明确授权修复并提交推送至 GitHub，持续到 CI 通过；状态：已实现并验证；适用仓库：`/Users/jobs/Documents/Github/JobsGenesis/OS@Extension/WindowsOS@Extension`。目录过滤器及兼容入口以 `bigint dev/ino` 比较目录身份，解决 Windows 路径大小写误判，保留父仓 / 嵌套仓保护；PowerShell 参数探针显式 UTF-8 输出，5.1 JSON 数组先赋值再展开；FVM 测试用字面路径 API 创建真实文件 / 目录及悬空链接，保留特殊字符覆盖。工作流未取消时继续执行全部独立检查，任一步失败仍整体失败。历史提交 `f11ce70` 已推送 GitHub，[运行 39457788523](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/39457788523) 在 Windows PowerShell 5.1 下全部 16 组检查成功，用时 3 分 9 秒；22 份目录索引与工作区往返通过，本地 40 项 TOC 回归通过。Windows 桌面菜单及 FlutterRunner `-Native` 验收仍独立执行，不由此 CI 结果替代。创建：2026-10-21；更新：2026-11-15。
+
+  - <span id="windows-ci-20261115">最新远端通过基线（2026-11-15；需求 confirmed／GitHub Actions verified）</span>：用户本轮明确授权提交推送 CI 修复并继续验证；适用仓库仍为上述 WindowsOS@Extension。8 个提交、54 个 CI 修复相关文件从 `3a23ede` 收口至 `dacaeaf72376ef5c9faed84d248e52a153343be7`，仅推送 GitHub `main`，未推送 Gitee 或父仓；SDK 路由、目录过滤器等既有／并发未提交内容保留。原失败运行 43673958394 的历史记录见下项。
+
+    - 最终实现包含实际 Label 首选尺寸、语言夹具隔离、UTF-8 BOM、绘图程序集显式加载、远端 Invoke 严格白名单、本包私有依赖及 CMD UTF-8 夹具；fzf 改用显式 Process、严格 UTF-8 和取消状态处理；环境恢复按存在性区分空值与未设置；双端候选读取使用局部值并在单一 catch 中识别被包装的取消；ZIP 成员路径显式使用斜杠。工作流把 Runner 回归拆为独立 `runner-tests` job，逐脚本使用 `-File` 并核验退出码，避免负向控制用例的 LASTEXITCODE 泄漏。
+
+    - [运行 43712724170](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/43712724170) 对应最终提交，状态 `completed/success`；`runner-tests` 用时 28 秒，Windows PowerShell 5.1 实际完成 457＋54 条断言；`test` 用时 254 秒。工作流 45 个命名运行检查步骤全部成功，0 失败、0 跳过；页面 Summary 为 Success、总用时 4 分 18 秒。证据保存在 `/Users/jobs/.codex/visualizations/2026/11/15/01a1ddc3-cde4-7302-b0ec-2ddabe1e4009/windows-actions-ci/` 的 `run.json`、`verification.json`、`workflow-success.jpg` 和 `delivery-audit.json`。该基线只证明工作流实际执行的 Windows 5.1 脚本、WinForms 和 MSVC 自动检查通过；不表示各脚本可选 `-Native`、真实 Explorer 注册／右键菜单逐项操作、Windows 11 ARM 桌面或真实 SDK 业务已验收，既有实机待验边界保留。
+
+  - Actions 后续运行 43673958394 的初轮排查（2026-11-15；日志 observed／本机 scoped-verified）：用户报告[运行 43673958394](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/43673958394) 的 `b97d22f` 仍失败。上轮 MSVC 构建与原生菜单探针已在该运行通过，剩余 8 步涉及新增自有脚本缺 BOM、面板实际 Label 高度／系统语言夹具、远端选择专用 Invoke 未登记覆盖、新快捷入口包夹具依赖、CMD 测试输出代码页、fzf stdin BOM 及虚拟设备跨场景函数代理。已分别补 BOM；标题按 Label.GetPreferredSize 测量并同步 36 份副本；选择计数测试隔离英文并按当前语言核对；严格白名单仅保留 Git 远端 Invoke；补本包私有依赖；以 UTF-8 子进程记录实际 cwd；fzf 保存／恢复输入编码并去 BOM；用真实临时配置变化代替身份函数代理且精确校验失败原因。本机 workflow 对应 43 份 PowerShell 测试全部通过，494 份脚本 Parser／BOM、25 包基础设施一致，96 份文档往返通过。该初轮阶段 Windows PowerShell 5.1 原生验证尚未完成：既有 Windows 11 ARM 虚拟机经用户解锁，但剪贴板不可用；拷贝粘贴选项已开启，Tools 无正常安装记录且宿主安装镜像校验附件缺失，官方 ARM Tools 光盘已准备，安装／重启／原生回归仍待完成。该阶段未提交、推送或修改远端；检测到目录过滤器并发改动，已保留。后续发布及远端验收以本节最新基线为准，初轮验证边界保留。
 
   - Actions 运行 43390408228 的本地排查（2026-11-13；需求 confirmed／日志 observed／本机 scoped-verified）：用户报告[运行 43390408228](https://github.com/JobsKits/WindowsOS_Extension/actions/runs/43390408228) 失败；对应 `934e146` 有 12 个失败步骤。已修 19 份原生 `Build.ps1` 的响应文件物理行边界（`/link` 只接收同一行后续参数），修复面板动态闭包访问模块私有函数并同步同源副本；测试补齐 SDK 依赖、机器版本字段／菜单数量及 .NET Framework stdin 无 BOM 编码，父编码恢复。工作流 checkout／setup-node 升至使用 Node 24 的 v6，接入 `Tests/NativeBuild.Tests.ps1/NativeBuild.Tests.ps1`。本机 PowerShell 7.6.9 下 workflow 对应 43 份 PowerShell 测试、43 项 Markdown 回归、94 份文档往返、483 份脚本 Parser／BOM 及 24 包基础设施一致性通过。虚拟设备启动测试另加强真实临时文件身份替换与场景诊断；原 Windows PowerShell 5.1 失败具体根因尚不能在本机复现，不能将此项或 MSVC／WinForms 表述为 Windows 已通过。未提交、推送或在 GitHub 重跑，历史远端通过基线继续独立保留。
 
@@ -203,7 +222,15 @@ tags:
 
 ## 十二、<span id="flutter-project-runner">双端 Flutter 项目右键运行</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- <span id="flutter-virtual-device-launch">已有虚拟设备独立启动组与环境更新</span>（2026-11-12，用户截图及明确要求 confirmed）：已有设备列表只展示已连接／已启动目标；“启动虚拟设备”独立为根菜单分组，子层提供启动已有 iOS／Android／鸿蒙模拟器，Windows 不显示 iOS，不把启动动作混在已有目标列表内。各层上下方向键选择、回车确认，非根层左键退真正上一层；搜索无结果时仍可返回。启动前在当前流程体检所选平台的宿主环境，有兼容正式更新先更新、缺失先获取配置，复检成功才列出／启动原实例；保留已有实例、数据与系统版本，真正运行 Flutter 时再做项目 SDK／平台／插件门禁，不为启动模拟器预先改业务工程。此条替代旧[[#flutter-device-groups|已有／新建两组及已有组内混启动动作]]的菜单布局。通用导航及虚拟设备环境规则已补强到 `jobs-macos-shell`，即时同步备份；官方许可、账号、权限或不可核验目录明确阻塞，不能把固定已知工具版本或认证错误当作已最新／就绪。
+- <span id="flutter-unified-device-menu-20261115">Flutter 统一虚拟设备菜单、逐行体检与运行展示</span>：来源：用户于 2026-11-15 在本聊天明确要求并持续补充；状态：需求 confirmed／源码隔离验证 scoped-verified，真实运行验收单列；创建／更新：2026-11-15；适用仓库：`/Users/jobs/Documents/GitHub/JobsGenesis/OS@Extension`，覆盖 MacOS／WindowsOS 独立 `JobsFlutterRunner` 与聚合 `JobsFlutterTools` 的运行入口。
+
+  - 菜单：根层使用“目前已有的真实设备”“虚拟设备”及保留既有桌面／Web 能力的“其他运行目标”，真实设备组按设备证据排除模拟器。新建和启动合入虚拟设备入口，按 iOS／Android／Harmony 分系统下钻；Windows 不显示 iOS。各系统内先列已有实例，最后一项为“新建对应系统虚拟设备”；已有实例直接复用／启动，新建成功按本轮有效回执承接同一设备并运行。移除“取消本轮运行”行，保留 Esc／Ctrl+C 取消、子层左键逐层返回和列表重新加载；新建不是空清单下未经选择就执行。
+  - 体检与准备：逐项换行展示环境检查，成功前置绿勾、失败前置红叉，缺失原因保留正文。同轮首查完整展示，后续真实复检只展开状态或详情有变化的平台；未变化的鸿蒙插件清单不重复，工程、SDK 身份或 FVM 声明切换后重新完整展示。仅缓存展示快照，不复用健康结论或省略所选平台门禁（2026-11-15，用户日志反馈 confirmed；Mac 33组254断言及包内5组29断言、Windows体检126／鸿蒙准备98断言通过；本机资源已备份同步并严格验签，Windows原生另验）；本次目标必需项在当前流程自动准备并复检，就绪后继续当前工程。其它平台的准备是独立可选项，回车可后台准备、其它输入跳过；后台任务保持单独日志和环境边界，不切换当前运行平台、不改选设备、不阻塞已就绪目标。取消、明确许可／权限问题和不可修复失败仍按原边界停止，不能以后台启动或目录存在冒充环境通过。
+  - 版本上下文：并列展示官网发布信息、本机实际 SDK 版本和工程 FVM 声明／绑定版本，并清楚标出它们的来源与未解析情况；本地只读记录、官网查询与工程约束各自核验，不靠执行未初始化 Flutter／Dart 来探测目标版本，也不为展示上下文升级或切换项目 SDK。官网暂不可达不能编造“最新”或误报本机／项目版本。
+  - 展示：从运行入口到 SDK 下载、模拟器准备、构建运行的里程碑统一红色；URL 按[[10-用户画像/长期偏好#script-url-display|绿色下划线偏好]]展示；错误全文红色，日志标签前加合适 emoji 并保留原 `[会话]`／`[依赖]`／`[警告]`／`[错误]` 等可检索标签。下载进度与拆分写入继续可见，原始日志／机器输出保持纯文本且不回写展示样式。
+  - 验证边界：设备菜单、精确回执与实例身份、返回／取消、体检准备分支、版本上下文和终端样式已做源码／隔离替身／PTY 回归；这些证据不等同真实 SDK 安装、原生模拟器启动或业务 App 运行。真实 iOS 已补验：原工程 `/Users/jobs/Documents/GitHub/JobsBaseConfig/JobsBaseConfig@JobsFlutterBaseConfigDemo` 与原模拟器 `88AD269D-2D0B-4A34-A49D-B121B74527DC` 收到 `app.started`，按本轮 app.stop 结束后 Flutter 与独立运行器均退出 0；原故障为 CocoaPods 拉取 HaishinKit 2.0.9 时 curl 18／early EOF，已补仅网络型依赖恢复且保留版本，未修改第三方源码。本机 `/Applications/Jobs自定义右键菜单.app` 内 FlutterTools 已备份更新，21 项资源与源码一致，包内 5 组 46 断言及内外严格深度签名通过；备份与独立实跑证据在 `~/.codex/backups/flutter-menu-environment-20261115.zhoXV2/`。Windows 源码 1038 条隔离断言、真实 fork／停止／锁／PID 保护及 AST／Job 编译通过，但 Windows 原生菜单、kernel32 Job、SDK 安装与设备运行仍未验。原有实例、数据、镜像及工程约束保全规则继续有效。
+
+- <span id="flutter-virtual-device-launch">已有虚拟设备独立启动组与环境更新</span>（2026-11-12，用户截图及明确要求 confirmed）：**菜单布局已于 2026-11-15 标为 `superseded`，改用[[#flutter-unified-device-menu-20261115|统一虚拟设备菜单]]；本条环境更新、精确实例身份与数据保全约束继续有效。** 以下保留历史要求与验证：已有设备列表只展示已连接／已启动目标；“启动虚拟设备”独立为根菜单分组，子层提供启动已有 iOS／Android／鸿蒙模拟器，Windows 不显示 iOS，不把启动动作混在已有目标列表内。各层上下方向键选择、回车确认，非根层左键退真正上一层；搜索无结果时仍可返回。启动前在当前流程体检所选平台的宿主环境，有兼容正式更新先更新、缺失先获取配置，复检成功才列出／启动原实例；保留已有实例、数据与系统版本，真正运行 Flutter 时再做项目 SDK／平台／插件门禁，不为启动模拟器预先改业务工程。此条替代旧[[#flutter-device-groups|已有／新建两组及已有组内混启动动作]]的菜单布局。通用导航及虚拟设备环境规则已补强到 `jobs-macos-shell`，即时同步备份；官方许可、账号、权限或不可核验目录明确阻塞，不能把固定已知工具版本或认证错误当作已最新／就绪。
 
   - 鸿蒙漏显证据（同日，scoped-observed）：本机未发现可用 HDC／DevEco／CLT；残留运行日志记录官方 Flutter 3.47.8 无 HAP、工程无 ohos/。源与安装包原有三份发现资源一致，未发现这三份资源部署落后。代码有可复现漏显：HDC 定位依赖整套 SDK 预检、USB 查询失败时丢弃已有 HDC 结果；双端独立寻址及失败取证须分别处理。手机已拔，残留 USB 快照只有 Hub，不能证明当时手机的连接、调试开关或授权状态；开发者模式不代替 USB 调试及 HDC 授权，不把软件层修复当作真机复验。
 
@@ -489,6 +516,12 @@ tags:
 
   - 实施与限定验收（2026-11-11，scoped-verified）：Mac标准源及44份快照一致，7×352译文与canonical语义一致；十语切换、原生完整字形、状态列跨组、800×600屏框及小屏布局通过，偏好／词库／镜像3组7452断言和相关选择／部署隔离回归通过。Windows标准源及35副本一致，10694项语言／词库／迁移断言、131项面板回归及24包parity通过；WinForms原生字体与交互未验。Mac已完整备份至 `~/.codex/backups/finder-ten-languages-20261111-c0dnvY/` 后更新联合App内管理源码、canonical和两处缓存面板可执行，内外App严格深度验签与资源cmp通过；重开生效，没有执行安装／卸载业务。
 
+- <span id="manager-full-row-baseline-20261116">功能整行选择与面板基准沉淀</span>（来源：用户2026-11-16截图及明确要求；状态 confirmed；适用OS@Extension双端总面板与随包面板）：功能行的复选框、标题、图标、普通状态区和行内空白均为同一勾选入口，一次完整点击只切换一次；保留原生Tab／Space／无障碍，失败日志链接及独立按钮优先，拖动／滚动／离行／忙碌不误选，不能把整组背景当一项。当前面板全部需求与差异收口 `项目相关报告/安装卸载管理面板需求资产盘点.md`，今后安装／卸载GUI按[[工作流决策#installer-panel-baseline|统一基准]]执行；主规范为现行 `jobs-macos-shell/安装卸载管理面板基准.md`，不复制另一套。
+
+- <span id="manager-background-residency-20261116">双端管理面板关闭与后台驻留</span>（来源：用户2026-11-16截图要求及随后再次澄清；需求 confirmed；适用 `JobsGenesis/OS@Extension` 双端总面板与随包管理面板）：只有没有任务进行时，关闭才弹框选择退到后台或完全退出；安装、卸载及面板构建清理未结束时不询问，直接隐藏到macOS系统状态栏／Windows系统托盘，不能中断任务、关闭输出管道或停止进度日志。状态栏／托盘必须能恢复原窗口和当前选择、进度、日志；完成后继续驻留供查看，忙碌时完整退出受保护且执行退出动作时再核验状态。驻留仅当前会话，不新增自启动；原只返回选择结果的内部兼容调用保留其stdout返回合同，避免调用脚本永久等待。普通关闭不再表示停止后续管理任务，旧管理面板相关关闭描述在此范围superseded；明确“停止安装”仍沿现有单元事务边界。源码、资产、各端验证与运行态同步归 `OS@Extension/项目相关报告/管理面板后台驻留资产盘点.md`，运行中旧进程不热替换、不为部署终止用户任务。
+
+- <span id="manager-log-theme-scroll-20261116">双端管理日志配色与手动浏览</span>（来源：用户2026-11-16截图及补充要求；需求 confirmed；适用 `OS@Extension` 双端总面板与独立随包面板）：日志区域必须有白天浅底深字、黑夜深底浅字两套完整背景／文字配色，正文、提示、成功、警告、错误和阶段标题分别匹配对比；跟随系统仍解析为这两套，切换时已有日志同步重着色，保留文本、选区和浏览位置。触摸板、滚轮、拖动滚动条及导航键须可手动浏览；手动滚动暂停自动追尾，重新勾选“自动滚动”恢复末尾追踪，不能让新输出立即拉回底部。纯文本复制和完整磁盘日志继续保留，颜色只是显示属性；原生事件链、源码副本、已安装资源和Windows原生验收分开核对。实现与当前验证边界归 `OS@Extension/项目相关报告/管理面板日志资产盘点.md`，旧进程不因源码更新热替换。
+
 - <span id="manager-theme-and-language">双端安装面板主题与语言</span>（来源：用户于 2026-11-04 明确要求；状态 confirmed；适用仓库 `/Users/jobs/Documents/Github/JobsGenesis/OS@Extension` 的 MacOS / WindowsOS 安装面板；创建 / 更新：2026-11-04）：主题必须包含“黑夜 / 白天 / 跟随系统”，语言必须包含“简体中文 / 繁体中文 / 英文 / 跟随系统”（此旧范围已由[[#manager-alignment-selection-ten-languages|十语言规则]]替代）。用户同日通过截图进一步确认：主题与语言控件统一放在面板右上角空白处，注意整体美观与对齐。沿用总面板、单功能随包面板与各自独立安装单元，不把本次界面选项扩张成系统全局主题或语言变更；双端实现、模板副本与说明一并核对，源码 / 隔离验证和目标系统桌面验收分别记录。 工程验证口径（2026-11-04，限定范围 verified）：源码及隔离 AppKit 控件验证已完成；Windows 原生 WinForms 与完整桌面视觉验收仍待目标机确认。
 
   - 紧凑图文入口（2026-11-08；用户截图要求 confirmed／实现限定验证 scoped-verified）：主题、语言标题紧贴各自下拉入口，采用“🎨 主题”“🌐 语言”；按当前界面语言实测标题宽度，不为英文提前留空。双端标签与下拉间隔为6逻辑点、两组间隔16，继续右对齐及窄窗换行。Mac主源与44份同源副本、本机已安装联合App面板源码已同步；原生控件切换／缩放隔离验证、哈希与严格验签通过，重开管理器自动编译。Windows对应实现与36份同源副本同步；既有定向布局／DPI等524条断言及24包一致性检查通过。完整偏好测试被FileHasher既有英文缺译阻断，修改前基线同样复现；Windows原生桌面验收另行核对。
@@ -607,5 +640,18 @@ tags:
 - 入口是通过相对路径转交包内同名脚本的普通文本文件，位于右键文件夹的同级；不是系统制作替身、符号链接或业务副本。包内 README 和原脚本保留；创建时不运行源脚本、不修改源内容与权限。MacOS 只处理 `.command` 包，Windows 只处理已确认的三种原生格式，不额外依赖 WSL / zsh。
 - 两端独立包名 `JobsCommandShortcutCreator`、功能 ID `command-shortcut-create`，分别接入本端管理面板并独立安装 / 卸载。菜单“🔗 创建脚本快捷入口…”仅对包含同名普通脚本的单个真实目录显示；默认 `原名（快捷入口）.后缀` 并允许改名，避免与同级原文件夹同名。取消不写入；已有文件、目录和链接均保留。生成入口传递参数与真实退出码，整组搬移后相对路径仍有效；十语、白天 / 黑夜 / 跟随系统沿用本端偏好。
 - 验证边界：MacOS 宿主与 Finder 扩展 Intel / Apple Silicon 双架构构建、404 项隔离行为断言及管理映射测试已通过；Windows 的 185 项核心、33 项原生菜单资格及 36 项 PowerShell 命名 / 开关 / 空值 / 余参数与退出码断言已隔离通过；普通脚本显式自定义参数若与高级代理保留参数类型冲突，运行时明确拒绝并提示，不静默改参。Windows 原生菜单 DLL、Explorer / WinForms、批处理原生参数与代码页仍待 Windows 验收。源码交付不代表本机已安装新菜单；本任务未执行真实扩展安装、提交或推送。
+
+## 四十、<span id="windows11-native-20261115">Windows 11 ARM64 初轮固定快照回归</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-15 要求用已打开的虚拟机验证 `/Users/jobs/Documents/GitHub/JobsGenesis/SourceTree.command/WindowsOS` 与 `/Users/jobs/Documents/GitHub/JobsGenesis/OS@Extension/WindowsOS@Extension`；范围 confirmed、结果 scoped-verified；创建／更新：2026-11-15。仅代表初轮固定快照，后续并行修复须独立复测。
+- Windows 11 ARM64、Windows PowerShell `5.1.26100.9974 Desktop / STA` 原生逐套回归共 76 套：41 Passed、9 Partial、17 Failed、9 BlockedDependency、0 TimedOut；扩展 69 套为 39／8／16／6，SourceTree 7 套为 2／1／1／3（通过／部分／失败／缺依赖）。1,275 文件哈希与 556 份 Parser／BOM 通过，测试副本前后无源码变化。
+- 缺 Git 阻塞 7 套、缺原生 Dart 阻塞 2 套；未发现 Node 或 MSVC，未验菜单 DLL 编译、真实 Explorer／Sourcetree 菜单安装和 SDK 业务。Partial 包含普通用户符号链接权限及未启用的原生分支，不能算完整通过。已确认网络路由 `.Split(@('/'),2)` 的 5.1／.NET Framework 重载错误，以及共享路由实际 `--universal` 分支差异；其它失败还包含测试兼容／契约问题和未决项，不一概归为业务缺陷。
+- 固定快照、逐套原始日志与分类证据位于 `/Users/jobs/.codex/visualizations/2026/11/15/01a1dd60-94ed-76c1-afa3-9b9b87aff220/windows11-validation/`，入口为 `validation-summary.json`、`received/results.json`、`extension-findings.json`、`sourcetree-findings.json`。初轮仅制作验证产物，未改业务源码；后续修复另列，未提交或推送。
+- <span id="windows-sdk-route-fix-20261115">初轮后共享 SDK 路由修复</span>（2026-11-15，用户授权 confirmed／限定验证 scoped-verified）：将对象路径拆分改为显式 `char[] / count / StringSplitOptions.None` 重载，合并 Runner 已有的 `precache --universal` 就绪与实际制品判断。原两目录及 SourceTree 运行副本共 37 份，用户另行明确同意同步 `JobsCommand@Flutter/WindowsOS` 的 11 份，共 48 份脚本与对应 README；只同步共同业务，保留终端保护差异和既有改动。公共路由 45 项已在 Windows 5.1 原生通过；三仓分发初次补跑因夹具仅有 x64 发布数据失败，补齐双架构且逐架构区分归档／SHA 后，Mac 默认及模拟 ARM64 分支各 134 项通过；后续 `followup-3` 的 Windows 原生 Integration 已通过。补丁、应用回执、原字节备份及静态核验在上述证据目录。
+- <span id="windows-followup-18-20261115">18 套原生定向补跑</span>（2026-11-15，scoped-verified）：8 Passed、1 Partial、9 Failed，无超时或缺依赖；1,275 文件哈希、556 份 Parser／BOM 均通过，目标测试副本未变。通过项含 SDK 路由、SDK 版本上下文、下载进度、鸿蒙准备／工具引导／镜像、原生部署夹具、卸载结果；部署路由仅因两项链接权限 Partial。九项失败的新证据及原日志保留于 `windows11-validation/followup/`，未以本机修复覆盖这些原生结果；后续 10 套新快照与只读面板尺寸诊断另行记录。
+- <span id="windows-sdk-cancel-context-20261115">SDK 重试的前置取消上下文诊断</span>（2026-11-15，观测与限定修复 scoped-verified）：固定原版五组实验中，原上下文、有断点、原样重定义、`$input` 改名均在长度错误失败，只有独立 HTTP 场景能原生续传；追踪显示当前 `RuntimeException` 进入旧的类型取消 catch，尚未进入通用 catch。此证据不等于已查明引擎内部缺陷或最小触发条件。修复仅删除两条冗余 typed rethrow，保留通用 catch 内本次异常链的取消／权限判断；48 份 `SdkDownloadOutput.ps1` 已同步，42 份与本机 51 项完整回归及 7 项取消／权限检查所验证候选逐字节一致，6 份保留原运行副本保护差异。`followup-3` 原生 `SdkAcquisitionRetry` 已在原上下文、无断点完整通过；原失败日志继续保留。
+- <span id="windows-acceptance-boundary-20261115">虚拟机回归与真实安装验收边界</span>（2026-11-15，用户质询 confirmed／证据边界 verified）：通过内网 curl 下载启动器后，实际是在 Windows PowerShell 5.1 中运行冻结源码的隔离回归，包含真实 WinForms 控件及测试替身；不等于安装后点击 Explorer／SourceTree 的业务验收。用户明确指出未直接安装运行，后续必须单列真实部署、客户端点击与卸载证据。真实 PathCopier 已完成一次原生当前用户安装：部署文件哈希、4个真实菜单键、已部署CLI特殊路径复制和真实卸载均通过；人工点击后剪贴板校验未匹配，状态为 `CliPassedExplorerNeedsManual`（退出码3），不能记为Explorer通过。用户确认点了该Jobs菜单且YES手敲，原因待包自身运行日志核查，不归因复制YES。4键及卸载快捷方式已撤销，禁用settings／release／备份按项目设计保留；不得删除tombstone绕过重跑保护。固定证据见 `windows11-validation/actual-install-bundle/received/20261115T132540206Z-b6851eb7-2b57-425d-b688-eab706449a81/latest/real-004-result.json`，5个上传文件SHA已核对。SourceTree常见安装候选、进程和默认XML均未发现，不能代替全盘不存在的结论，客户端验收未执行。尾回归 `followup-7` 的缺失运行器帮助文件来自旧 1,275 文件白名单漏包，不能归为产品缺陷；新的动态打包器发现 1,283 文件（新增 8），核对完整目录、哈希和导入，避免把初轮清单当后续复制白名单。面板尺寸和 VirtualStart 尾项仍未完成原生复验。
+
+- <span id="windows-tail-diagnostics-20261115">真实安装后诊断与测试工具修正</span>（2026-11-15，scoped-verified）：指定 copy-path 日志只有安装／卸载行，无业务错误；这不能证明 Explorer 调用成功。诊断上传21文件SHA均匹配，1,283源码前后哈希通过，但 VirtualStart 和两面板诊断均失败。bootstrap 的0退出是固定 supervisor driver 未传播子脚本退出码所致，不能记为通过；新artifact已显式传递并正向核对唯一完整报告，Mac三进程与13报告契约正反例通过。面板旧探针对Hashtable直接按key名排序使用了PowerShell6才支持的行为，PS5改写偏移损坏，尚未进入布局断言；新候选以显式整数索引排序，Mac兼容回放和真实代码改写验证通过，Windows待验。VirtualStart原断言错误要求连续请求时间戳必不同；仅改测试为独立Headers引用及每次Origin／UTC日期／正Int64序号有效，生产模块未改，Mac Boundary85、完整461及7组变异验证通过，Windows新候选未验。固定日志在 `windows11-validation/diagnostics-bundle/received/20261115T135852399Z-24f4243a-16db-4c9c-8d51-b3340f2429ed/latest/`；新完整源码草稿为1,301文件，尚未发布或执行。用户要求后续自行操作，见[[长期偏好#vm-testing-agent-operated]]；用户随后明确确认未锁屏；控制工具持续出现 noWindowsAvailable，重新初始化超时，vmrun 要求加密密码，未能启动新原生测试，不以候选准备替代原生验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

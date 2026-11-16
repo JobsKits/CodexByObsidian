@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-11-15
+updated: 2026-11-16
 tags:
   - codex-memory
   - project
@@ -99,6 +99,10 @@ tags:
 - [六十七、三工程 ARKit 空间实验室](#arkit-demo)
 - [六十八、四工程全局语言与原生 Demo 逐页整理](#native-global-language-ui-review)
 - [六十九、Swift Pod 随库 Stability 测试](#swift-pod-stability-tests)
+- [七十、首页菜单视觉与四工程最近使用](#native-home-menu-and-recents)
+- [七十一、四原生工程的真实 Core Data Demo](#native-coredata-demos)
+- [七十二、五端首页浮钟与世界时钟骨架](#world-clock-skeleton-20261116)
+- [七十三、首页返回、侧栏与开屏浮钟](#native-home-behavior-20261116)
 
 </details>
 <!-- jobs-toc:end -->
@@ -426,8 +430,9 @@ tags:
 - <span id="oc-app-resource-layout">主工程入口、图片与占位文件</span>：来源：用户于 2026-11-14 结合新旧工程截图明确要求，并确认目录为 `其他/libs`；状态 confirmed；适用范围：本节两侧 OC 主工程；创建 / 更新：2026-11-14。老工程目录名称与位置以新工程为准，正常入口为 `JobsOCBaseConfigDemo/入口/{AppDelegate,SceneDelegate,main.m}`，启动配置保留配置职责。参与 App 打包的主工程图片统一归入 `JobsOCBaseConfigDemo/其他/libs`；外侧说明图片可显示在 Xcode，但不属于任何 target 或构建资源，实际运行素材先归位再调整引用。Pod 自己的资源不受主工程 `libs` 限制。`.gitkeep` 不得显示在 Xcode 或参与构建打包；冗余与已无对应功能的旧空骨架占位清理，真实源码及资源保留。新旧只允许 Pod 下沉与主工程集成所需的形态差异，不能以资源整理覆盖已有内容；规则主归 `jobs-objective-c-pods` 的主工程图片与占位文件及项目映射附件。
 
 - **2026-11-14 最终归档与自动化并集**：来源为用户在本轮逐项确认；状态 confirmed；适用范围为本节 OC 新旧工程，更新时间 2026-11-15。旧工程根目录使用 `Libs/`，集中承接 `JobsOCBaseCustomize3rdCore`、`JobsOCBaseCustomizeUIKitCore`、`JobsOCDSL`、`OCBaseConfig`、`PodsManual` 与 `🔨Manual_Add_ThirdParty（按需引入）`；本轮中间名 `JobsLibs` 已由最终 `Libs` 替代，不能继续按旧主工程内路径定位。第三方目录整体归档不改变其所有权与源码维护边界。
-- 两侧 Ribbon 均归根 `Libs/构建工具/`：旧侧为 `JobsAppIconRibbon/`，新侧为 `JobsAppIconRibbon@Pods/`，保留旧主工程工具与新本地 Pod 的承载形态。新侧原根 `JobsAppIconRibbon.config` 随包进入该 Pod，旧配置同样随自身工具包；新侧尽可能由 Pod 承载生成器、脚本、配置与 `script_phase`，主工程保留 Pod 依赖和 AppIcon 选择配置。路径由脚本／工程位置解析，不依赖启动工作目录。
-- 两侧 `ScriptsByPods/` 的真实脚本只分 `自动化测试相关脚本/` 与 `Cocoapods相关脚本/`，根目录另保留两个共用 Behavior 的相对兼容链接（见[[#xcode-pod-classified-path-compatibility|菜单路径兼容]]）；原 `ScriptsByDevTools` 内容整体并入前者，同步真实调用、测试、CI、工程引用及文档。两侧主工程 `JobsOCBaseConfigDemo.entitlements`、`JobsConfig.xcconfig` 与整个 `配置info.plist/` 资料目录归 `JobsOCBaseConfigDemo/其他/`；新侧资料由旧侧补齐。实际 App `Info.plist` 仍按原 `INFOPLIST_FILE` 位于主工程原位置，不把说明／备份目录误当运行配置。老工程 Core Data 使用既有 `JobsOCBaseConfigDemo/其他/CoreData/JobsOCBaseConfigDemo.xcdatamodeld`；主文件同步组默认不加入 App 时，其 `membershipExceptions` 是启用白名单，保留模型这一唯一成员，不能反向当作排除项移除。
+- <span id="oc-new-pod-layout">OC 新工程 Pod 归属与脚本蓝色目录</span>：来源为用户 2026-11-15 明确纠正；状态 confirmed。新侧 Ribbon Pod 统一位于根 `JobsByPods/JobsAppIconRibbon@Pods/`，新工程根目录不保留 `Libs/`，主工程导航不保留原 `Libs` 展示组；Ribbon 与其它自建 Pod 一样从 `Pods → Development Pods` 展开。旧侧继续使用 `Libs/构建工具/JobsAppIconRibbon/`，保留直接主工程集成形态。原“两侧 Ribbon 均归 Libs/构建工具”中对新侧的安排已被此条替代（superseded），不能再由迁移器反迁。新侧配置随 Pod 保留，Pod 承载生成器、脚本及 `script_phase`；路径由脚本／工程位置解析，不依赖启动工作目录。
+- 2026-11-15 本次目录纠正限定验证（scoped-verified）：Ribbon 的五份生产文件字节及权限在搬迁前后不变，测试仅修正同工程兄弟资源路径；7 类生成器行为与中文空格工程迁移定位通过。新侧按现有锁定依赖执行 `pod install --no-repo-update` 成功，`PODS` 版本集合不变，Development Pods 实际路径已是 `JobsByPods/JobsAppIconRibbon@Pods`；目标 scheme 可列出、单独 Debug 模拟器构建与实际派生图标生成成功。两侧脚本兼容入口各两项 `--check` 通过，原 App 编译与资源成员保留，内嵌 Runner 子工程引用保留。老工程蓝色父目录及两个分类已在真实 Xcode 窗口确认；新侧模型已验证，CUA 界面连接连续超时，未声称新侧实屏验收。上述每侧 165 项 XCTest 为此前阶段记录，不代替本次目录变更后的全量运行。
+- 两侧 `ScriptsByPods/` 的真实脚本只分 `自动化测试相关脚本/` 与 `Cocoapods相关脚本/`，根目录另保留两个共用 Behavior 的相对兼容链接（见[[#xcode-pod-classified-path-compatibility|菜单路径兼容]]）；原 `ScriptsByDevTools` 内容整体并入前者，同步真实调用、测试、CI、工程引用及文档。两侧主工程 `JobsOCBaseConfigDemo.entitlements`、`JobsConfig.xcconfig` 与整个 `配置info.plist/` 资料目录归 `JobsOCBaseConfigDemo/其他/`；新侧资料由旧侧补齐。实际 App `Info.plist` 仍按原 `INFOPLIST_FILE` 位于主工程原位置，不把说明／备份目录误当运行配置。老工程 Core Data 使用既有 `JobsOCBaseConfigDemo/其他/CoreData/JobsOCBaseConfigDemo.xcdatamodeld`；主文件同步组默认不加入 App 时，其 `membershipExceptions` 是启用白名单，保留模型这一唯一成员，不能反向当作排除项移除。 两侧 Xcode 中 `ScriptsByPods` 及其两个分类均使用蓝色文件系统同步文件夹，根为 `PBXFileSystemSynchronizedRootGroup`，由磁盘发现子目录；仅作导航，不加入任何 target 的同步目录列表或编译／资源阶段。
 - 用户再次明确自动化能力取新旧双方完整并集：脚本、用例、fixture、断言、结果校验与 CI 门禁均对齐，只保留“新功能下沉自建 Pod／旧功能直接集成主工程”的差异，不得用旧工程新增 Pod 代替测试集成。2026-11-15 已限定验证：每侧静态 XCTest 并集 161 项（组件 144＋启动宿主 5＋主 App 12），默认矩阵加 Snowflake 的 4 项 Release 执行，每侧实际 165 项均零失败、零跳过；各 10 组 macOS 真实生产 harness、正常 arm64 Debug 构建及各 4 个实际 UI 场景（17 步）通过。范围为本机 Xcode 27.2／iOS 26.5 arm64 模拟器，除 Snowflake 外 XCTest 均为 Debug；不外推为真机、全部普通 Release 或远端 CI 已通过。旧最终源指纹 `ea172434…d144`，新 `109599de…9717`，已独立重读实际 xcresult、签名／准备链及当前源码。
 - 旧侧导航与时钟的当前自有维护源码位于 `Libs/OCBaseConfig/JobsMixFunc/JobsNavigationTransitionMgr/JobsNavigationTransitionMgr/`、`Libs/OCBaseConfig/JobsMixFunc/JobsClockView/JobsClockView/`；原 manual 同名源码保留原字节并停用重复 App 编译成员。后续对齐优先修改这些维护版；2026-11-15 的有效 target／实际测试已核验，第三方目录共 521 项与移动前 SHA／大小一致。
 - 用户于 2026-11-03 再次确认本节新旧工程平行要求，并点名 `JobsPodsStabilitySceneDelegate`：新工程至少由本地 Pod 管理，老工程需补齐同等功能并直接集成主工程；保留稳定性宿主与正常 App 启动用途的边界。状态：confirmed（用户要求）；此条不代表迁移、全量平行审计或构建已完成，最终结果以当次任务验证为准。规则主归属为 `jobs-objective-c-pods` 的“文件组织与类边界”及同级项目映射附件。
@@ -721,5 +726,36 @@ tags:
 - Flutter 的本地 Pod 是占位声明，框架由主 App 的工具链阶段嵌入；独立测试不能据链接成功就假定运行时框架存在。`JobsSwiftTools`、`JobsSwiftAppTools`、`JobsBy3rdTools`、`JobsLocalNotification` 的测试规格仅为模拟器把 Flutter helper 动态提供的 `FRAMEWORK_SEARCH_PATHS` 继承进 `LD_RUNPATH_SEARCH_PATHS`；不硬编码用户目录、不改生产配置或生成的 Flutter Pod。须有当前机器健康的 SDK 缓存；此配置不证明测试产物可搬运或真机引擎打包／签名通过。
 - 入口为 `ScriptsByPods/jobs_swift_pods_tests.rb/jobs_swift_pods_tests.rb`，同包 README 说明全量／定向／`--audit-only`；读取真实 target UUID，在独立输出目录生成临时 workspace／Scheme，分开构建和运行。官方 `.xcresult` 摘要与测试树须逐 Pod 非零通过、零失败／跳过／预期失败且源码指纹一致；仅安装审计、子集通过或源码变化期间的旧结果都不能充当最终全量验收。进程组超时与有界输出排空仅结束本次命令，不误杀其它构建。
 - 本地限定验收：CocoaPods 实际生成 64 个独立 test target／Scheme，生产源码隔离及 139 个根 Pod 版本不变；Xcode 27.2、iOS 26.5 arm64 模拟器最终完整一轮 128／128、零失败零跳过且源码指纹一致。执行器另有 7 组、44 条隔离断言通过。证据 `/Users/jobs/.codex/visualizations/2026/11/14/swift-pod-tests/full-3/results.json`；前序 Flutter 加载失败和并行修改导致指纹未放行的独立轮次保留，不混合计数。CI 已在源码中接入 Pod 编译之后、主 App 测试之前，并保存独立证据 artifact；本轮未提交、推送或触发远端 CI，未验证真机。
+
+## 七十、<span id="native-home-menu-and-recents">首页菜单视觉与四工程最近使用</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于2026-11-15明确满意 Flutter 首页右上下拉菜单的凹凸立体感，要求 OC 新旧与 Swift UIKit 向其学习，并修正菜单位置偏差；同轮明确最近使用须辐射 OC 新旧／Swift UIKit／SwiftUI。状态：需求 confirmed；创建：2026-11-15，更新：2026-11-16。适用仓库为第一节四个原生工程；SwiftUI不纳入本次UIKit菜单外观修复范围。
+- 菜单以 Flutter 的紧凑圆角卡片、表面层次与柔阴影为视觉参考；弹层锚点取真实右上按钮并换算到承载层坐标，处理屏幕边缘、明暗主题和长语言文案。实际外观、坐标与适配验收依当次资产表和证据，不由参照要求推定已一致。
+- 最近使用以稳定功能ID记录实际进入的目标，前插去重、最多30项、持久恢复并忽略已删除注册项；普通目录、搜索和最近重开共用记录，完整空态／重新加载及真实功能路由保留打开来源，沿用全局语言和主题。SwiftUI沿用现有共享观察模型与 `NavigationStack`，不为最近页另造全局设置或强套UIKit容器。先盘点及每次改App同步资产表继续归 [[30-工作流决策/工作流决策#app-asset-inventory-sync|既有工作流决策]]，不另立重复规则。
+- 本次源码与OC限定状态（更新2026-11-16）：四工程最近使用源码均已落地；OC新旧最终arm64模拟器构建及AX增量构建均通过，两侧中文浅色三项菜单的阴影、圆角、右缘锚定和下方间距均已实看。新OC从菜单搜索、关键词结果进入真实沙箱示例，`cls:JobsMicroSandboxDemoVC` 单项偏好落盘已验；最近页重启恢复／返回来源仍未验，不外推其它主题／语言或真机。
+- Swift UIKit隔离限定验证（2026-11-16）：artifact副本最终完整构建成功，正常Flutter与Sourcery阶段通过，并已安装启动到首页；原工作树6份pubspec／lock／生成metadata哈希未变，7项依赖重解仅发生在副本。四个本轮责任源码与原工作树当前哈希一致，副本并发CoreData差异不纳入当前验收。原workspace旧SDK／锁不匹配仍未改变，不能写成原工程直接构建成功；菜单／最近页因CUA未暴露导航及 `noWindowsAvailable` 未能展开，实际交互仍待验。
+- SwiftUI限定验证：最终App根共享模型注入版Debug Simulator构建通过，真实模型隔离测试13项断言通过；新安装无记录空态／重新加载、普通入口打开 `Text/Label/Image` 后最近为1条、从最近重开并返回仍在最近且无重复均已实看。最终版本重装、终止冷启动后仍恢复该记录，返回与去重再次通过。搜索／速览实际打开、全部语言／主题画面与真机未在本批实看；源码接线和模型验证不代替这些交互验收。
+
+## 七十一、<span id="native-coredata-demos">四原生工程的真实 [**Core Data**](https://developer.apple.com/documentation/coredata) Demo</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户在核查已有模型后明确要求 OC 新旧及 Swift“要接入，要使用”；需求 confirmed，创建／更新2026-11-16，适用仓库沿第一节四个原生工程绝对路径。模型须接入可达菜单与真实 SQLite CRUD，不把模型占位或自动打印日志计作已使用；默认新库为空，新增、编辑、删除、重载与清空确认沿用全局语言和主题，写操作立即保存、失败回滚并可重试。
+- 架构映射：两 OC 使用既有 `CoreDataVC`、`User(name, age)` 模型和 AppDelegate 的 `NSPersistentCloudKitContainer`，实际适配层为 `JobsCoreDataUserStore`，保留默认 `JobsOCBaseConfigDemo.sqlite`；移除进入即自动增删 Alice／Bob 的副作用。Swift UIKit 为 `Demo@CoreData/JobsCoreDataDemoVC` 与 `JobsCoreDataUserStore`，原空模型补 `User(name, age)`，存储位于 Application Support 下 `JobsSwiftBaseConfigDemo/Users.sqlite`。SwiftUI 保留上一轮 `DemoNote` 模型与对应 Demo，不强改成三端 User 模型。
+- 构建与存储限定验证：两 OC 完整及最终增量构建通过，真实生产 Store 的 SQLite 集成测试27项通过；Swift 真实 SQLite、跨容器及跨进程恢复测试通过。Swift UIKit 本轮490文件同源的隔离 Flutter 整包构建 exit 0，原 workspace 仍因既有 Flutter metadata 问题失败且未修，不能写成原 workspace 直接构建通过。
+- 界面边界：两 OC 有限冷读回记录1已实看，但通知授权遮挡；Swift App 创建实际数据库、由真实 Store 写入记录1已验。业务页完整显示、按钮 CRUD／清空取消与确认、全局十语三主题切换仍待 Mac 解锁后实测，不能把存储测试或受遮挡截图扩写为完整 UI 通过。源码位置、图标来源与逐项证据继续查各工程 `项目相关报告/`，不在永久记忆重复流水账。
+
+## 七十二、<span id="world-clock-skeleton-20261116">五端首页浮钟与世界时钟骨架</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户2026-11-16新增并确认；状态 confirmed；适用本笔记第一节OC两工程／Swift UIKit／SwiftUI及相邻Flutter工程；创建／更新2026-11-16。五端首页统一“功能实验室”，保留原生项目来源副标题、Flutter补来源。SwiftUI核查缺首页浮钟时补齐，不能把缺失作为永久差异。
+- 时间按钮按真实字体／语言／DynamicType与安全区自适应并留内边距，短按push世界时钟、长按拖动并沿既有四边吸附；原短按提示和长按确认隐藏明确 superseded，显隐仍从设置恢复。先前全屏拖动、计时／布局／主题语言更新保持落点等约束继续有效。
+- 世界页当前设备时区独立置顶，其余按同一瞬间有效UTC偏移各一知名代表（巴黎／纽约优先，含30／45分钟），显示城市、时区、UTC偏移、当地日期／星期／时分秒，使用系统规则处理DST，前台可见才每秒刷新，后台／离开停、返回立即校时。格式开关默认关即24小时，开为12小时，记住选择、立即刷新全部行并保留滚动；大写AM／PM，午夜12 AM、正午12 PM。格式仅世界页，首页仍24小时。
+- 用户同日追加：四原生当前时区向Flutter学习，放在格式开关下方的独立强调色卡片，突出当前时间并保留城市、IANA、UTC偏移、日期和星期；秒更新不能重建整个列表或丢失滚动。原生开关左标题须反映当前制式：ON显示12小时制、OFF显示24小时制；旧固定“12小时制”标题在四原生范围内 superseded，Flutter固定标签不据此一并改动。
+- 此需求归App骨架，不注册Demo项或写入Demo最近；OC新旧需求一致、只保留代码组织差异；Timer优先沿用JobsTimer机制，SwiftUI可用主工程生命周期适配，不因此新增Pods。各端资产先盘点润色需求再实施，源码／专项／构建／实际设备交互分开记录，当前结果查当次工程报告。
+
+## 七十三、<span id="native-home-behavior-20261116">首页返回、侧栏与开屏浮钟</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户2026-11-16明确要求；状态 confirmed；创建／更新2026-11-16，适用第一节四原生工程及相邻Flutter视觉／开屏约束。四原生设置增加“返回首页时收缩分组”，缺值默认开，只从具体Demo返回时收缩；关闭则保留离开前展开和滚动，即使旧返回刷新开关开启也不能重置。手动单组／批量操作仍有效，设置／世界时钟等非Demo返回不冒充Demo返回。SwiftUI补现有分组的手动收缩，不由此创造原本没有的侧栏或开屏。
+- 设置选项使用各App沙盒UserDefaults，iOS实际文件为`Library/Preferences/<bundleID>.plist`；新收缩键分别为OC两侧`com.BSports.JobsOCDemoListCollapseOnDemoReturn`、Swift `RootList.collapseOnDemoReturn`、SwiftUI `JobsSwiftUIBaseConfigDemo.collapseOnDemoReturn`。分组展开集合和浮钟坐标仍可能只在视图内存，不能泛称全部首页状态持久化；卸载App或清理模拟器会失去其沙盒。
+- Swift左菜单必须由真实导航按钮连接真实drawer owner，避免可选祖先查找无声失效，OC入口同时回归。五端时间浮钟不覆盖开屏，已有开屏的宿主在呈现前抑制、真实移除及首页可交互后恢复，不用固定延时；搜索／覆盖页及前后台沿用可见性门禁，原全屏拖动和位置保持继续有效。UIKit首页Timer按owner实例隔离，暂停／移除不能干扰其它Scene；真实多Scene画面仍须单列验证。
+- 共同首页视觉以Swift UIKit为参照：圆角卡片、组头和条目主副标题层级、留白与内部划线，OC新旧／SwiftUI／Flutter向其靠齐；保留各端既有功能和稳定ID。具体参数、代码入口、构建与实际交互以当批骨架盘点为准，不把同源模型或历史截图算作全部设备／主题验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

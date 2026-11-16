@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-11-13
+updated: 2026-11-15
 tags:
   - codex-memory
   - project
@@ -41,6 +41,7 @@ tags:
 - [十七、自定义菜单分类与打包命名](#action-menu-groups)
 - [十八、当前仓库的通用 Push 修复入口](#universal-push-repair)
 - [十九、Commit 目录过滤器与 Node 路径修复](#commit-markdown-filter-repair)
+- [二十、终端临时配色与现行范本](#terminal-style-template)
 
 </details>
 <!-- jobs-toc:end -->
@@ -65,6 +66,8 @@ tags:
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、验证基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- <span id="windows11-native-20261115">2026-11-15 Windows 11 ARM64 初轮快照</span>：用户要求验证 WindowsOS 后，在 Windows PowerShell 5.1 Desktop／STA 原生运行 7 套；2 通过（Extractor 14 项、FlutterRunner 12 项）、HarmonyBuild 1 套部分验证（41 项、2 项链接场景缺权限）、Safety 1 套失败（实际 29 个动作、断言仍写 28）、3 套因缺 Git 启动前阻塞。Safety 后续 CMD 检查尚未执行；真实菜单、Git 行为和完整桌面业务未验。初轮未改源码或菜单；总 76 套固定证据见 [[MacOS-Finder-扩展体系#windows11-native-20261115]]。
+- 初轮后修复（2026-11-15，限定验证 scoped-verified）：Safety 改为逐项校验 `actions.json`、实施 ID 与唯一同名 CMD，兼容终端保护后的原退出码；运行与备灾各 331 断言及 9 组清单变异验证通过，保留原保护差异。首次原生补跑又暴露 WinPS 5.1 的 JSON 数组被 `@(... | ConvertFrom-Json)` 多包一层；已改为先接收解析结果。后续 `followup-3` 的 Windows 原生 Safety 已通过，含真实 CMD 夹具，仍不代表真实 SourceTree 客户端菜单已安装或点击验收。CMD 为终端守护的启动／收尾保留 15 秒有界窗口。共享 SDK 路由已原生通过，见 [[MacOS-Finder-扩展体系#windows-sdk-route-fix-20261115]]；原失败证据继续保留，实际安装验收边界见 [[MacOS-Finder-扩展体系#windows-acceptance-boundary-20261115]]。
 - 用 `cmp` 或内容哈希核验两份对应文件完全一致。
 - 如果修改 `.command`，必须分别对运行副本与备灾副本执行 `zsh -n`。
 - 新增或修改 Sourcetree 脚本时，必须把动作实际写入当前用户 `actions.plist` 并完成重载验证；只生成脚本或 README 不算完成。
@@ -232,5 +235,12 @@ tags:
 - `--repair-filters` 仅执行工作树定位、锁检查与 C08，不改业务索引、正文、绑定或子模块；显式 `--repair-paths` 继续仅修旧索引路径并跳过 C08，默认与 `--stage-all` 仍保留各自原暂存策略。WindowsOS 公共模块在锁处理后、status 前接入同一内嵌逻辑，继续只做暂存 dry-run，不真实 add。
 - 真实 Git clean / smudge 探针使用独立临时对象目录，以同一 Git 属性与换行管线对账转换器，兼容 autocrlf、显式 eol、UTF-8/BOM、中文与 ident；UTF-16 被现有 UTF-8 工具拒绝并保留现场，不声称支持。精确恢复依据位于各仓真实 Git 元数据中的 `jobs-filter-backup-*/before.json`。
 - 六子仓均已通过修改后的脚本修复；父仓与六子仓的真实双向过滤、独立临时索引 add、原始目录 check 与 `commit -a --dry-run` 通过，原始业务 index、HEAD 和受控正文逐字节保持。Mac 新定向 17 项、原路径 18 项和 Windows 模块 13 项真实 Git 隔离回归通过。双位置 9 个修改文件同步核验，现有菜单目标与 `$REPO` 保持有效；未创建提交或推送，Windows 原生控制台与 WinPS 5.1 实机另验。
+
+## 二十、<span id="terminal-style-template">终端临时配色与现行范本</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+- 来源：用户于 2026-11-15 要求修复打开远程仓库地址及全域同源保护，并明确固化可复用范本；状态：需求 confirmed／限定验证 scoped-verified；适用范围：`/Users/jobs/Documents/GitHub/JobsGenesis` 及 `/Users/jobs/SourceTree.command`。标准实现归现行 `jobs-macos-shell`，生产脚本内嵌完整保护，不能运行时依赖 Skill 路径。
+- 设置核验与退出阶段有界识别帧外回车／方向键；核验失败后重新查询当前19项颜色，只撤回匹配本轮目标的项，恢复成功用纯文本继续，业务只执行一次并保留真实退出码。当前等于原色不重复写回，后续改色保留；查询持续失败保留人工恢复入口与具体阶段／颜色项原因。原用户旧恢复脚本未执行，不能把隔离会话通过当作原TTY重跑通过。
+- 本轮484份同源源码、326个command及3份生成Shell静态检查通过，41份SourceTree运行guard与仓库逐字节一致；87项配色回归、35项远程地址隔离业务回归通过。原生Terminal独立会话相同按键输入对照中，新版退出0、无警告，恢复后19色额外读回一致。未改动作路径、Git配置、用户原终端或其它已安装环境副本；未提交推送。
+- 用户明确的范本维护方式：新写／修改脚本直接复用现行范本；先修生产并验证，再在同一任务更新范本及回归。Skill只保留最终可用实现、使用方式、必要边界和验证要求，不记录困难、问题列表、排障经过或历次升级历史；只维护现行Skills工作树，不复制到备份态。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➔点我回到首页</a>

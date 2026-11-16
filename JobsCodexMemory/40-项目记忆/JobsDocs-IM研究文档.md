@@ -4,7 +4,7 @@ status: confirmed
 scope: JobsDocs IM 技术研究与自建产品需求
 source: 用户于 2026-09-25 确认完整 iOS IM 研究范围，2026-10-07 确认自建 IM 方向、三阶段/主营内核、低门槛部署与 AI 主力，2026-10-08 明确独立从零新建、本人 Swift 模板与 iOS SQLite 引擎，并委托 Codex 完成工程选型与验证、强调后端正式灾备、多端同步竞品对标和架构图交付；2026-10-09要求按审计意见整改原文、回归并同步README
 created: 2026-09-25
-updated: 2026-11-14
+updated: 2026-11-16
 tags:
   - ios
   - im
@@ -195,5 +195,11 @@ tags:
 - 来源与状态：用户于2026-11-14明确授权开始落盘代码，要求组合本人0～1软件开发、前端体验及外源UI Skills，前端尽量原生、不用跨平台，先满足I基础版；本次编码授权为confirmed。第三区域“尚未创建业务工程”和第十七章此前“先完善文档再代码”的等待状态已superseded；单一现行需求、SDK及外部渠道后置的边界继续有效。
 - 用户进一步明确“JobsIM这个文件夹以前的内容，都是需求”。仓库为 /Users/jobs/Documents/GitHub/JobsIM；编码前七份文档、原始xlsx及图解整体置于 需求/，原根README承接为 需求/README.md，各专题继续使用含.md后缀的同名包装目录。主需求现为 需求/IM需求明细表.md/IM需求明细表.md，数据库为 需求/JobsIM数据库设计.md/JobsIM数据库设计.md；旧的专题直接位于仓库根路径已superseded。
 - 仓库根README用于工程导航；业务工程在代码/，测试在工程外测试/，平台部署在部署/。需求文件只维护一套，不以代码切片替代完整产品合同，不建V1.0等平行需求或版本对照；逐端构建、接口联调、部署演练与全量243项验收分别记录，当前不得宣称全I完成。
+
+- <span id="jobsim-persistent-runtime">运行数据必须放持久目录。</span>2026-11-15用户确认运行过本机 `clean` 和 Cleaner for Xcode；已读其指定的 JobsMacEnvVarConfigs `scripts/clean.command/clean.command`，确认直接清空 `~/Library/Caches` 内容且不经废纸篓。JobsIM 开发运行库／密钥／唯一备份不能存 Cache：新运行状态、实例CA与已安装工具在 `~/Library/Application Support/JobsIM`，备份另存 `~/Documents/JobsIMBackups`，缓存仅容纳可重建内容；部署入口原有持久State默认保持。重新初始化用新部署身份与CA，不冒充恢复原数据；仓库已有报告只证明其历史构建。此为项目工程约束与源码核验事实，不归因于未经审计的具体清理步骤；不修改用户清理工具，不将同机分目录视为异地灾备。
+
+- <span id="jobsim-central-reports">JobsIM 报告集中与资产同步。</span>2026-11-15按用户确认的全局 App 盘点规范，工程 `/Users/jobs/Documents/GitHub/JobsIM` 的统一入口为 `项目相关报告/README.md`，五端表为 `项目相关报告/资产盘点/README.md`；执行证据、实现进度、统计分别归 `项目相关报告/测试/`、`实现进度/`、`项目统计/`。根 README、原需求正文、代码地图、接口契约及工具固定入口保留原位；历史报告目录用相对兼容链接保留聊天导航，工具默认直接写中央新子项，不依赖 Windows 软链接。原始 JSON／PNG／log／包及旧 SHA 不改，原导航先留存，导航修订另封校验；秘密和备份仍在工程外。每次 App 修改同任务同步入口、行为、默认值、持久化、生命周期、源码、差异与证据，不把源码／主机替身／构建通过外推为原生或全 I／243项验收。状态：confirmed／本轮迁移限定验证。
+
+- <span id="jobsim-validation-scope">限定回归基线与未完范围。</span>2026-11-16续写：各轮依项目中央资产表、逐轮SHA与源冻结，不能累计成243验收。Android旧5774的11JVM／23原生／3真HTTPS与UI、Web旧D5的26本地／11真／16模拟认证、CLI旧15a4的55本地／13真分别保留。新正式导出Web有18注入／全工程TS／生产构建，CLI13cd有88本地／Mac构建，Android1588有16JVM及主／测试APK编译、5新增原生方法仅编译，均无本轮真API；iOS正式导出App89e／test94a1完整编译与31原S2＋10导出共41本地执行通过、123输入前后核齐，自有sim已关闭；完整UI／Files／真实API另验。iOS固定30原生／旧真接口与新sim完整UI失败分列，六family实际logout且精确核revoked/active0；公开档案源修31目标已纳新41本地，不借旧30包或未过完整UI。CLI主动改密7150有97本地／0失败／2环境跳过及Mac构建，计数器旧提示粘连少报按原raw＋99源码方法名集合独立核正、未改旧原件，未真API；CLI对象eb42的80本地／Mac构建已过，完整准备记录与global迟到围栏有本地证据，未真实批准或API。Harmony旧35host／41旧规则、双HAP／37方法仅编译；正式导出已源接、首15host限定通过，后补18目标被磁盘门禁拦下、新5Hypium仅源／42方法，本轮HAP与设备均未验，无HDC目标。后端云草稿含真实恢复，正式导出2b58限定完成全媒体／源排空／取消／恢复；对象9f3b有7纯／9真PG及构建；本人主动改密62d3有4纯／12真PG及构建，原责任密封恢复／全family撤销／原结果限流／迟到Cookie与独立epoch均有反例；后续注销普通准入门禁fee94两cmd及4纯／25PG事件（含原12、5新组、8子项）过，none才普通认证／恢复／导出，prepared管理员重置与初始交付另有复核，尚无公开注销／受限证明／取消／清理worker；这些新专项owner依赖是进程夹具，不是HTTPS／独立恢复或端落盘。完整冻结目标／连续累计ACK／保留worker、五端完整导出和主动改密、注销／普通迁移及其余I未交付，after_receipt仍false。用户于2026-11-16明确保持当前磁盘状况继续写代码：低于本轮4GiB只暂停新编译／VM／真实专项，源码继续，不擅自清理／迁移已有缓存、数据、SDK或模拟器；既成会话最窄收尾，保失败原件和秘密。新对象56443运行域尚未创建。状态scoped-verified／全I未交付，不新增或降排原需求。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

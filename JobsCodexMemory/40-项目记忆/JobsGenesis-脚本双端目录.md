@@ -31,6 +31,7 @@ tags:
 - [六、SSH 终端与 Python GUI 分工](#ssh-cli-python-gui)
 - [七、终端配色广域修复](#terminal-style-genesis-fix)
 - [八、环境同步生效提示](#zshrc-activation-message)
+- [九、全局 Flutter 与项目 FVM 更新边界](#global-flutter-update)
 
 </details>
 <!-- jobs-toc:end -->
@@ -130,8 +131,17 @@ tags:
 
 - 用户后续原入口日志（2026-11-15 09:34，log-observed）：用户再次提供 `install（快捷入口）.command ; exit;` 的完整输出，本次已替换 `~/.zshrc`、打印同步完成及日志路径，随后正常保存会话，未出现配色恢复警告。该日志支持本次原入口正常完成；没有直接展示 19 项原色复核，也未说明是否再次制造方向键／连续回车余留，因此不外推所有按键场景均已完成用户实测。之前原会话失败反证保留。
 
+- 当前设置核验／回退行为（2026-11-15，需求 confirmed／隔离与原生独立会话 scoped-verified）：设置核验也有界接受帧外回车与明确方向键；核验失败重新读取19项当前值，安全撤回成功后纯文本继续业务，取代旧“applied按键严格停止且未完成核验不恢复”的行为。484份同源源码与SourceTree41份运行guard已更新，保护块外业务保留；87项配色及35项远程地址回归通过，原生独立会话相同按键对照与还原后19色读回通过。具体范围与用户要求的现行范本维护方式见[[SourceTree-脚本体系#terminal-style-template|终端临时配色与现行范本]]；本轮没有同步其它环境安装副本，也没有操作用户原TTY或执行旧restore脚本。
+
 ## 八、<span id="zshrc-activation-message">环境同步生效提示</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 - 来源：用户于 2026-11-15 核对 `source ~/.zshrc` 提示后，明确要求区分已打开与新打开的终端；状态：confirmed；创建 / 更新：2026-11-15；适用范围：`🌍JobsMacEnvVarConfigs/install.command/install.command` 环境同步安装器及其 `~/.JobsMacEnv/install.command` 已安装副本。完成提示应说明：当前已打开的终端需在各自窗口执行 `source ~/.zshrc` 重新加载配置；新打开的交互终端会自动加载 `~/.zshrc` 中的最新配置，无需手动执行。这里的“最新”指该文件当前内容，不承诺跳过替换时也会加载本次生成的配置。本轮只调整这两份安装器的提示文案，不新增自动 `source`、不改变安装流程，也不扩展为其它脚本或 Skills 的全局约束。
+
+## 九、<span id="global-flutter-update">全局 Flutter 与项目 FVM 更新边界</span> <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+
+- 来源：用户于 2026-11-15 明确要求 `update` 升级本机已配置的全局 [**Flutter**](https://flutter.dev/) 环境，没有则跳过且不安装；项目 SDK 由 [**FVM**](https://fvm.app/) 独立管理。状态：confirmed；创建／更新：2026-11-15；仓库：`/Users/jobs/Documents/GitHub/JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs`。
+- `scripts/update.command/update.command` 只发现和升级独立全局 SDK；先跳过 PATH 中的项目 FVM／未知包装入口，继续检查有效 PATH 候选、Flutter 环境变量及 Homebrew 实际前缀。FVM 数字版本、频道缓存和项目绑定均不因全局维护而改写；未安装 FVM 工具也不借 Dart 顺手安装。
+- 全局 SDK 沿用当前频道获取最新版，不隐式换频道或来源；升级在 SDK 目录执行，避免 Flutter 官方 `upgrade` 根据调用方工程执行 pub 依赖升级。用户另行明确授权的项目换版单独执行，不视为全局 `update` 的默认动作。
+- 限定验证（2026-11-15，scoped-verified）：Flutter／Gem 隔离回归 29 项、入口隔离 15 项及语法通过；本机只读发现 Homebrew 全局 SDK 为 Flutter 3.50.0。本轮修改源码及说明，未执行全量环境同步或整轮真实 `update`，现有已安装短命令副本不冒充已部署。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
