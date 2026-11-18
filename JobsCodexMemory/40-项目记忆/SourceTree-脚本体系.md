@@ -5,7 +5,7 @@ scope: sourcetree-scripts
 runtime: /Users/jobs/SourceTree.command
 backup: /Users/jobs/Documents/Github/JobsGenesis/SourceTree.command
 created: 2026-07-15
-updated: 2026-11-15
+updated: 2026-11-18
 tags:
   - codex-memory
   - project
@@ -86,7 +86,8 @@ tags:
 ## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、Commit / Fetch 场景化解锁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - Commit 修复固定拆成 `C01`–`C07`：工作树与 gitdir 绑定、`index.lock`、`.gitmodules` 暂存顺序、嵌套工作树与路径迁移、子模块与 gitlink、一轮完整索引刷新、索引/dry-run 解锁复验；每个场景必须有独立函数、出现原因和通过日志。
-  - <span id="commit-obsolete-paths">旧路径精确修复</span>（2026-11-05，用户要求修复 confirmed／实现 scoped-verified）：Sourcetree 先添加文件变同名目录的新子项，再对旧文件调用 `git rm -f`，会触发 `without -r`；旧条目已消失时可能报 `pathspec did not match`，不能直接补 `-r` 删除新目录。现脚本在 HEAD 普通文件已变真实目录时自动选择精确模式，第二参数 `--repair-paths` 可显式选择，`--stage-all` 保留原完整流程。精确模式跳过 C03–C05，只暂存未有暂存变化且确已缺失/变目录的普通旧文件删除；保护新目录、部分暂存、ITA、flags、gitlink、符号链接和祖先路径，冲突或索引锁停止。独占锁、索引备份与临时索引验证后写回，不创建提交或推送。18 项完整入口隔离回归、双位置语法与内容核对通过；SwiftUI 真实仓仅暂存 6 个旧 CodeGraph 文件删除，其余 125 条索引内容保持，并已在 Sourcetree 刷新显示重命名。实际 Commit、Hook 和签名未执行；本条补充并限定前述 C06 全量刷新默认适用范围。
+  - <span id="commit-obsolete-paths">旧路径精确修复</span>（2026-11-05，用户要求修复 confirmed／实现 scoped-verified）：Sourcetree 先添加文件变同名目录的新子项，再对旧文件调用 `git rm -f`，会触发 `without -r`；旧条目已消失时可能报 `pathspec did not match`，不能直接补 `-r` 删除新目录。现脚本在 HEAD 普通文件已变真实目录时自动选择精确模式，第二参数 `--repair-paths` 可显式选择，`--stage-all` 保留原完整流程。精确模式跳过 C03–C05，只暂存未有暂存变化且确已缺失/变目录的普通旧文件删除；保护新目录、部分暂存、ITA、flags、gitlink、符号链接和祖先路径，冲突或索引锁停止。独占锁、索引备份与临时索引验证后写回，不创建提交或推送。18 项完整入口隔离回归、双位置语法与内容核对通过；SwiftUI 真实仓仅暂存 6 个旧 CodeGraph 文件删除，其余 125 条索引内容保持，并已在 Sourcetree 刷新显示重命名。实际 Commit、Hook 和签名未执行；本条补充并限定前述 C06 全量刷新默认适用范围。2026-11-17因Swift旧报告已暂存迁移而GUI仍沿用旧删除列表，扩展自动识别“缺失旧文件已不在索引”的精确模式；无剩余安全候选时保留原索引、提示刷新并取消GUI旧选择，不重复删除，也不回退全量暂存。当前源码态／运行态入口各20项隔离回归、语法与镜像字节核对通过；这是当前字节的新验收，不声称与已移除旧归档的历史脚本摘要相同，本次复验未改真实业务索引。
+  - <span id="commit-add-then-rm-20261118">先 add 新子项再 rm 旧父路径</span>（2026-11-18，用户要求蒸馏并修脚本 confirmed／隔离验证 scoped-verified）：普通脚本改同名包装目录，前序 `git add -f` 两子项成功后，索引精确旧条目已消失；后续 `git rm -q -f` 实际匹配新子树，报 `without -r`。不能补 `-r`，即使 `--cached -r` 也会移除新子项暂存。双位置 Commit 入口按 HEAD 旧普通文件、旧索引条目缺失、真实同名目录与索引子项联合显示确定诊断及子项数，排除仅意图添加的子项；没有其它安全删除候选时逐字节保留索引，提示刷新并取消旧选择，不重放 GUI 原生队列。精确模式仍允许暂存其它符合原条件的缺失普通文件删除，不泛称任何场景都全索引 no-op。23 项完整入口隔离回归、双位置语法与6文件字节核对通过；用户软件仓只读核实为 D＋A＋A，未运行修复或改业务索引。菜单与双模板均已指向原有效入口、`$REPO` 参数，无需改配置；本轮未点击真实 GUI 或提交。通用规则归现行 `jobs-git-repository`，Shell 短引用，不复制 Skills 备份态。
 - Fetch 修复固定拆成 `F01`–`F05`：原生 `fetch --prune`、`remote prune`、MacOS 大小写路径碰撞、前缀文件挡目录、同名目录挡文件；每产生一项实际修复就立即重新 Fetch，成功后停止后续元数据处理。
 - Fetch 大小写碰撞不能只搬移 loose ref；应先用 Git 原生 `pack-refs` 保留有效引用并释放大小写前缀文件路径，再备份冲突 reflog 后复试。
 - 两份同名 README 必须专门维护“故障现象、出现原因、独立处理、解锁判据、不处理边界”，并与脚本场景编号一一对应；JobsDocs Git 故障手册继续保留跨主题知识地图，但与单个脚本直接相关的原理、错误分流、诊断命令、手工边界和执行后核对必须完整下沉到同名 README，不能只在 JobsDocs 保留或只放链接。

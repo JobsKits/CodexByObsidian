@@ -2,10 +2,10 @@
 type: project-memory
 status: active
 scope: JobsDeviceInfo
-repository: /Users/jobs/Documents/Github/JobsDeviceInfo
+repository: /Users/jobs/Documents/GitHub/JobsProds/JobsDeviceInfo
 source: 2026-10-28 至 2026-10-29 用户确认、本机验证与线上发布核验
 created: 2026-10-28
-updated: 2026-11-06
+updated: 2026-11-17
 tags:
   - codex-memory
   - project
@@ -26,7 +26,7 @@ tags:
 
 ## 一、项目边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-- 当前项目路径：`/Users/jobs/Documents/Github/JobsDeviceInfo`，2026-10-29 实查已是独立 Git 工作树，远端为 GitHub `JobsKits/JobsDeviceInfo` 与 Gitee `JobsGo/JobsDeviceInfo`；替代 2026-10-28 桌面独立文件夹、尚未建库的状态。原始桌面交付要求保留为来源，不继续作为当前工作路径。
+- <span id="jobsprods-location">当前项目路径</span>：`/Users/jobs/Documents/GitHub/JobsProds/JobsDeviceInfo`。来源：用户2026-11-17说明自行移入两份工程，当前目录与根README已核实；状态 confirmed／source-verified；创建／更新2026-11-17。旧 `/Users/jobs/Documents/Github/JobsDeviceInfo` 根路径为 superseded。2026-10-29 实查已是独立 Git 工作树，远端为 GitHub `JobsKits/JobsDeviceInfo` 与 Gitee `JobsGo/JobsDeviceInfo`；原始桌面交付要求保留为来源，不继续作为当前工作路径。此次只维护总览与路径记忆，未重新验证部署、远端或真机采集。
 - 目录规范（2026-10-29，用户明确要求 / 本机 verified）：六份项目 README 及 `.jobs-markdown-toc/README.md` 共七份精确接入标准过滤器，本地保留 `[toc]`、整文件暂存生成折叠目录；本机已注册上述双远端的 12 个精确 URL 变体。字节往返、临时索引、两个来源的首次克隆及真实快进拉取通过；克隆用进程内本地 bare 重定向，未向托管远端发布。源码、真实 HEAD 和暂存内容保持；首次发布仍须正常整文件暂存全部清单文档、属性和工具后检查，不把本地接入当成远端已更新。审计与备份位于 `/Users/jobs/.codex/backups/JobsDeviceInfo-toc-2026-10-29-S1byQQ`。
 - 当前线上入口：[设备采集站](https://jobs-device-info-pages.pages.dev/)。采用 [**Cloudflare Pages**](https://developers.cloudflare.com/pages/) 专属项目 `jobs-device-info-pages`，通过 Service Binding 原样调用 `jobs-device-info` Worker；数据库仍为原独立 [**D1**](https://developers.cloudflare.com/d1/)，不复制业务或迁移数据，原 Worker Cron 继续清理。
 - 桌面入口为 `【MacOS】🚀部署到Cloudflare.command`（后端与网页）、`【MacOS】🌐部署Pages入口.command`（薄入口）、`【MacOS】🧪本地预览.command` 和 `打开线上采集站.webloc`。修改后端或网页先部署 Worker，再执行 Pages 入口脚本以更新本地预览默认地址；只发布 Pages 不更新原 Worker 的业务源码或网页资源。

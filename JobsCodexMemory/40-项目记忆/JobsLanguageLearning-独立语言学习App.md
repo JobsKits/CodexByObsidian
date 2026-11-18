@@ -2,11 +2,11 @@
 type: project-memory
 status: active
 scope: JobsLanguageLearning
-repository: /Users/jobs/Documents/Github/语言学习
+repository: /Users/jobs/Documents/GitHub/JobsProds/语言学习（单机版）
 source: 2026-10-03 用户明确要求三端新增法语、西班牙语、朝鲜语拼读；架构与实现由当前工程核验
 confirmation: 用户确认新增语言范围；架构事实由工程核验
 created: 2026-10-01
-updated: 2026-11-01
+updated: 2026-11-17
 tags:
   - codex-memory
   - project
@@ -40,6 +40,8 @@ tags:
 > 用户要求在系统桌面新建独立 [**Swift**](https://www.swift.org/) App，沿用 Jobs Swift 项目的架构与链式 UI，整合俄语、英语、日语三个成熟学习功能；2026-10-03 明确将法语、西班牙语、朝鲜语拼读扩展到原生、Flutter 和 Python 三端。
 
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、项目与来源边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+
+- <span id="jobsprods-location">当前项目路径</span>：`/Users/jobs/Documents/GitHub/JobsProds/语言学习（单机版）`。来源：用户2026-11-17说明自行移入两份工程，根README的JobsLanguageLearning名称及原生iOS／Flutter／Python布局已核实；状态 confirmed／source-verified；创建／更新2026-11-17。旧 `/Users/jobs/Documents/Github/语言学习` 根路径为 superseded，历史条目中该工程的旧前缀按当前根目录解析；三端与子仓仍归同一产品。此次只维护总览与路径记忆，未重新验证构建、设备语音或翻译。
 
 - 2026-10-04 用户明确移动端双向同步约束：iOS 出现的问题要在 Flutter 对应调整，Flutter 出现的问题也要在 iOS 对应调整；适用于搜索框位置、字号主次、列表布局等共同能力。
 - 来源：用户于 2026-10-04 在任务 `01a0ff33-3ef8-7300-a8e0-8b8c3c617620` 明确要求；状态：已确认；适用范围：iOS / Flutter 首页；创建 / 更新：2026-10-05。首页旗帜资源随应用本地打包：对应语言入口展示国旗，阿拉伯语展示用户指定的阿拉伯联盟旗帜，不使用运行时外链。会话完成记录报告两端已使用本地图片、iOS 模拟器构建与 Flutter 静态分析通过；页面视觉验收尚未完成。

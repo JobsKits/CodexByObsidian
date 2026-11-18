@@ -11,7 +11,7 @@ repositories:
   - /Users/jobs/Desktop/JobsLanguageLearning
   - /Users/jobs/Desktop/JobsMosaicLab
 created: 2026-07-15
-updated: 2026-11-16
+updated: 2026-11-18
 tags:
   - codex-memory
   - project
@@ -541,7 +541,8 @@ tags:
 - 当前远端别名为 GitHub `Github`、Gitee `码云`（2026-11-05 用户说明并经本机只读核对，confirmed / scoped-verified），本节历史记录中的 `origin` / `gitee` 为已被替代的旧别名；仅适用于上述 OC 新工程，不推广到旧工程或其它仓库。职责保持 `byPods → Github/byPods`、`Gitee@snapshot → 码云/byPods`：GitHub 保留全部原历史；Gitee 首次快照无父提交，后续只延续快照父链，不合并两端的提交历史；保留现有跟踪文件和忽略范围，包括当前依赖报告与 PNG。
 - 同日分支显示与命名调整（2026-10-07，confirmed）：用户要求去掉 Sourcetree 中的 `codex` 文件夹层，随后自行改名为 `Gitee@snapshot` 并明确要求维持该名，大小写和 `@` 必须保留，与 `byPods` 同级显示。旧名称 `codex/gitee-snapshot`、`gitee-snapshot` 均已取代（`superseded`）；改名保留已有快照提交，安装配置、推送映射与文档同步使用用户当前名称，远端目标仍为 `gitee/byPods`。
 - 快照分支名称属于可调整配置：通过随 `git branch -m` 移动的本地分支标记识别现有名称，旧版本用唯一快照根标记识别；自动同步不得因旧配置而重建已改名分支。改名后重新安装会沿用用户当前名、保留快照链并更新默认推送映射。Sourcetree 显式推送须选择 `Gitee@snapshot → byPods` 并关闭标签推送，不能用窗口自动填入的同名远端目标。
-- 工程入口为 `ScriptsByDevTools/gitee_snapshot.command/`，tracked hook 源位于 `.githooks/`；安装将入口复制到 Git 元数据目录并备份本地配置。源分支提交、合并、改写后自动同步已提交文件树，推送前拦截原历史、标签和过期快照；不切换工作区、不改暂存区、不自动推送。新克隆或迁移电脑须重新安装本地配置。
+- 工程当前入口为 `ScriptsByPods/自动化测试相关脚本/gitee_snapshot.command/`（2026-11-18核实；旧 `ScriptsByDevTools/gitee_snapshot.command/` 位置 superseded），tracked hook 源位于 `.githooks/`；安装将入口复制到 Git 元数据目录并备份本地配置。源分支提交、合并、改写后自动同步已提交文件树，推送前拦截原历史、标签和过期快照；不切换工作区、不改暂存区、不自动推送。新克隆或迁移电脑须重新安装本地配置。
+- <span id="snapshot-hook-locale-path-20261118">Sourcetree 无语言环境的中文路径</span>（2026-11-18，用户报错与本机进程核实／隔离验证 scoped-verified）：实际进程未设置 `LANG/LC_ALL/LC_CTYPE` 时，zsh `${(%):-%x}` 会转义中文路径，旧入口 `cd` 失败后继续得到项目根 `/`。现行源码顶层保存 `ENTRY_PATH="${0:A}"`，以原生 `:h` 定位脚本包和工程，并校验 Git 根身份；不改系统语言、Git 配置或既有 hook。中文空格 fixture 从 `/` 在 unset／C／UTF-8 三环境中经实际安装 hook 预检通过：GitHub 开发历史放行，Gitee 原历史仍因快照门禁拒绝，预检不写远端。整套隔离回归通过；另使用 Sourcetree 实际自定义 Git、无 locale 环境与用户原参数加 `--dry-run`，真实 GitHub 预检退出0，全部 refs／索引／配置逐字节保持，未提交或实际推送。当前源码修复由已安装 hook 直接读取，无需重新安装；Sourcetree GUI 点击另验。
 - 同日使用流程补充（2026-10-07，confirmed）：开发、提交与拉取 GitHub 都保持检出 `byPods`；Sourcetree 推 Gitee 只在窗口选择快照源分支，无须检出快照。仅删除本地 remote-tracking 记录不等于服务器删除成功。
 - 同日删除权限纠正（2026-10-07，confirmed）：用户明确要求“只要是远端，我都要允许删除”。本工程本地 hook 放行所有远端引用的原生删除，包含分支、标签与多引用删除；纯删除不依赖工作区快照脚本，切换旧分支后也可执行。普通推送继续检查快照与目标。先前只允许删除 `byPods` 的本地限制已取代（`superseded`），不再按远端名、分支名或快照启用状态限制用户删除。远端实际操作仍由用户执行，Codex 不自动清理 `main` 或其它远端记录。
 - 本工程不使用“逐层空白提交并Push”通用动作去整合全部远端；使用 Sourcetree 原生推送窗口或明确 ref 映射。双远端推同一最终提交的旧要求在本工程内已被取代（`superseded`），其它仓库继续遵循 [[SourceTree-脚本体系#七、逐层空白提交推送的递归范围|SourceTree 通用双线路策略]]。

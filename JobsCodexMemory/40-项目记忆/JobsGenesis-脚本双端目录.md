@@ -5,7 +5,7 @@ scope: JobsGenesis-platform-scripts
 repository: /Users/jobs/Documents/Github/JobsGenesis
 source: 2026-10-23 用户明确要求五个脚本仓按 MacOS 和 WindowsOS 划分
 created: 2026-10-23
-updated: 2026-11-15
+updated: 2026-11-18
 tags:
   - codex-memory
   - project
@@ -32,6 +32,8 @@ tags:
 - [七、终端配色广域修复](#terminal-style-genesis-fix)
 - [八、环境同步生效提示](#zshrc-activation-message)
 - [九、全局 Flutter 与项目 FVM 更新边界](#global-flutter-update)
+- [十、脚本规范统一与源码迁移](#script-unification-20261117)
+- [十一、父子 Git 仓库管理收口为双端 Python GUI](#nested-git-gui-20261118)
 
 </details>
 <!-- jobs-toc:end -->
@@ -143,5 +145,21 @@ tags:
 - `scripts/update.command/update.command` 只发现和升级独立全局 SDK；先跳过 PATH 中的项目 FVM／未知包装入口，继续检查有效 PATH 候选、Flutter 环境变量及 Homebrew 实际前缀。FVM 数字版本、频道缓存和项目绑定均不因全局维护而改写；未安装 FVM 工具也不借 Dart 顺手安装。
 - 全局 SDK 沿用当前频道获取最新版，不隐式换频道或来源；升级在 SDK 目录执行，避免 Flutter 官方 `upgrade` 根据调用方工程执行 pub 依赖升级。用户另行明确授权的项目换版单独执行，不视为全局 `update` 的默认动作。
 - 限定验证（2026-11-15，scoped-verified）：Flutter／Gem 隔离回归 29 项、入口隔离 15 项及语法通过；本机只读发现 Homebrew 全局 SDK 为 Flutter 3.50.0。本轮修改源码及说明，未执行全量环境同步或整轮真实 `update`，现有已安装短命令副本不冒充已部署。
+
+## 十、<span id="script-unification-20261117">脚本规范统一与源码迁移</span> <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+
+- 来源：用户在 2026-11-16 要求按现行脚本 Skills 和公约统一，并明确范围“仅 JobsGenesis 下的脚本”，2026-11-17 要求继续；状态：confirmed（范围）、scoped-verified（源码迁移与隔离验证）；适用仓库：`/Users/jobs/Documents/GitHub/JobsGenesis`；创建 / 更新：2026-11-17。
+- 当前源码使用含扩展名的同名包装目录及按角色适用的平台前缀，就近保留 README；source / import 库、固定工具名、测试协议入口和已发布 App 平铺资源按各自职责处理，不能把源码包装路径写回旧收据或安装产物。路径与逐文件验证集中在仓根 `项目相关报告/脚本路径映射.json`、`脚本统一验证清单.json` 与 `脚本统一审查.md`，后续定位先查现行清单；根 `🔎审计脚本.py` 继续保留已确认的独立入口例外。
+- Sourcetree 固定运行副本与源码副本先备份、保留各自有效独有内容后同步；实际菜单配置只读核验。OS 扩展的源码包装与 Bundle 资源名分离，通过显式复制阶段保留旧发布路径；仅源码验证不代表已安装 App 更新。本轮 Windows AST / BOM、静态夹具或 macOS PowerShell 检查均不替代 Windows 5.1 / CMD 实机验收，也不覆盖先前日期的原生验证记录。
+
+## 十一、<span id="nested-git-gui-20261118">父子 Git 仓库管理收口为双端 Python GUI</span> <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+
+- 来源：用户于 2026-11-18 结合 JobsGenesis 根目录截图明确提出；状态：confirmed（需求与推广边界）；创建／更新：2026-11-18。当前实施仓库为 `/Users/jobs/Documents/GitHub/JobsGenesis`。
+- 用户要求将根目录子模块下载／递归同步、父子引用维护、`.gitmodules` 维护收进一个 [**Python**](https://www.python.org) GUI，按 [**MacOS**](https://www.apple.com/macos/)／[**WindowsOS**](https://www.microsoft.com/windows) 双端组织。仓内新建一个功能目录，放完整可修改源码、源码阐述 README、构建入口和生成的可运行包；仓根放相对定位的普通快捷启动入口，不用 Finder 替身，不硬编码本机仓库路径。
+- 根 `【MacOS】🧹清理缓存与构建产物.command` 用户明确不要，清理职责由 `OS@Extension` 下现有 Finder／资源管理器扩展承担；不在新 Git 面板重复提供清理功能。此要求对截图中仓根配置入口生效，不授权删除子仓同名工具或改动系统扩展。
+- 此类父子嵌套 Git 仓库今后采用同一标准；本轮先整改 JobsGenesis；同任务后续用户明确指定将标准推广到其子仓 `JobsConfigOS`，当前授权范围为这两个实际 Git 根，其它仓库仍等待点名，不自动批量铺开。主规则收口现行 `jobs-git-repository/SKILL.md` 的 `nested-git-gui`；旧脚本包装与三个独立文档条目要求在已迁移仓按新 GUI 的真实布局与能力描述，不延续已删除入口。
+- 同日用户依据界面截图追加，并明确并入此类父子嵌套 Git 仓库的通用标准（confirmed）：窗口及页内标题要明确“Git 父／子仓管理”，主标题前配图标；语言与主题控件同一横行，标签前分别有对应图形标识；“选择仓库”不带省略号；移除“进入面板只扫描”横幅。现行通用实现规则仍归 `jobs-git-repository/SKILL.md#nested-git-gui`，本轮实现 JobsGenesis，并已获用户明确指定推广到其子仓 JobsConfigOS；其它仓库等待用户点名，移除横幅不取消写前预览与确认。
+- 本轮两仓已实际接入同一 `1.0.1` 六模块源码与本地Git图标，分别构建Mac成品并原生扫描JobsGenesis的10子仓、JobsConfigOS的8子仓；对应记录位于两仓本轮Git父子仓资产盘点（2026-11-18，scoped-verified）。Windows目前是完整源码及本机构建入口交付，未生成或验收Windows EXE，不能把Mac结果外推。
+- 需求确认与实现验收分开：当前源码、产物、相对启动和两端验证状态以仓根 `项目相关报告/` 对应资产盘点为准，不能从本记忆推断任一平台已完成实机验收；本次标准记录不授权业务仓暂存、提交、推送或远程变更。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

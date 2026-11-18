@@ -5,7 +5,7 @@ scope: flutter-demo-hub
 repository: /Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsFlutterBaseConfigDemo
 source: 用户于 2026-11-14、2026-11-15、2026-11-16 明确提出的工程长期建设及首页骨架要求
 created: 2026-11-14
-updated: 2026-11-16
+updated: 2026-11-17
 tags:
   - codex-memory
   - project
@@ -25,6 +25,10 @@ tags:
 > 用户希望 Flutter 工程长期平行于 OC／Swift 原生强 Demo；需求 confirmed；功能实现与编译／交互验证见下方当前基线，真实硬件验收单独记录。
 
 ## 一、确认的工程要求 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+
+- <span id="standalone-terminal-and-menu-20261117">每Demo独立启动与两种简化入口</span>：来源为用户2026-11-17明确要求，状态 confirmed，适用本Flutter工程及其终端／右键启动工具。每个Demo实际源码必须独立可运行；新终端输入命令进入等待状态，再手动输入／拖入`.dart`，或右键该文件从终端运行。终端入口归`JobsGenesis/JobsConfigOS/🌍JobsMacEnvVarConfigs`，系统右键归`JobsGenesis/OS@Extension`；命令采用`frun`，含main实际源码为目标，向上定位所属工程pubspec并使用工程SDK／依赖／平台宿主，不复制到临时工程、不改写主入口。辅助文件／part／生成文件不补无意义main。本聊天2026-11-17追加确认：只有一个可执行项的右键组展开为父级‘从终端运行 Flutter Demo’，设备选择每行仅名称，内部标识隐藏且重名精确回映；工具行为及平台门禁的当前事实查[[MacOS-Finder-扩展体系#flutter-unified-device-menu-20261115|双端运行器记录]]。两端菜单源码、隔离测试、已安装菜单与实际运行分别记录于工程`项目相关报告/Demo源码目录整理.md#file-launchers`，不把静态入口全覆盖当成所有Demo设备业务实测。
+
+- <span id="flat-demo-source-20261116">Demo源码目录扁平化</span>：来源：用户2026-11-16本轮明确要求，状态 confirmed，范围本工程lib/demos。删除全部入口.dart，独立main直接放真实实现；原“源码”目录内容上移一层并删除中间目录，维护import／export／part、登记、测试和文档，生成内容保字节、稳定ID及偏好不变。此前保留lib/demos内纯转发入口的做法在本范围superseded；lib/JobsDemoTools历史兼容层继续指向实际源码，不由本条扩大删除。当前实现及本批验证查项目相关报告/Demo源码目录整理.md。
 
 - App 进入先开屏，结束移除开屏，再进入首页。首页是按功能分组的列表，每个 cell 对应实际可观摩功能，支持搜索。
 - 首页左向右滑出菜单，半开／全开可设置；其它能力以 OC 新旧／Swift 工程实际功能为蓝本，保留所有 Flutter 既有功能再补缺项。
@@ -63,7 +67,7 @@ tags:
 - 2026-11-15此前App骨架批次基线：三原生工程各 `项目相关报告/App骨架功能盘点.md`（统一25项SKEL资产），Flutter同目录有本仓资产表、统一对照及帧错误排查；原生125处源码链接/行号、两OC同需求矩阵、6份根文档迁移正文/119入链复核通过。该批搜索/菜单/侧栏/分组置顶记忆/悬浮/刷新已接入，556＋15共571测试、静态无error/warning、iOS主入口debug及Androiddebug构建通过；模拟器限定实测入口与侧栏/设置已验，长组跨屏拖动/真机摇动声音触觉仍待验。帧时间clamping未稳定复现、未修复；候选调度实验未启用。其它骨架缺口及两OC6份巡检生成清单写入例外，以当前资产表和验收记录为准，不将本条扩写为完整四端等价。
 - <span id="recent-scroll-validation-20261115">2026-11-15最近使用／收藏移除／下拉边界增量（历史批次）</span>：当批源码已移除侧栏收藏入口与行菜单收藏项，保留置顶；最近使用按稳定ID前插去重、最多30项，读取过滤未知ID。最近为独立始终展开列表，不受首页分组折叠／置顶排序影响，不手工拖排。首页与普通刷新适配当时采用 `AlwaysScrollableScrollPhysics(parent: ClampingScrollPhysics())`，保留Material和Jobs两种提示；该固定目录的滚动方案于2026-11-16被标为 superseded，当前要求见 [[#home-pull-follow-20261116|首页分组操作与跟手刷新]]。限定首页10项＋边缘组合6项＋公共15项共31项回归、iOS Simulator debug构建（276.6秒）通过，不等于重跑全仓或真机验收。新版重装启动后真实AX已确认侧栏无收藏、最近空态与重新加载，行菜单只有源码位置／复制运行命令。真实长拉未验，当时仅Widget持有1200px下固定目录的断言通过；一次drag返回成功仍无法确认事件落到手机内容，像素／逻辑坐标与 `noWindowsAvailable` 问题未排除，不能记为实际长拉或释放后的界面验收。该批状态 source-implemented／build-verified／scoped-ui-verified（仅前述AX）；实际结果由当次资产表和证据维护，旧批次验收不自动覆盖后续源码。
 - 2026-11-16跟手刷新与组头简化阶段（source-implemented／scoped-tested／build-verified）：公共 `JobsRefreshScrollPhysics` 基于Bouncing阻尼与弹簧、默认最大越界120逻辑像素，在拖动与惯性阶段限幅；首页与普通Material／Jobs刷新适配均接入。组头三点移除、拖动柄及原布局记忆保留，不新增偏好键。首页10项＋边缘组合6项、公共组件19项，共35项通过；4文件分析0 error／0 warning、8 info，iOS Simulator debug阶段构建87.1秒通过。该结果早于功能语义与源码头部入口的追加迁移，不作为迁移最终验收；真实触控仍待验，后续当前结果以资产表为准。
-- 2026-11-16功能语义与源码入口迁移（source-implemented／scoped-target-ui-verified，整包待验）：119目录已去来源前缀，68项按稳定ID并入现有六组，189个相关ID序列不变；布局恢复只过滤废组键，不清空其它布局或最近。300个主／独立运行文件为175实现源码＋46带实现入口＋79独立或转发文件，main放到指令区之后并有带引号的头注命令；另175个纯兼容入口仅export＋main委托，88个helper不造main，三份生成part保留原字节。175个factory在实际源码，sourcePath／entryPath同源，独立运行仍依赖工程pubspec／资源／辅助库。胶囊源码 `lib/demos/胶囊按钮切页/源码/JobsSegmentTabs.dart` 的iOS构建49.0秒通过，实际启动后点击“7日内”使内容由1到3；仅该目标已实测，全仓测试／分析与最终首页包由当批验收记录回填。
+- 2026-11-16功能语义与源码入口迁移（历史批次；本条保留175份兼容入口的目录形态已由flat-demo-source-20261116替代；source-implemented／scoped-target-ui-verified，整包待验）：119目录已去来源前缀，68项按稳定ID并入现有六组，189个相关ID序列不变；布局恢复只过滤废组键，不清空其它布局或最近。300个主／独立运行文件为175实现源码＋46带实现入口＋79独立或转发文件，main放到指令区之后并有带引号的头注命令；另175个纯兼容入口仅export＋main委托，88个helper不造main，三份生成part保留原字节。175个factory在实际源码，sourcePath／entryPath同源，独立运行仍依赖工程pubspec／资源／辅助库。胶囊源码 `lib/demos/胶囊按钮切页/源码/JobsSegmentTabs.dart` 的iOS构建49.0秒通过，实际启动后点击“7日内”使内容由1到3；仅该目标已实测，全仓测试／分析与最终首页包由当批验收记录回填。
 
 ## 四、<span id="four-repository-curation">四库功能与 UI 蒸馏</span> <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
 
